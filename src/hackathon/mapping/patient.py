@@ -7,7 +7,7 @@ GENDERS = {"male", "female", "other", "unknown"}
 
 
 def map_patient(record: dict[str, str]) -> Patient:
-    """Map one CSV row (``id, family_name, given_name, birth_date, gender``) to a FHIR Patient.
+    """Map one CSV row (``id, family_name, given_name, birth_date, gender[, phone]``) to a Patient.
 
     The source ``id`` is stored as an identifier (system ``PATIENT_ID_SYSTEM``) so the
     patient can be found again on a server that assigns its own resource ids.
@@ -22,6 +22,8 @@ def map_patient(record: dict[str, str]) -> Patient:
         data["identifier"] = [{"system": PATIENT_ID_SYSTEM, "value": record["id"]}]
     if record.get("birth_date"):
         data["birthDate"] = record["birth_date"]
+    if record.get("phone"):
+        data["telecom"] = [{"system": "phone", "value": record["phone"]}]
     if record.get("gender"):
         gender = record["gender"].lower()
         # fhir.resources does not enforce the code set for `code` fields, so check it here.

@@ -56,7 +56,9 @@ Needs Java 11+. Downloads the pinned Synthea release (about 200 MB) and generate
 python scripts/generate_synthea.py
 ```
 
-If Java is missing, skip this; the CSV sample is enough for the skeleton. A tiny fixture may be committed under `tests/fixtures/`.
+Notes: Synthea only supports US states (default Massachusetts), so the data is US-flavoured. Seed 42 hung on our machine; the script defaults to seed 7, which finishes in about a minute. If a run hangs, pass `--seed <n>`. A trimmed 10-entry fixture lives in `tests/fixtures/synthea_sample_bundle.json` (validated by a unit test).
+
+If Java is missing, skip this; the CSV sample is enough for the skeleton.
 
 ## Structure
 

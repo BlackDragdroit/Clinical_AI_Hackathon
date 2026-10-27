@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 import pytest
@@ -62,6 +63,13 @@ def test_validate_valid_and_invalid() -> None:
     assert not bad.ok
     assert bad.errors
     assert not validate_resource({}, "NotAResource").ok
+
+
+def test_synthea_fixture_validates() -> None:
+    fixture = Path(__file__).resolve().parents[1] / "fixtures" / "synthea_sample_bundle.json"
+    data = json.loads(fixture.read_text(encoding="utf-8"))
+    result = validate_resource(data, "Bundle")
+    assert result.ok, result.errors
 
 
 def test_api_health_and_convert() -> None:

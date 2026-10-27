@@ -33,6 +33,14 @@ def test_map_patient() -> None:
     assert patient.gender == "female"
 
 
+def test_map_patient_phone() -> None:
+    patient = map_patient({**ROW, "phone": "+43 1 5550100"})
+    assert patient.telecom[0].system == "phone"
+    assert patient.telecom[0].value == "+43 1 5550100"
+    assert validate_resource(patient.model_dump(mode="json", exclude_none=True), "Patient").ok
+    assert map_patient({**ROW, "phone": ""}).telecom is None
+
+
 def test_map_patient_invalid_gender() -> None:
     with pytest.raises(ValueError):
         map_patient({**ROW, "gender": "not-a-gender"})

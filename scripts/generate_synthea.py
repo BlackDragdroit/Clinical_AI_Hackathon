@@ -24,7 +24,8 @@ OUT_DIR = ROOT / "data" / "synthetic" / "synthea"
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--population", type=int, default=20)
-    parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--seed", type=int, default=7)  # seed 42 hung with v4.0.0
+    parser.add_argument("--state", default="Massachusetts", help="US state (Synthea limitation)")
     args = parser.parse_args()
 
     if shutil.which("java") is None:
@@ -43,9 +44,7 @@ def main() -> int:
         "-s", str(args.seed),
         "--exporter.baseDirectory", str(OUT_DIR),
         "--exporter.fhir.export", "true",
-        "--exporter.hospital.fhir.export", "false",
-        "--exporter.practitioner.fhir.export", "false",
-        "Vienna",
+        args.state,  # Synthea only supports US states (demographics are US-based)
     ]  # fmt: skip
     print("Running:", " ".join(command))
     return subprocess.call(command)

@@ -1,0 +1,6 @@
+id,family_name,given_name,birth_date,gender
+1,Patient1,Test,1980-01-15,female
+2,Patient2,Test,1975-06-30,male
+3,Patient3,Test,1992-11-02,other
+4,Patient4,Test,2001-03-21,female
+5,Patient5,Test,1968-09-09,male

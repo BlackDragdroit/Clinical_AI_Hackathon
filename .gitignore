@@ -1,0 +1,24 @@
+# Environments
+.venv/
+venv/
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+build/
+dist/
+
+# Data (only small synthetic samples belong in the repo)
+data/raw/
+data/synthetic/synthea/
+out/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hackathon"
+version = "0.1.0"
+description = "Clinical AI Hackathon Vienna 2026 - FHIR interoperability skeleton"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi==0.143.0",
+    "uvicorn==0.54.0",
+    "pydantic==2.14.1",
+    "fhir.resources==8.3.0",
+    "httpx==0.28.1",
+    "pandas==3.0.6",
+    "streamlit==1.65.0",
+    "python-dotenv==1.2.4",
+    # Required by FastAPI for file uploads (POST /convert).
+    "python-multipart==0.0.32",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==9.1.1",
+    "ruff==0.17.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+# Integration tests need network access; run them with `pytest -m integration`.
+addopts = "-m 'not integration'"
+markers = [
+    "integration: needs network access (public HAPI FHIR test server)",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

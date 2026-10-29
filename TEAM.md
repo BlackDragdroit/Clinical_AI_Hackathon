@@ -41,16 +41,12 @@ uv run python -m app.cli '!anfrage labor "Dr. Eva Brandl" eva.brandl@labor-kanal
 
 **Owns:** `docker-compose.yml`, `Dockerfile`, `Makefile`, `scripts/setup_synapse.sh`, `scripts/seed_hapi.py`, `app/bot.py`, `app/commands.py`, `app/requests_service.py`, `app/fhir_client.py`, `app/config.py`, `app/delivery/ftapi_submitbox.py`, `element/config.json`.
 
-**Tonight (to 22:00)**
-1. `make up` works and has been verified (see PROGRESS.md). Run it yourself from a clean clone (`make reset && make up`) and log in to Element as `lena.hofer`.
-2. In Element, `!anfrage …`, then `!senden <id>` → the email appears in Mailpit and `Task/…` exists on HAPI.
-3. Fallback if Synapse isn't up by 21:30: everyone keeps working with `MATRIX_ENABLED=0` and the CLI; you finish Matrix on Friday.
+**Status: done (Thu 21:45).** G1 and G2 are verified (see PROGRESS.md). All `TODO(SWE 1)` items are closed: real HAPI client with Task executionPeriod + input, bot limited to `AUTHORIZED_SENDERS`, HTML cards with clickable FHIR links, README Architecture + "every component is replaceable". FTAPI is deliberately not used (see DECISIONS.md).
 
-**Friday (to 13:30)**
-- `fhir_client.py`: run `fhir_client.py` against the real HAPI and fix what fails (transaction response, `$validate`, the Task PUT). Add `executionPeriod` to the Task and check it with the validator.
-- Bot: a formatted confirmation card (HTML `formatted_body`). Accept commands only from `DOCTOR_MXID`. Put clickable HAPI links in the messages.
-- FTAPI: ask the FTAPI people on site for sandbox API access. If they give it, implement `ftapi_submitbox.py`. If not, keep the stub and say so in the README.
-- README sections: **Architecture** (components, how they talk, a Mermaid diagram) and **"every vendor is replaceable"** (Mailpit → SMTP, SMS page → gateway, mock eID → ID Austria via OIDC, HAPI → any FHIR R4 server, FTAPI adapter).
+**Friday (to 13:30): support the team**
+- Keep the stack healthy for everyone. `scripts/dev/flow.sh` replays request 1 / M1–M3 against the running stack in seconds; use it after every merge to `main`.
+- Help SWE 2 wire `scripts/e2e.py` (Playwright) to the same flows, and help Biostat with `make metrics`.
+- Before 13:30: `make reset && make up` from a clean clone, then run `scripts/dev/flow.sh` once for each case.
 
 **Done when**
 - G1 `make up` from a clean clone (`make reset` first) ends with Element reachable and `curl -s localhost:8090/fhir/Patient/maria-beispiel` returning the patient.

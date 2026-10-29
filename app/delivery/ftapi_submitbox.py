@@ -1,12 +1,13 @@
 """FTAPI SubmitBox adapter (track partner). Owner: SWE 1.
 
-Design: FTAPI hosts the public upload page as the third-party trust provider; it sees no patient
-identity before the identity check. Status: NOT wired. FTAPI documents that a REST API exists
-("Für individuelle Systemlösungen bietet FTAPI eine REST-API", ftapi.com/plattform/integrationen),
-but publishes no reference; the API is licence-gated (Secure Intelligence / Enterprise tiers).
-We do not guess endpoints. EMAIL_CHANNEL=mailpit is the default; this class only shows where FTAPI plugs in.
+Not used in the prototype: uploads go through our own portal, delivered by SMTP (EMAIL_CHANNEL=mailpit).
+In production a secure-transfer provider such as FTAPI could host the public upload page as a
+third-party trust provider; it would see no patient identity before the identity check. FTAPI
+documents that a REST API exists ("Für individuelle Systemlösungen bietet FTAPI eine REST-API",
+ftapi.com/plattform/integrationen) but publishes no reference; the API is licence-gated (Secure
+Intelligence / Enterprise tiers). We do not guess endpoints, so this class only marks where it plugs in.
 
-What we need from FTAPI to implement send() (ask at the booth):
+What an implementation of send() would need from FTAPI:
   1. a test tenant with API access, its base URL, the auth method and header names
   2. the call that creates a per-request SubmitBox / "Datei anfordern" link for a named recipient
      (and whether links can be per request at all, or only one static mailbox per user)

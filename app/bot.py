@@ -7,7 +7,7 @@ from __future__ import annotations
 import asyncio
 import logging
 
-from app import commands, notify
+from app import commands, matrix_format, notify
 from app.config import settings
 
 log = logging.getLogger("befundbruecke.bot")
@@ -32,14 +32,14 @@ async def run_bot() -> None:
     since = first.next_batch
 
     async def say(text: str) -> None:
-        await client.room_send(settings.matrix_room_id, "m.room.message", {"msgtype": "m.text", "body": text})
+        await client.room_send(settings.matrix_room_id, "m.room.message", matrix_format.content(text))
 
     async def on_message(room: MatrixRoom, event: RoomMessageText) -> None:
         if room.room_id != settings.matrix_room_id or event.sender == settings.matrix_bot_user:
             return
         if not event.body.startswith("!"):
             return
-        # TODO(SWE 1): only accept commands from members of the clinic directory (here: DOCTOR_MXID)
+        # commands.handle refuses senders outside AUTHORIZED_SENDERS (the clinic directory)
         reply = await asyncio.to_thread(commands.handle, event.body, event.sender)
         await say(reply)
 

@@ -19,7 +19,7 @@ dev: env         ## app locally on :8000 with reload; Matrix off unless MATRIX_E
 	set -a; source .env; set +a; MATRIX_ENABLED=$${MATRIX_ENABLED_DEV:-0} $(RUN) uvicorn app.main:app --reload --port 8000
 
 up: env          ## whole stack: synapse+users+room, hapi seeded, mailpit, element, app
-	docker compose up -d synapse hapi mailpit element
+	docker compose up -d hapi mailpit element   # synapse starts in setup_synapse.sh once its config exists
 	./scripts/setup_synapse.sh
 	$(RUN) python -m scripts.seed_hapi
 	docker compose up -d --build app

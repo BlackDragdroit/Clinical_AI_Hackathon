@@ -1,7 +1,8 @@
 # BefundBrücke
 
-FTAPI gets the document in securely; BefundBrücke proves it comes from the right person, is about the
-right patient, and files it as valid FHIR R4 — automatically, audited, with Dr. Hofer told in Matrix.
+A doctor in a closed Matrix network asks someone outside it for a document. BefundBrücke gets it in
+through a one-time link, proves it comes from the right person and is about the right patient, and files
+it as valid FHIR R4: automatically, audited, with Dr. Hofer told in Matrix.
 
 AIM Healthcare Hackathon Vienna 2026, Track 2 (Health Data Interoperability, partner FTAPI). Synthetic data only.
 
@@ -100,7 +101,7 @@ sequenceDiagram
 - Nothing is written to HAPI unless the core decides `file` and HAPI `$validate` reports no errors, or Dr. Hofer confirms a `review` with `!ablegen`. A `reject` (document is about another patient) is quarantined, not filed.
 - Unknown, expired, used and exhausted links all get the same neutral answer, so a guesser learns nothing.
 - Only Matrix IDs in `AUTHORIZED_SENDERS` (the clinic directory; default Dr. Hofer) can make the bot request documents or file answers. Anyone else in the room gets "Keine Berechtigung" and nothing happens.
-- The public portal is the part that faces the internet. It could be hosted by a third-party trust provider such as FTAPI SubmitBox, behind the `Channel` and portal boundary, because it needs no patient data before the identity check. The FTAPI adapter is not wired yet (see below).
+- The public portal is the part that faces the internet. In the prototype we host it ourselves. In production it can move to a third-party trust provider such as FTAPI SubmitBox, behind the `Channel` and portal boundary, because it needs no patient data before the identity check. The prototype does not use FTAPI (see below).
 
 ## Design answers
 ### 1. How does an outside person prove who they are without a directory?
@@ -123,7 +124,7 @@ Each simulated part sits behind one small interface. Swapping it touches the fil
 | SMS inbox page (`/sms`) | An SMS gateway | `Channel.send(to, link)`; a new `Channel` with `kind = "sms"` replaces `sms_inbox.py` |
 | Mock eID (`identity/eid_mock.py`) | ID Austria via OIDC | `EidAssertion` returned by `eid_mock.verify()`: name, birth date, pseudonym (bPK), level of assurance. The portal consumes only this object. |
 | HAPI FHIR server | Any FHIR R4 server | `app/fhir_client.py` uses plain FHIR REST (read Patient, create Task, `$validate`, transaction) |
-| FTAPI SubmitBox | Adapter `app/delivery/ftapi_submitbox.py`, selected with `EMAIL_CHANNEL=mailpit\|ftapi` | `Channel.send(to, link)`. **Status: stub.** FTAPI states that a REST API exists but publishes no reference, and API access is licence-gated. We have not invented endpoints. The adapter raises `NotImplementedError`, and its docstring lists what we need from FTAPI. The default is `EMAIL_CHANNEL=mailpit`. |
+| Our own upload portal + Mailpit | A secure-transfer provider such as FTAPI SubmitBox | `Channel.send(to, link)`; `EMAIL_CHANNEL` selects the channel. **Not used in the prototype.** FTAPI states that a REST API exists but publishes no reference (access is licence-gated), and we did not invent endpoints. `app/delivery/ftapi_submitbox.py` marks where the adapter goes. |
 | Synapse + Element | Any Matrix homeserver and client, or PGK | `bot.py` speaks the Matrix client-server API (matrix-nio) and calls `commands.handle(text, sender)` |
 | SQLite | Postgres | Only `app/db.py` imports `sqlite3` |
 

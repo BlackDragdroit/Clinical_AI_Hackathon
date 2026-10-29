@@ -73,3 +73,28 @@ def test_eid_page_is_labelled_simulation_in_both_languages():
         assert "SIMULATION" in c.get("/eid/authorize?state=x").text
         c.get("/lang/en")
         assert "SIMULATION" in c.get("/eid/authorize?state=x").text
+
+
+def test_attempts_exhausted_blocks_request_and_alerts_once():
+    from app import audit
+    _req()
+    raw = tokens.issue("r1", "e@x.example")
+    statuses, bodies = [], []
+    with _client() as c:
+        for _ in range(settings.max_identity_attempts + 2):
+            r = c.get(f"/r/{raw}/callback", params={"assertion": eid_mock.issue("karl")})
+            statuses.append(r.status_code)
+            bodies.append(r.text)
+        landing = c.get(f"/r/{raw}")
+        unknown = c.get("/r/does-not-exist")
+    n = settings.max_identity_attempts
+    assert statuses[:n - 1] == [403] * (n - 1)
+    assert statuses[n - 1:] == [404] * 3                       # last failed attempt and later ones: neutral dead-link page
+    import re
+    def strip(html): return re.sub(r'<a class="lang".*?</a>', "", html)     # the toggle echoes the page's own path
+    assert strip(bodies[n - 1]) == strip(bodies[n]) == strip(unknown.text) == strip(landing.text)
+    assert db.get("requests", "id", "r1")["status"] == "blocked"
+    alerts = [m for m in db.query("SELECT * FROM matrix_outbox WHERE request_id = 'r1'") if "gesperrt" in m["text"]]
+    assert len(alerts) == 1
+    flags = [e["details"]["blocked"] for e in audit.entries("r1") if e["event"] == "identity_checked"]
+    assert flags == [False] * (n - 1) + [True]                 # the exhausting attempt is marked in the audit trail

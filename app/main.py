@@ -52,7 +52,8 @@ def _lang(request: Request) -> str:
 
 def _page(request: Request, name: str, status: int = 200, **ctx) -> HTMLResponse:
     lang = _lang(request)
-    here = request.url.path + (f"?{request.url.query}" if request.url.query else "")
+    # keep the query only on the eID page (it carries the link state); never echo a signed assertion into a URL
+    here = request.url.path + (f"?{request.url.query}" if request.url.path == "/eid/authorize" and request.url.query else "")
     base = {"clinic": settings.clinic_name, "lang": lang, "t": lambda k, **kw: i18n.tr(lang, k, clinic=settings.clinic_name, **kw),
             "other_lang": i18n.tr(lang, "lang_code"), "switch_href": f"/lang/{i18n.tr(lang, 'lang_code')}?next={quote(here, safe='')}"}
     return templates.TemplateResponse(request, name, {**base, **ctx}, status_code=status)
@@ -65,6 +66,15 @@ def _doc_label(request: Request, doc_type: str) -> str:
 def _invalid(request: Request) -> HTMLResponse:
     # same page for unknown / expired / used / blocked links: a guesser learns nothing
     return _page(request, "invalid.html", 404)
+
+
+def _block(req: dict) -> None:
+    """Identity attempts exhausted: block the request and alert Dr. Hofer exactly once."""
+    if db.get("requests", "id", req["id"])["status"] == "blocked":
+        return
+    db.update("requests", "id", req["id"], status="blocked")
+    notify.doctor(f"🔒 Anfrage {req['id']} gesperrt: {settings.max_identity_attempts} fehlgeschlagene "
+                  f"Identitätsprüfungen. Der Link ist deaktiviert. Bitte neu senden, wenn der Empfänger stimmt.", req["id"])
 
 
 def _who(request: Request) -> str:
@@ -125,11 +135,15 @@ def eid_callback(request: Request, raw: str, assertion: str):
         attempts = tokens.count_failed_attempt(raw)
         label = misdelivery.classify_identity_failure(req)
         audit.log("identity_checked", req["id"], actor,
-                  {"result": "FAILED", "method": "eid-mock", "loa": who.loa, "attempt": attempts})
+                  {"result": "FAILED", "method": "eid-mock", "loa": who.loa, "attempt": attempts,
+                   "blocked": attempts >= settings.max_identity_attempts})
         audit.log("misdelivery_caught", req["id"], actor,
                   {"type": label, "verified": who.full_name, "expected": req["expected_name"]})
         notify.doctor(f"⚠️ Fehlzustellung erkannt (Anfrage {req['id']}): verifiziert {who.full_name} ≠ "
                       f"{req['expected_name']}. Nichts offengelegt, nichts abgelegt.", req["id"])
+        if attempts >= settings.max_identity_attempts:
+            _block(req)
+            return _invalid(request)        # same neutral page as any dead link
         return _page(request, "identity_failed.html", 403)
     audit.log("identity_checked", req["id"], actor, {"result": "OK", "method": "eid-mock", "loa": who.loa})
     db.update("requests", "id", req["id"], status="identified")

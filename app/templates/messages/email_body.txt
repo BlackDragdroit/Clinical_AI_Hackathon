@@ -1,0 +1,12 @@
+Guten Tag,
+
+{{ clinic }} hat eine sichere Dokumentenanfrage an Sie gerichtet.
+
+Bitte öffnen Sie diesen persönlichen Link. Sie brauchen kein Konto und keine Installation:
+{{ link }}
+
+Der Link gilt 72 Stunden und nur für Sie persönlich. Bitte leiten Sie diese Nachricht nicht weiter.
+Wenn Sie diese Nachricht irrtümlich erhalten haben, ignorieren Sie sie bitte.
+
+---
+{{ clinic }} has sent you a secure document request. Please open the personal link above.

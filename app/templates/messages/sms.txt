@@ -1,0 +1,1 @@
+{{ clinic }}: sichere Dokumentenanfrage an Sie. Persönlicher Link (72 h, nicht weiterleiten): {{ link }}

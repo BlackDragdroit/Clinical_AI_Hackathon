@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Audit{% endblock %}
+{% block body %}
+<h2>Audit-Protokoll</h2>
+<p>Hash-Kette: {% if chain_ok %}✅ intakt{% else %}❌ verletzt{% endif %} ·
+   Abdeckung: {% for ev, ok in coverage.items() %}{{ '✅' if ok else '⬜' }} {{ ev }} {% endfor %} ·
+   <a href="/audit.json">JSON</a></p>
+<table>
+  <tr><th>#</th><th>Wann (UTC)</th><th>Was</th><th>Anfrage</th><th>Wer</th><th>Details</th></tr>
+  {% for e in entries %}
+  <tr><td>{{ e.seq }}</td><td>{{ e.ts }}</td><td>{{ e.event }}</td><td>{{ e.request_id or '' }}</td><td>{{ e.actor }}</td><td><code>{{ e.details | tojson }}</code></td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

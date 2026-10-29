@@ -1,0 +1,46 @@
+# Stack for BefundBrücke. Owner: SWE 1. Start with `make up` (runs setup scripts in the right order).
+services:
+  synapse:
+    image: matrixdotorg/synapse:v1.120.0
+    environment:
+      SYNAPSE_SERVER_NAME: klinikum.example
+      SYNAPSE_REPORT_STATS: "no"
+    volumes:
+      - synapse-data:/data
+    ports: ["8008:8008"]
+
+  element:
+    image: vectorim/element-web:v1.11.85
+    volumes:
+      - ./element/config.json:/app/config.json:ro
+    ports: ["8080:80"]
+
+  hapi:
+    image: hapiproject/hapi:v7.4.0
+    environment:
+      hapi.fhir.fhir_version: R4
+      hapi.fhir.client_id_strategy: ANY
+    ports: ["8090:8080"]
+
+  mailpit:
+    image: axllent/mailpit:v1.21.5
+    ports: ["8025:8025", "1025:1025"]
+
+  app:
+    build: .
+    env_file: .env
+    environment:
+      HAPI_URL: http://hapi:8080/fhir
+      SMTP_HOST: mailpit
+      MAILPIT_API: http://mailpit:8025/api/v1
+      MATRIX_HOMESERVER: http://synapse:8008
+      DB_PATH: /data/befundbruecke.sqlite
+      VAR_DIR: /data
+    volumes:
+      - app-data:/data
+    ports: ["8000:8000"]
+    depends_on: [synapse, hapi, mailpit]
+
+volumes:
+  synapse-data:
+  app-data:

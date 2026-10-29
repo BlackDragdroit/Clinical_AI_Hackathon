@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="card">
+  <p>{{ neutral }}</p>
+  <p class="muted">Bitte bestätigen Sie zuerst, wer Sie sind. Danach sehen Sie, worum es geht.</p>
+  <a class="btn" href="/eid/authorize?state={{ raw }}">Mit ID Austria anmelden</a>
+</div>
+{% endblock %}

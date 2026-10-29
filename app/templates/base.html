@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Sichere Dokumentenanfrage{% endblock %}</title>
+<style>
+  /* TODO(SWE 2): mobile-first polish, EN toggle, large tap targets */
+  body { font: 17px/1.5 system-ui, sans-serif; margin: 0; background: #f5f7f8; color: #1d2327; }
+  main { max-width: 34rem; margin: 0 auto; padding: 1.25rem 1rem 3rem; }
+  .card { background: #fff; border-radius: 12px; padding: 1.25rem; box-shadow: 0 1px 3px #0002; }
+  .btn { display: block; width: 100%; padding: .9rem; border: 0; border-radius: 10px; background: #1f5f8b;
+         color: #fff; font-size: 1.05rem; text-align: center; text-decoration: none; cursor: pointer; }
+  label { display: block; margin: .9rem 0 .3rem; font-weight: 600; }
+  input, textarea { width: 100%; box-sizing: border-box; padding: .7rem; font-size: 1rem; border: 1px solid #bbb; border-radius: 8px; }
+  .muted { color: #5f6b72; font-size: .9rem; }
+  .err { color: #a4262c; }
+  table { border-collapse: collapse; width: 100%; font-size: .85rem; } td, th { border-bottom: 1px solid #ddd; padding: .35rem; text-align: left; vertical-align: top; }
+</style>
+</head>
+<body><main>{% block body %}{% endblock %}</main></body>
+</html>

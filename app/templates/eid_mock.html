@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}ID Austria (Simulation){% endblock %}
+{% block body %}
+<div class="card">
+  <h2>ID Austria – Simulation</h2>
+  <p class="muted">Testumgebung: wählen Sie eine synthetische Testperson. In Produktion: Anmeldung über ID Austria (OIDC).</p>
+  <form method="post" action="/eid/authorize">
+    <input type="hidden" name="state" value="{{ state }}">
+    {% for key, c in citizens.items() %}
+    <label><input type="radio" name="citizen" value="{{ key }}" {% if loop.first %}checked{% endif %} style="width:auto"> {{ c.given }} {{ c.family }}</label>
+    {% endfor %}
+    <p><button class="btn" type="submit">Anmelden</button></p>
+  </form>
+</div>
+{% endblock %}

@@ -1,8 +1,10 @@
 {% extends "base.html" %}
+{% block steps %}{% set step = 1 %}{% include "_steps.html" %}{% endblock %}
 {% block body %}
 <div class="card">
   <p>{{ neutral }}</p>
-  <p class="muted">Bitte bestätigen Sie zuerst, wer Sie sind. Danach sehen Sie, worum es geht.</p>
-  <a class="btn" href="/eid/authorize?state={{ raw }}">Mit ID Austria anmelden</a>
+  <p class="muted">{{ t('landing_hint') }}</p>
+  <a class="btn" href="/eid/authorize?state={{ raw }}">{{ t('landing_btn') }}</a>
+  <p class="muted">{{ t('landing_time') }}</p>
 </div>
 {% endblock %}

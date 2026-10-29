@@ -15,19 +15,22 @@ import contextlib
 from contextlib import asynccontextmanager
 from pathlib import Path
 
+from urllib.parse import quote
+
 from fastapi import FastAPI, File, Form, Request, UploadFile
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
-from app import audit, bot, db, intake_service, misdelivery, notify, tokens
+from app import audit, bot, db, i18n, intake_service, misdelivery, notify, tokens
 from app.config import settings
 from app.identity import eid_mock, policy
 from app.security import sign, unsign
 
 templates = Jinja2Templates(directory=str(Path(__file__).resolve().parent / "templates"))
 SESSION = "bb_session"
+LANG_COOKIE = "bb_lang"
+COOKIE_SECURE = settings.base_url.startswith("https://")
 NEUTRAL = f"{settings.clinic_name} hat eine sichere Dokumentenanfrage an Sie gerichtet."
-DOC_LABEL = {"lab": "Laborbefund", "report": "Entlassungsbericht"}
 
 
 @asynccontextmanager
@@ -43,8 +46,20 @@ async def lifespan(_: FastAPI):
 app = FastAPI(title="BefundBrücke", lifespan=lifespan)
 
 
+def _lang(request: Request) -> str:
+    return i18n.pick(request.cookies.get(LANG_COOKIE))
+
+
 def _page(request: Request, name: str, status: int = 200, **ctx) -> HTMLResponse:
-    return templates.TemplateResponse(request, name, {"clinic": settings.clinic_name, **ctx}, status_code=status)
+    lang = _lang(request)
+    here = request.url.path + (f"?{request.url.query}" if request.url.query else "")
+    base = {"clinic": settings.clinic_name, "lang": lang, "t": lambda k, **kw: i18n.tr(lang, k, clinic=settings.clinic_name, **kw),
+            "other_lang": i18n.tr(lang, "lang_code"), "switch_href": f"/lang/{i18n.tr(lang, 'lang_code')}?next={quote(here, safe='')}"}
+    return templates.TemplateResponse(request, name, {**base, **ctx}, status_code=status)
+
+
+def _doc_label(request: Request, doc_type: str) -> str:
+    return i18n.DOC_LABEL[_lang(request)][doc_type]
 
 
 def _invalid(request: Request) -> HTMLResponse:
@@ -59,6 +74,15 @@ def _who(request: Request) -> str:
 def _session(request: Request, raw: str) -> dict | None:
     s = unsign(request.cookies.get(SESSION, ""), "portal")
     return s if s and s.get("th") == tokens.token_hash(raw) else None
+
+
+@app.get("/lang/{code}")
+def set_lang(code: str, next: str = "/"):
+    # only same-site relative paths: no open redirect
+    dest = next if next.startswith("/") and not next.startswith("//") and "\\" not in next else "/"
+    resp = RedirectResponse(dest, status_code=303)
+    resp.set_cookie(LANG_COOKIE, i18n.pick(code), max_age=86400 * 30, samesite="lax", secure=COOKIE_SECURE)
+    return resp
 
 
 @app.get("/health")
@@ -76,7 +100,7 @@ def open_link(request: Request, raw: str):
         db.update("requests", "id", req["id"], status="opened")
     audit.log("link_opened", req["id"], _who(request),
               {"user_agent": request.headers.get("user-agent", ""), "status": req["status"]})
-    return _page(request, "landing.html", neutral=NEUTRAL, raw=raw)
+    return _page(request, "landing.html", neutral=i18n.tr(_lang(request), "neutral", clinic=settings.clinic_name), raw=raw)
 
 
 @app.get("/eid/authorize", response_class=HTMLResponse)
@@ -112,7 +136,7 @@ def eid_callback(request: Request, raw: str, assertion: str):
     resp = RedirectResponse(f"/r/{raw}/answer", status_code=303)
     cookie = sign({"th": tokens.token_hash(raw), "name": who.full_name, "pseud": who.pseudonym,
                    "method": policy.identity_method_text(who)}, "portal", 3600)
-    resp.set_cookie(SESSION, cookie, httponly=True, samesite="lax", max_age=3600)   # TODO(SWE 2): secure=True behind HTTPS
+    resp.set_cookie(SESSION, cookie, httponly=True, samesite="lax", max_age=3600, secure=COOKIE_SECURE)
     return resp
 
 
@@ -123,7 +147,7 @@ def answer_form(request: Request, raw: str):
         return _invalid(request)
     req = db.get("requests", "id", tok["request_id"])
     audit.log("patient_revealed", req["id"], f"eid:{sess['pseud']} {sess['name']}", {"after": "identity_checked OK"})
-    return _page(request, "answer.html", raw=raw, req=req, doc_label=DOC_LABEL[req["doc_type"]],
+    return _page(request, "answer.html", raw=raw, req=req, doc_label=_doc_label(request, req["doc_type"]),
                  doctor=settings.doctor_name, sender=sess["name"])
 
 
@@ -140,8 +164,8 @@ async def answer_submit(request: Request, raw: str, typed_name: str = Form(...),
     else:
         content, filename = text, "formular.md"
     if not content.strip():
-        return _page(request, "answer.html", 400, raw=raw, req=req, doc_label=DOC_LABEL[req["doc_type"]],
-                     doctor=settings.doctor_name, sender=sess["name"], error="Bitte Datei hochladen oder Text eingeben.")
+        return _page(request, "answer.html", 400, raw=raw, req=req, doc_label=_doc_label(request, req["doc_type"]),
+                     doctor=settings.doctor_name, sender=sess["name"], error=i18n.tr(_lang(request), "err_empty"))
     tokens.mark_used(raw)
     actor = f"eid:{sess['pseud']} {sess['name']}"
     db.update("requests", "id", req["id"], status="answered")

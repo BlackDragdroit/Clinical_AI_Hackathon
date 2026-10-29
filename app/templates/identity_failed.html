@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block body %}
 <div class="card">
-  <h2>Anfrage nicht für Sie bestimmt</h2>
-  <p>Diese Anfrage ist an eine bestimmte Person gerichtet. Ihre Identität passt nicht dazu, daher können wir keine Inhalte anzeigen.</p>
-  <p class="muted">Wenn Sie die Nachricht weitergeleitet bekommen oder irrtümlich erhalten haben, müssen Sie nichts tun. Die anfragende Stelle wurde informiert.</p>
+  <h2>{{ t('failed_h') }}</h2>
+  <p>{{ t('failed_p') }}</p>
+  <p class="muted">{{ t('failed_small') }}</p>
 </div>
 {% endblock %}

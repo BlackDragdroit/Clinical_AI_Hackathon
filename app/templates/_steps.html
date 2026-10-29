@@ -1,0 +1,6 @@
+{# step: 1 identity, 2 upload, 3 done #}
+<ol class="steps" aria-label="{{ t('step_of', n=step if step < 3 else 2) }}">
+  <li class="{{ 'done' if step > 1 else 'on' }}">1. {{ t('step_identity') }}</li>
+  <li class="{{ 'done' if step > 2 else ('on' if step == 2 else '') }}">2. {{ t('step_upload') }}</li>
+  <li class="{{ 'on' if step == 3 else '' }}">✓ {{ t('step_done') }}</li>
+</ol>

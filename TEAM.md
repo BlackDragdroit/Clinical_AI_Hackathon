@@ -6,7 +6,7 @@
 
 The thin slice already works **in tests**, with HAPI faked: request 1 by email, request 2 by SMS, M1, M2 and M3 are all caught, the audit log covers 6 of 6 steps, and the hash chain verifies. `make test` reports 26 passed and 4 xfailed.
 
-**Not yet run against the real stack.** Nobody has run Synapse, HAPI, Mailpit or Element with it yet; that's SWE 1's first job. Each person below owns their files: make them work for real, make them good, and prove it with a gate.
+**M0 is done:** `make up` brings up the real stack, and request 1, request 2 and M1–M3 have been run on it. See PROGRESS.md. The HL7 validator hasn't been run yet. Each person below owns their files: make them work for real, make them good, and prove it with a gate.
 
 ```
 make install && make test        # everyone, first thing
@@ -41,8 +41,8 @@ uv run python -m app.cli '!anfrage labor "Dr. Eva Brandl" eva.brandl@labor-kanal
 
 **Owns:** `docker-compose.yml`, `Dockerfile`, `Makefile`, `scripts/setup_synapse.sh`, `scripts/seed_hapi.py`, `app/bot.py`, `app/commands.py`, `app/requests_service.py`, `app/fhir_client.py`, `app/config.py`, `app/delivery/ftapi_submitbox.py`, `element/config.json`.
 
-**Tonight (to 22:00): M0. The whole team depends on this.**
-1. `make up` → Synapse with users and room, Element login as `lena.hofer`, HAPI seeded, Mailpit, app container. Fix whatever breaks (the image tags exist; the setup script is untested against the real images).
+**Tonight (to 22:00)**
+1. `make up` works and has been verified (see PROGRESS.md). Run it yourself from a clean clone (`make reset && make up`) and log in to Element as `lena.hofer`.
 2. In Element, `!anfrage …`, then `!senden <id>` → the email appears in Mailpit and `Task/…` exists on HAPI.
 3. Fallback if Synapse isn't up by 21:30: everyone keeps working with `MATRIX_ENABLED=0` and the CLI; you finish Matrix on Friday.
 

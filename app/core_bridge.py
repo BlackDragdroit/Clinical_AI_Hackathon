@@ -11,5 +11,6 @@ if _CORE not in sys.path:
 
 from fs_matcher import Person, norm_tokens  # noqa: E402
 from intake import IntakeResult, run_intake  # noqa: E402
+from parse_doc import parse_markdown  # noqa: E402
 
-__all__ = ["IntakeResult", "Person", "norm_tokens", "run_intake"]
+__all__ = ["IntakeResult", "Person", "norm_tokens", "parse_markdown", "run_intake"]

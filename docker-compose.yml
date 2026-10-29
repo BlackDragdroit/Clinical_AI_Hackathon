@@ -20,6 +20,11 @@ services:
     environment:
       hapi.fhir.fhir_version: R4
       hapi.fhir.client_id_strategy: ANY
+      # the image default is in-memory H2: every container restart would wipe filed results.
+      # File-based H2 in the non-root user's home (an existing dir, so the volume inherits its owner).
+      spring.datasource.url: jdbc:h2:file:/home/nonroot/h2/hapi
+    volumes:
+      - hapi-data:/home/nonroot
     ports: ["8090:8080"]
 
   mailpit:
@@ -43,4 +48,5 @@ services:
 
 volumes:
   synapse-data:
+  hapi-data:
   app-data:

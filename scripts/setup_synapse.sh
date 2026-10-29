@@ -10,11 +10,14 @@ dc() { docker compose "$@"; }
 if ! dc run --rm --entrypoint sh synapse -c 'test -f /data/homeserver.yaml'; then
   echo "== generating homeserver.yaml"
   dc run --rm synapse generate
-  # demo: the bot posts several messages quickly; lift the per-user message rate limit
-  dc run --rm -T --entrypoint sh synapse -c 'cat >> /data/homeserver.yaml' <<'YAML'
+  # demo/tests: the bot posts several messages quickly and test scripts log in often; lift those rate limits
+  dc run --rm -T --entrypoint sh synapse -c '{ echo; cat; } >> /data/homeserver.yaml' <<'YAML'   # generated file has no trailing newline
 rc_message:
   per_second: 50
   burst_count: 100
+rc_login:
+  address: {per_second: 10, burst_count: 50}
+  account: {per_second: 10, burst_count: 50}
 YAML
 fi
 dc up -d synapse

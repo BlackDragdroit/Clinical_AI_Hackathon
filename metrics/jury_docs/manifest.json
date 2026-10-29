@@ -1,0 +1,8 @@
+[
+  {"file": "scenario/documents/lab-result-maria-beispiel.md", "requested": ["Maria Beispiel", "1961-03-12"],
+   "typed": ["Maria Beispiel", "12.03.1961"], "expected": "file", "why": "scenario request 1"},
+  {"file": "scenario/documents/rehab-report-maria-beispiel.md", "requested": ["Maria Beispiel", "1961-03-12"],
+   "typed": ["Maria Beispiel", "12.03.1961"], "expected": "file", "why": "scenario request 2"},
+  {"file": "scenario/documents/lab-result-max-beispiel.md", "requested": ["Maria Beispiel", "1961-03-12"],
+   "typed": ["Max Beispiel", "01.01.1960"], "expected": "reject", "why": "scenario M3"}
+]

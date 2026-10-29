@@ -1,0 +1,15 @@
+# Decisions
+
+Append one line per decision: what, why, who. Placeholders that still need verifying are marked **VERIFY**.
+
+- core/ is imported unchanged via `app/core_bridge.py` (flat imports put core/ on sys.path). — setup
+- Doctor commands go through one function (`commands.handle`) shared by the Matrix bot and `python -m app.cli`, so the flow works without Synapse. — setup
+- Matrix notifications go through an outbox table (`matrix_outbox`); the bot drains it, or the console does with `MATRIX_ENABLED=0`. — setup
+- Channels receive only `(to, link)`; message texts may use only `link` and `clinic`. That makes Hard rule 1 structural, and a test checks it. — setup
+- Mock eID assertion = HMAC-signed JSON with the ID Austria fields (name, birth date, bPK-like pseudonym, LoA). The real path is OIDC; only `eid_mock.py` changes. — setup
+- Identity binding: the eID name must equal the expected person's name (titles, case and umlaut spelling ignored). On a mismatch, nothing is revealed, `identity_checked FAILED` + `misdelivery_caught` are logged, and Dr. Hofer is alerted. — setup
+- On M3 (reject) the Task goes back to `in-progress` (still waiting for the right document), and the answer is kept in `answers` as quarantined. — setup
+- Audit timestamps are UTC; FHIR timestamps are Europe/Vienna (core). — setup
+- **VERIFY** `IDENTITY_POLICY_URI` in core/fhir_build.py points at example.org; point it at the README anchor.
+- **VERIFY** Docker image tags pinned on 2026-10-29: synapse v1.120.0, element-web v1.11.85, hapi v7.4.0, mailpit v1.21.5.
+- **VERIFY** FTAPI SubmitBox API: not wired, stub only until FTAPI gives sandbox access.

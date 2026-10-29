@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}SMS (Simulation){% endblock %}
+{% block body %}
+<h2>SMS-Posteingang (Simulation)</h2>
+{% for m in messages %}
+<div class="card" style="margin-bottom:.8rem">
+  <p class="muted">An {{ m.to_number }} · {{ m.ts }}</p>
+  <p>{{ m.body | urlize }}</p>
+</div>
+{% else %}<p class="muted">Keine Nachrichten.</p>{% endfor %}
+{% endblock %}

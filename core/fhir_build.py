@@ -29,9 +29,9 @@ V2_0074 = "http://terminology.hl7.org/CodeSystem/v2-0074"
 PROV_TYPE = "http://terminology.hl7.org/CodeSystem/provenance-participant-type"
 IDENTITY_POLICY_URI = "https://example.org/befundbruecke/policy/identity-v1"   # TODO: point at README anchor
 
-UCUM_MAP = {
-    "10^9/l": "10*9/L", "10^9/L": "10*9/L", "g/l": "10*9/L", "G/L": "10*9/L", "10^12/l": "10*12/L", "T/L": "10*12/L",
-    "g/L": "g/L", "g/dl": "g/dL", "g/dL": "g/dL", "mg/dl": "mg/dL", "mg/dL": "mg/dL", "mg/l": "mg/L", "mg/L": "mg/L",
+UCUM_MAP = {   # exact key first: "G/l" is Giga per litre (Austrian cell counts), "g/l" is gram per litre
+    "10^9/l": "10*9/L", "10^9/L": "10*9/L", "G/l": "10*9/L", "G/L": "10*9/L", "10^12/l": "10*12/L", "T/L": "10*12/L",
+    "T/l": "10*12/L", "g/l": "g/L", "g/L": "g/L", "g/dl": "g/dL", "g/dL": "g/dL", "mg/dl": "mg/dL", "mg/dL": "mg/dL", "mg/l": "mg/L", "mg/L": "mg/L",
     "mmol/l": "mmol/L", "mmol/L": "mmol/L", "µmol/l": "umol/L", "µmol/L": "umol/L", "umol/L": "umol/L",
     "s": "s", "sec": "s", "%": "%", "U/l": "U/L", "U/L": "U/L", "fl": "fL", "fL": "fL", "pg": "pg",
     "ng/ml": "ng/mL", "ng/mL": "ng/mL", "mIU/L": "m[IU]/L", "mU/L": "mU/L", "IU/L": "[IU]/L",

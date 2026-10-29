@@ -13,3 +13,6 @@ Append one line per decision: what, why, who. Placeholders that still need verif
 - **VERIFY** `IDENTITY_POLICY_URI` in core/fhir_build.py points at example.org; point it at the README anchor.
 - Docker image tags pinned and run on 2026-10-29: synapse v1.120.0, element-web v1.11.85, hapi v7.4.0, mailpit v1.21.5. — SWE 1
 - FTAPI is not used in the prototype (the track allows any replaceable product). FTAPI publishes no API reference, so we did not invent endpoints. Uploads go through our own portal; `ftapi_submitbox.py` marks where a provider adapter would go. README tagline and architecture say this explicitly. — SWE 1
+- Address lint warns only about near-misses of KNOWN_DOMAINS and never blocks; an unknown domain that resembles none of them gives no warning (we can't know every lab). — MedEng
+- Misdelivery codes in the audit log are `M1` / `M2` / `M3`; the human label lives in `app/i18n.py` and says "wahrscheinlich" for M1/M2, because a failed eID can't tell a wrong address from a forward with certainty. — MedEng
+- UI texts go through `app/i18n.py` (German default and fallback, English second). Stored texts (`lint_warnings`, audit details) stay German for the record; pages that need another language render from codes (`lint_findings`, `misdelivery_label`). — MedEng

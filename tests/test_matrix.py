@@ -35,3 +35,11 @@ def test_html_bolds_first_line_links_urls_codes_commands():
     assert '<a href="http://localhost:8090/fhir/DiagnosticReport/9ae0">DiagnosticReport/9ae0</a>.' in h
     c = matrix_format.content("x")
     assert c["format"] == "org.matrix.custom.html" and c["body"] == "x"
+
+
+def test_long_first_line_bolds_only_first_clause():
+    msg = ("✅ Antwort von Eva Brandl (Labor Kanalstraße) abgelegt – 11 FHIR-Ressourcen. Identität geprüft: "
+           "ID Austria (simuliert, LoA high), Namensabgleich OK http://localhost:8090/fhir/DiagnosticReport/1")
+    h = matrix_format.to_html(msg)
+    assert h.startswith("<strong>✅ Antwort von Eva Brandl (Labor Kanalstraße) abgelegt</strong> – 11 FHIR")
+    assert h.count("<strong>") == 1 and '<a href="http://localhost:8090/fhir/DiagnosticReport/1">' in h

@@ -34,11 +34,22 @@ def _label(url: str) -> str:
     return m.group(1) if m else url
 
 
+_CLAUSE = re.compile(r"( – |: |\. )")
+
+
+def _headline(line: str) -> str:
+    """Bold what happened, not a whole paragraph: a long first line is bolded up to its first clause."""
+    if len(line) > 90:
+        m = _CLAUSE.search(line, 15)
+        if m and m.start() < 90:
+            cut = m.end() if m.group(1) == ". " else m.start()
+            return f"<strong>{_inline(line[:cut].rstrip())}</strong>{_inline(line[cut:])}"
+    return f"<strong>{_inline(line)}</strong>"
+
+
 def to_html(text: str) -> str:
     lines = text.strip().split("\n")
-    head, rest = lines[0], lines[1:]
-    parts = [f"<strong>{_inline(head)}</strong>"] + [_inline(l) for l in rest]
-    return "<br>".join(parts)
+    return "<br>".join([_headline(lines[0])] + [_inline(l) for l in lines[1:]])
 
 
 def content(text: str) -> dict:

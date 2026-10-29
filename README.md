@@ -99,6 +99,7 @@ sequenceDiagram
 - Delivery channels see only the recipient and the opaque link (`Channel.send(to, link)`). The message templates can use only the link and the clinic name.
 - Nothing is written to HAPI unless the core decides `file` and HAPI `$validate` reports no errors, or Dr. Hofer confirms a `review` with `!ablegen`. A `reject` (document is about another patient) is quarantined, not filed.
 - Unknown, expired, used and exhausted links all get the same neutral answer, so a guesser learns nothing.
+- Only Matrix IDs in `AUTHORIZED_SENDERS` (the clinic directory; default Dr. Hofer) can make the bot request documents or file answers. Anyone else in the room gets "Keine Berechtigung" and nothing happens.
 - The public portal is the part that faces the internet. It could be hosted by a third-party trust provider such as FTAPI SubmitBox, behind the `Channel` and portal boundary, because it needs no patient data before the identity check. The FTAPI adapter is not wired yet (see below).
 
 ## Design answers
@@ -122,7 +123,7 @@ Each simulated part sits behind one small interface. Swapping it touches the fil
 | SMS inbox page (`/sms`) | An SMS gateway | `Channel.send(to, link)`; a new `Channel` with `kind = "sms"` replaces `sms_inbox.py` |
 | Mock eID (`identity/eid_mock.py`) | ID Austria via OIDC | `EidAssertion` returned by `eid_mock.verify()`: name, birth date, pseudonym (bPK), level of assurance. The portal consumes only this object. |
 | HAPI FHIR server | Any FHIR R4 server | `app/fhir_client.py` uses plain FHIR REST (read Patient, create Task, `$validate`, transaction) |
-| FTAPI SubmitBox | Adapter `app/delivery/ftapi_submitbox.py`, selected with `EMAIL_CHANNEL=mailpit\|ftapi` | `Channel.send(to, link)`. **Status: stub.** It raises `NotImplementedError` until we have FTAPI sandbox API access; we have not invented endpoints. The default is `EMAIL_CHANNEL=mailpit`. |
+| FTAPI SubmitBox | Adapter `app/delivery/ftapi_submitbox.py`, selected with `EMAIL_CHANNEL=mailpit\|ftapi` | `Channel.send(to, link)`. **Status: stub.** FTAPI states that a REST API exists but publishes no reference, and API access is licence-gated. We have not invented endpoints. The adapter raises `NotImplementedError`, and its docstring lists what we need from FTAPI. The default is `EMAIL_CHANNEL=mailpit`. |
 | Synapse + Element | Any Matrix homeserver and client, or PGK | `bot.py` speaks the Matrix client-server API (matrix-nio) and calls `commands.handle(text, sender)` |
 | SQLite | Postgres | Only `app/db.py` imports `sqlite3` |
 

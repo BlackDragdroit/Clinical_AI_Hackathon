@@ -39,6 +39,13 @@ login() {  # localpart password -> access token
 LENA=$(login lena.hofer "$DOCTOR_PASSWORD")
 BOT=$(login befundbruecke "$MATRIX_BOT_PASSWORD")
 
+urlq() { python3 -c 'import sys,urllib.parse; print(urllib.parse.quote(sys.argv[1]))' "$1"; }
+# after `make reset` .env still names the room of the wiped homeserver: forget it so a new one is created
+if [ -n "${MATRIX_ROOM_ID:-}" ] && ! curl -fs "$HS/_matrix/client/v3/rooms/$(urlq "$MATRIX_ROOM_ID")/joined_members" \
+    -H "Authorization: Bearer $LENA" >/dev/null; then
+  echo "== $MATRIX_ROOM_ID no longer exists"
+  MATRIX_ROOM_ID=
+fi
 if [ -z "${MATRIX_ROOM_ID:-}" ]; then
   echo "== creating room"
   MATRIX_ROOM_ID=$(curl -fs -XPOST "$HS/_matrix/client/v3/createRoom" -H "Authorization: Bearer $LENA" \
@@ -47,6 +54,6 @@ if [ -z "${MATRIX_ROOM_ID:-}" ]; then
     | python3 -c 'import json,sys; print(json.load(sys.stdin)["room_id"])')
   sed -i "s|^MATRIX_ROOM_ID=.*|MATRIX_ROOM_ID=$MATRIX_ROOM_ID|" .env
 fi
-curl -fs -XPOST "$HS/_matrix/client/v3/join/$(python3 -c 'import sys,urllib.parse; print(urllib.parse.quote(sys.argv[1]))' "$MATRIX_ROOM_ID")" \
+curl -fs -XPOST "$HS/_matrix/client/v3/join/$(urlq "$MATRIX_ROOM_ID")" \
   -H "Authorization: Bearer $BOT" -H 'Content-Type: application/json' -d '{}' >/dev/null
 echo "== room $MATRIX_ROOM_ID ready (written to .env)"

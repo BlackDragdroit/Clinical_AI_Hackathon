@@ -41,21 +41,41 @@ def search_patients(family: str | None, birthdate: str | None) -> list[dict]:
     return list(out.values())
 
 
-def create_task(request: dict) -> str:
-    """Task(status=requested) for the outstanding request. Returns 'Task/<id>'."""
-    start = datetime.now(timezone.utc)
+# what Dr. Hofer asked for, as the LOINC document type the filed answer will carry
+REQUESTED_DOC = {
+    "lab": {"system": "http://loinc.org", "code": "11502-2", "display": "Laboratory report"},
+    "report": {"system": "http://loinc.org", "code": "18842-5", "display": "Discharge summary"},
+}
+
+
+def _now() -> str:
+    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+def task_resource(request: dict, start: datetime | None = None) -> dict:
+    """R4 Task for an outstanding request. executionPeriod runs from sending until the Task is closed
+    (end set by set_task_status); restriction.period.end = link expiry, the answer must arrive by then."""
+    start = start or datetime.now(timezone.utc)
+    end = (start + timedelta(hours=settings.link_ttl_hours)).isoformat(timespec="seconds")
     task = {
         "resourceType": "Task", "status": "requested", "intent": "order",
         "code": {"text": "Dokument von externer Stelle anfordern"},
         "description": request["reason"] or None,
         "for": {"reference": request["patient_ref"]},
         "authoredOn": start.isoformat(timespec="seconds"),
+        "executionPeriod": {"start": start.isoformat(timespec="seconds")},
         "requester": {"display": settings.doctor_name},
         "owner": {"display": request["expected_name"]},
-        "restriction": {"period": {"end": (start + timedelta(hours=settings.link_ttl_hours)).isoformat(timespec="seconds")}},
-        # TODO(SWE 1): executionPeriod per plan; check against R4 Task + validator, Task.input with doc type
+        "restriction": {"period": {"end": end}},
+        "input": [{"type": {"text": "Angefordertes Dokument"},
+                   "valueCodeableConcept": {"coding": [REQUESTED_DOC[request["doc_type"]]]}}],
     }
-    task = {k: v for k, v in task.items() if v is not None}
+    return {k: v for k, v in task.items() if v is not None}
+
+
+def create_task(request: dict) -> str:
+    """Task(status=requested) for the outstanding request. Returns 'Task/<id>'."""
+    task = task_resource(request)
     with _client() as c:
         r = c.post("Task", json=task)
         r.raise_for_status()
@@ -67,10 +87,19 @@ def set_task_status(task_ref: str, status: str, output_refs: list[str] | None = 
     with _client() as c:
         task = c.get(task_ref).raise_for_status().json()
         task["status"] = status
+        if status in ("completed", "rejected", "cancelled"):
+            task["executionPeriod"] = {**task.get("executionPeriod", {}), "end": _now()}
         if output_refs:
             task["output"] = [{"type": {"text": "abgelegte Ressource"}, "valueReference": {"reference": ref}}
                               for ref in output_refs]
         c.put(task_ref, json=task).raise_for_status()
+
+
+def validate_resource(resource: dict) -> list[dict]:
+    """HAPI $validate on a single resource (e.g. the Task) -> error/fatal issues."""
+    with _client() as c:
+        oo = c.post(f"{resource['resourceType']}/$validate", json=resource).json()
+    return [i for i in oo.get("issue", []) if i.get("severity") in ("error", "fatal")]
 
 
 def validate(bundle: dict) -> list[dict]:

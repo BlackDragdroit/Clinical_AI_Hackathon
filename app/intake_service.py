@@ -9,7 +9,7 @@ from pathlib import Path
 
 from app import audit, db, fhir_client, notify
 from app.config import settings
-from app.core_bridge import Person, run_intake
+from app.core_bridge import Person, parse_markdown, run_intake
 
 SYSTEM = "system:befundbruecke"
 
@@ -20,7 +20,7 @@ def process_answer(req: dict, *, verified_name: str, identity_method: str, actor
     `content` is the engine's canonical Markdown; `engine_notes` (completeness, recency, plausibility) are appended
     to Dr. Hofer's message on file/review, never on a reject (they describe the other patient's document)."""
     res = run_intake(content, Person.from_full(req["patient_name"], req["patient_dob"]),
-                     Person.from_full(typed_name, typed_dob), verified_name, "", identity_method,
+                     Person.from_full(typed_name, typed_dob), verified_name, parse_markdown(content).org, identity_method,
                      req["patient_ref"], filename)
     decision = res.decision
     # TODO(MedEng): downgrade file -> review when policy.auto_file_allowed is False (possession-only path)

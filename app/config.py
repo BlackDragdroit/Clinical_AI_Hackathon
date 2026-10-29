@@ -22,6 +22,9 @@ class Settings:
     clinic_name: str = _env("CLINIC_NAME", "Klinikum Beispielstadt")
     doctor_mxid: str = _env("DOCTOR_MXID", "@lena.hofer:klinikum.example")
     doctor_name: str = _env("DOCTOR_NAME", "Dr. Lena Hofer")
+    # Matrix IDs allowed to send commands (the clinic directory; here only Dr. Hofer)
+    authorized_senders: tuple[str, ...] = field(default_factory=lambda: tuple(
+        s.strip() for s in _env("AUTHORIZED_SENDERS", _env("DOCTOR_MXID", "@lena.hofer:klinikum.example")).split(",") if s.strip()))
 
     hapi_url: str = _env("HAPI_URL", "http://localhost:8090/fhir")        # what the app talks to
     hapi_public_url: str = _env("HAPI_PUBLIC_URL", "http://localhost:8090/fhir")   # what links in Matrix point to

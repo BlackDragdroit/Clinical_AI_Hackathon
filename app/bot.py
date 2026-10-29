@@ -7,7 +7,7 @@ from __future__ import annotations
 import asyncio
 import logging
 
-from app import commands, engine_client, notify
+from app import commands, engine_client, matrix_format, notify
 from app.config import settings
 
 log = logging.getLogger("befundbruecke.bot")
@@ -32,25 +32,25 @@ async def run_bot() -> None:
     since = first.next_batch
 
     async def say(text: str) -> None:
-        await client.room_send(settings.matrix_room_id, "m.room.message", {"msgtype": "m.text", "body": text})
+        await client.room_send(settings.matrix_room_id, "m.room.message", matrix_format.content(text))
 
     async def on_message(room: MatrixRoom, event: RoomMessageText) -> None:
         if room.room_id != settings.matrix_room_id or event.sender == settings.matrix_bot_user:
             return
-        if not event.body.startswith("!") and event.sender != settings.doctor_mxid:
-            return           # a plain sentence is a request only when the doctor writes it
-        # TODO(SWE 1): only accept commands from members of the clinic directory (here: DOCTOR_MXID)
+        if not event.body.startswith("!") and event.sender not in settings.authorized_senders:
+            return           # a plain sentence is a request only from the clinic directory; others are chat
+        # commands.handle refuses senders outside AUTHORIZED_SENDERS (the clinic directory)
         reply = await asyncio.to_thread(commands.handle, event.body, event.sender)
         await say(reply)
 
     async def on_voice(room: MatrixRoom, event: RoomMessageAudio) -> None:
         """Element voice message -> engine (speech-to-text + request job). The audio is kept in memory only."""
-        if room.room_id != settings.matrix_room_id or event.sender != settings.doctor_mxid:
+        if room.room_id != settings.matrix_room_id or event.sender not in settings.authorized_senders:
             return
         resp = await client.download(event.url)
         audio = getattr(resp, "body", None)
         if not audio:
-            await say("Sprachnachricht konnte nicht geladen werden.")
+            await say("Sprachnachricht nicht verarbeitet\nDie Audiodatei konnte nicht geladen werden. Bitte erneut senden.")
             return
         res = await asyncio.to_thread(engine_client.request_audio, audio, getattr(resp, "filename", None) or "voice.ogg")
         del audio

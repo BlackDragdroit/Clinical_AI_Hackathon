@@ -20,8 +20,8 @@ PLAIN_1 = ("Bitte bei Dr. Eva Brandl, eva.brandl@labor-kanal.example, die aktuel
 
 def _send_plain(text: str) -> str:
     reply = commands.handle(text, DOCTOR)
-    rid = re.search(r"Anfrage (\w+) \(Entwurf\)", reply).group(1)
-    assert "verstanden aus" in reply
+    rid = re.search(r"Anfrage (\w+): Entwurf", reply).group(1)
+    assert "Verstanden aus" in reply and reply.splitlines()[-1] == f"Senden: !senden {rid}"
     assert "gesendet" in commands.handle(f"!senden {rid}", DOCTOR)
     return rid
 
@@ -54,7 +54,7 @@ def test_plain_german_request_and_pdf_answer(hapi, outbox):
 
 def test_incomplete_request_asks_and_drafts_nothing(hapi):
     reply = commands.handle("Bitte die Gerinnung von Frau Maria Beispiel bei Dr. Eva Brandl anfordern", DOCTOR)
-    assert "❓" in reply and "Geburtsdatum" in reply
+    assert reply.startswith("Anfrage noch nicht vollständig") and "Geburtsdatum" in reply
     assert not db.query("SELECT * FROM requests")
 
 

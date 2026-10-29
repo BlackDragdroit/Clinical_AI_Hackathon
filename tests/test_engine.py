@@ -176,3 +176,25 @@ def test_readback_rebuilds_with_corrections():
     md = doc("lab-result-maria-beispiel.md")
     out = document_job.apply_readback(md, {"rows.0.result": "1.1"})
     assert "| INR (prothrombin time) | 1.1 |" in out and "Patient: Maria Beispiel, born 12 March 1961" in out
+
+
+# ---------------------------------------------------------------- HTTP API (what the app calls with ENGINE_URL)
+def test_engine_api_request_and_document():
+    from fastapi.testclient import TestClient
+    from engine.api import app
+    with TestClient(app) as c:
+        assert c.get("/health").json()["ok"]
+        r = c.post("/v1/request", json={"text": SPOKEN_1, "use_llm": False}).json()
+        assert r["contact"]["value"] == "eva.brandl@labor-kanal.example" and r["patient"]["status"] == "need_dob" or r["ready"] is False
+        pdf = md_to_pdf(doc("lab-result-maria-beispiel.md"))
+        d = c.post("/v1/document", files={"file": ("b.pdf", pdf, "application/pdf")},
+                   data={"requested_loinc": ",".join(COAG), "requested_doc_type": "lab"}).json()
+        assert d["path"] == "pdf-text" and d["check_lines_de"][:2] == ["Werte plausibel", "4/4 angefragte Parameter"]
+
+
+def test_photo_rendering_is_an_image_the_engine_routes_to_ocr():
+    from eval.render import photo, scan
+    pdf = md_to_pdf(doc("lab-result-maria-beispiel.md"))
+    for img in (photo(pdf, seed=3), scan(pdf, seed=3)):
+        r = document_job.read(img, "foto.jpg", use_models=False)
+        assert r["input"]["kind"] == "image" and not r["ok"]          # no OCR configured -> asks for another format

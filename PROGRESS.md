@@ -101,3 +101,31 @@ Append after each milestone: what works, what's next, known issues.
 - **Test that proves it:** `tests/test_flow.py::test_wrong_doc_type_goes_to_review` — makes a `labor` (doc_type=lab) request, submits `rehab-report-maria-beispiel.md` (doc kind=report), asserts `request.status == "review"`, nothing posted to HAPI, and Dr. Hofer's Matrix message contains the mismatch reason.
 - **Caveats:** The mismatch check only fires when `engine/checks.py::run()` can determine `doc.kind` (i.e. the document was successfully parsed as `lab` or `report`). An unparseable document follows the existing "unreadable" path and never reaches this check. Downgrading a `reject` is not done (wrong-patient documents are still quarantined regardless of doc type).
 - `make test`: 199 passed, 2 xfailed. P1 closed. — IMPROVE
+
+## Multi-agent wave 1–3 (Fri 30 Oct, Bob swarm)
+
+**Wave 1 (5 parallel agents):**
+- IMPROVE P1: lab request answered with a discharge report now goes to `review` instead of `file`. Test: `test_wrong_doc_type_goes_to_review`.
+- PLAYTEST T2–T8: 7 new security/edge-case tests in `tests/test_security.py` (XSS escaping, unknown patient, malformed command, pasted text, session-less access, blocked==expired link). T1 (eID replay) added as xfail stub, fixed in wave 3.
+- DOCS P4/P5: README answer 4 (misdelivery: lint + identity binding + Fellegi-Sunter) and "What works / what doesn't" completed with AI engine and portal bullets.
+- FHIR P14: confirmed `names_match` already handles extra eID given names; 5 new test cases added.
+- ENGINE P16: 122 ELGA Austrian lab parameter LOINC aliases added to `engine/lexicon.py`. `eval/RESULTS.md` summary table added; `deploy/gpu/RUNBOOK.md` model verification section added.
+
+**Wave 2 (4 parallel agents):**
+- IMPROVE P2: review ping to Dr. Hofer now includes parsed row count and "möglicherweise kein gültiges Dokument" for junk.
+- IMPROVE P3: identity failure pings deduplicated — only first failure and block ping sent to Dr. Hofer (not all 5).
+- IMPROVE P13: `AUDIT_TOKEN` env var added; `/audit`, `/audit/apple`, `/audit.json` return 403 when token is set and missing.
+- REWRITE P11: `app/main.py` split into `app/portal_router.py` (9 public routes) + `app/clinic_router.py` (3 internal routes). `PORTAL_ONLY=1` omits the clinic router for internet-facing deployments. `app/main.py` is now 39 lines.
+- FHIR P12: Practitioner and Organization resources now carry a slug-based identifier (`urn:befundbruecke:sender` / `urn:befundbruecke:org`) + `ifNoneExist` conditional-create so HAPI deduplicates repeat filings.
+- DOCS: DEMO_CLINICAL_STORY.md "Demo tips" section added (M1/M2/M3 shot instructions, cut-if-short table, common mistakes).
+
+**Wave 3 (4 parallel agents):**
+- IMPROVE P17: `POST /admin/purge` endpoint + `QUARANTINE_TTL_DAYS`/`TOKEN_TTL_DAYS` config. Deletes old quarantined answers and used/expired tokens; audit log untouched. Test: `tests/test_purge.py`.
+- IMPROVE P20: mock eID assertion now bound to the link token (HMAC payload includes `lt` field). T1 xfail → real passing test. `e2e.py --local` 5/5.
+- DOCS P15/P18/P19: README "Production deployment" section (env vars table, PORTAL_ONLY Docker example); eID OIDC production callout; DECISIONS.md wave-1/2 entries.
+- PLAYTEST: 5 new coverage tests (portal-only route hiding, Bearer audit token, FHIR identifier fields, parseable-doc review).
+
+**Overall: 190 → 209 passed, 2 xfailed → 1 xfailed. 19 new items completed across 3 waves.**
+- Next (needs Docker): P6 METRICS.md live run, P7 e2e on real stack, P8 HL7 validator on live bundles.
+- Next (needs GPU): P9 NuExtract3/Qwen3-ASR/PaddleOCR-VL vLLM verification.
+- Known issues unchanged: no retention of audit log; `/sms` still public; GIL slowdown on large uploads (capped at 1 MB).

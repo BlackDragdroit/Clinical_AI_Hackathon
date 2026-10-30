@@ -94,10 +94,12 @@ Each agent picks its own items (column "Owner"). COORDINATOR updates this table 
 | P14 | Name check: double given names | FHIR | `fhir/name-policy` | ✅ wave-1 |
 | P15 | O4 — mock eID assertion not tied to link (production OIDC note) | DOCS | `docs/eid-production-note` | open |
 | P16 | ELGA LOINC preferred codes in lexicon | ENGINE | `engine/elga-loinc` | ✅ wave-1 |
-| P17 | Retention/purge: TTL-based deletion of quarantine + used tokens | IMPROVE | `improve/retention` | open |
-| P18 | README: production deployment notes (PORTAL_ONLY, AUDIT_TOKEN, ifNoneExist) | DOCS | `docs/wave3` | open |
-| P19 | DECISIONS.md: document wave-1/2 changes (P1, P11, P12, P13) | DOCS | `docs/wave3` | open |
-| P20 | T1 eID replay test: bind assertion to link in mock (O4 fix) | IMPROVE | `improve/wave3` | open |
+| P17 | Retention/purge: TTL-based deletion of quarantine + used tokens | IMPROVE | `improve/wave3` | ✅ wave-3 |
+| P18 | README: production deployment notes (PORTAL_ONLY, AUDIT_TOKEN, ifNoneExist) | DOCS | `docs/wave3` | ✅ wave-3 |
+| P19 | DECISIONS.md: document wave-1/2 changes (P1, P11, P12, P13) | DOCS | `docs/wave3` | ✅ wave-3 |
+| P20 | T1 eID replay test: bind assertion to link in mock (O4 fix) | IMPROVE | `improve/wave3` | ✅ wave-3 |
+| P21 | PROGRESS.md: wave-2/3 milestone entry | COORDINATOR | `main` | open |
+| P22 | git push origin main | COORDINATOR | `main` | open |
 
 ---
 

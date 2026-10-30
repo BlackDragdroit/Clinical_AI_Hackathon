@@ -167,6 +167,16 @@ def audit_page(request: Request, request_id: str | None = None):
     return resp
 
 
+@app.get("/audit/apple", response_class=HTMLResponse)
+def audit_page_apple(request: Request, request_id: str | None = None):
+    # same data and query params as /audit, second look (Apple HIG inspector style) for side-by-side review
+    lang = i18n.resolve_lang(request)
+    resp = _page(request, "audit_apple.html", v=audit.view(request_id, lang, base="/audit/apple"), lang=lang)
+    if request.query_params.get("lang"):
+        i18n.remember(resp, lang)
+    return resp
+
+
 @app.get("/audit.json")
 def audit_json(request_id: str | None = None):
     v = audit.view(request_id)

@@ -88,6 +88,7 @@ LATER = ("request_parsed", "readback_shown", "readback_confirmed")
 MISDELIVERY_CODES = ("M1", "M2", "M3")
 STATUSES = ("draft", "sent", "opened", "identified", "answered", "filed", "review", "rejected", "discarded", "blocked")
 _STATUS_TONE = {"filed": "ok", "review": "warn", "rejected": "bad", "blocked": "bad", "discarded": "muted"}
+DESIGNS = {"standard": "/audit", "apple": "/audit/apple"}   # two looks of the same page, same data
 _EN_MONTHS = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
 
 try:
@@ -273,9 +274,10 @@ def _href(request_id: str | None, lang: str | None, path: str = "/audit") -> str
     return f"{path}?{urlencode(params)}" if params else path
 
 
-def view(request_id: str | None = None, lang: str = i18n.DEFAULT) -> dict:
+def view(request_id: str | None = None, lang: str = i18n.DEFAULT, base: str = "/audit") -> dict:
     """Everything the /audit page shows, already privacy-filtered: patients by reference only, contacts
-    masked, no answer content. M3 entries hold only scores, so nothing about the other patient is here."""
+    masked, no answer content. M3 entries hold only scores, so nothing about the other patient is here.
+    `base` is the page the filter and language links point to (/audit, or the /audit/apple design)."""
     from app.requests_service import mask   # late import: requests_service imports this module
 
     lang = i18n.norm_lang(lang)
@@ -300,7 +302,7 @@ def view(request_id: str | None = None, lang: str = i18n.DEFAULT) -> dict:
             "what": describe(e, lang), "note": note(e, lang), "tone": outcome(e),
             "details_json": json.dumps(e["details"], ensure_ascii=False, indent=2, sort_keys=True),
             "hash": e["hash"], "prev_hash": e["prev_hash"], "broken": e["seq"] in broken,
-            "href": _href(e["request_id"], lang) if e["request_id"] else None,
+            "href": _href(e["request_id"], lang, base) if e["request_id"] else None,
         })
 
     requests = []
@@ -317,7 +319,7 @@ def view(request_id: str | None = None, lang: str = i18n.DEFAULT) -> dict:
             "covered": sum(ev in seen for ev in REQUIRED),
             "misdelivery": sorted({str(e["details"].get("type")) for e in evs if e["event"] == "misdelivery_caught"}),
             "created": f"{fmt_date(created, lang)} {created:%H:%M}" if created else r["created_at"],
-            "href": _href(r["id"], lang), "selected": r["id"] == request_id,
+            "href": _href(r["id"], lang, base), "selected": r["id"] == request_id,
         })
 
     seen = {e["event"] for e in scope}
@@ -336,6 +338,11 @@ def view(request_id: str | None = None, lang: str = i18n.DEFAULT) -> dict:
         "coverage": {ev: ev in seen for ev in REQUIRED}, "covered": sum(ev in seen for ev in REQUIRED),
         "entries": rows, "requests": requests, "misdelivery": caught,
         "known_request": request_id is None or request_id in by_request or any(r["selected"] for r in requests),
-        "links": {"all": _href(None, lang), "json": _href(request_id, None, "/audit.json"),
-                  "toggle": _href(request_id, i18n.other_lang(lang))},
+        "links": {"all": _href(None, lang, base), "json": _href(request_id, None, "/audit.json"),
+                  "toggle": _href(request_id, i18n.other_lang(lang), base),
+                  # same filter and language, other design; and one link per language for a segmented control
+                  "design": {name: _href(request_id, lang, path) for name, path in DESIGNS.items()},
+                  "lang": {code: _href(request_id, code, base) for code in i18n.LANGS}},
+        # every row of the whole chain (seq, verifies?), for the chain strip on /audit/apple
+        "chain": [{"seq": seq, "ok": ok} for seq, ok in checks],
     }

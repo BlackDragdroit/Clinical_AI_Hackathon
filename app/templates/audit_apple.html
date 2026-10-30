@@ -1,0 +1,299 @@
+{#- Audit page, second look: an inspector-style staff screen after Apple's Human Interface Guidelines
+    (grouped inset sections, system type scale, semantic colour tiles, disclosure triangles). Same data as
+    /audit (audit.view(..., base="/audit/apple")), same texts (t()), no JavaScript. Owner: MedEng. -#}
+{%- macro glyph(name) -%}
+<svg class="g" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false" fill="none"
+     stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+{%- if name == "check" %}<path d="M5 12.5 10 17.5 19 7"/>
+{%- elif name == "x" %}<path d="M7 7l10 10M17 7 7 17"/>
+{%- elif name == "warn" %}<path d="M12 4 2.8 19.5h18.4Z"/><path d="M12 10v4.2M12 17.2h.01"/>
+{%- elif name == "shield" %}<path d="M12 21s7.5-3.6 7.5-9.6V5.6L12 3 4.5 5.6v5.8C4.5 17.4 12 21 12 21Z"/><path d="M12 8.5v4M12 15.6h.01"/>
+{%- elif name == "chain" %}<path d="M10 14a4.2 4.2 0 0 0 6 .4l2.7-2.7a4.2 4.2 0 0 0-6-6l-1.4 1.4"/><path d="M14 10a4.2 4.2 0 0 0-6-.4l-2.7 2.7a4.2 4.2 0 0 0 6 6l1.4-1.4"/>
+{%- elif name == "pencil" %}<path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16Z"/><path d="M13.5 6.5l4 4"/>
+{%- elif name == "send" %}<path d="M21 3 10 14"/><path d="M21 3 14.5 21l-4.5-7-7-4.5Z"/>
+{%- elif name == "link" %}<path d="M10 14a4.2 4.2 0 0 0 6 .4l2.7-2.7a4.2 4.2 0 0 0-6-6l-1.4 1.4"/><path d="M14 10a4.2 4.2 0 0 0-6-.4l-2.7 2.7a4.2 4.2 0 0 0 6 6l1.4-1.4"/>
+{%- elif name == "person" %}<circle cx="12" cy="8" r="3.6"/><path d="M4.8 20a7.2 7.2 0 0 1 14.4 0"/>
+{%- elif name == "eye" %}<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.8"/>
+{%- elif name == "upload" %}<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M12 17.5v-6M9.3 14l2.7-2.7 2.7 2.7"/>
+{%- elif name == "tray" %}<path d="M3 13.5 5.5 5h13l2.5 8.5V19a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z"/><path d="M3 13.5h5l1.5 2.5h5l1.5-2.5h5"/>
+{%- elif name == "bubble" %}<path d="M5 18.5 3.5 21l.6-3.6A8 8 0 1 1 8 19.6Z"/>
+{%- elif name == "clock" %}<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>
+{%- elif name == "minus" %}<circle cx="12" cy="12" r="8.5"/><path d="M8.5 12h7"/>
+{%- elif name == "empty" %}<circle cx="12" cy="12" r="8" stroke-dasharray="2.6 2.6"/>
+{%- elif name == "download" %}<path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 20h14"/>
+{%- elif name == "chevron" %}<path d="M9.5 6 15.5 12l-6 6"/>
+{%- elif name == "lock" %}<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/>
+{%- else %}<circle cx="12" cy="12" r="3.2" fill="currentColor" stroke="none"/>
+{%- endif %}</svg>
+{%- endmacro -%}
+{#- colour carries the outcome, the glyph carries the event; a hidden word carries both for screen readers -#}
+{%- set ev_glyph = {"request_drafted": "pencil", "request_sent": "send", "link_opened": "link", "identity_checked": "person",
+                    "patient_revealed": "eye", "answer_sent": "upload", "answer_filed": "tray", "misdelivery_caught": "shield",
+                    "review_requested": "warn", "review_decided": "check", "request_parsed": "bubble",
+                    "readback_shown": "bubble", "readback_confirmed": "check"} -%}
+{%- set status_glyph = {"ok": "check", "warn": "warn", "bad": "x", "muted": "minus", "info": "clock"} -%}
+{%- set scope_text = t("audit.request", lang, id=v.request_id) if v.request_id else t("audit.all_requests", lang) -%}
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light dark">
+<title>{{ t("audit.title", lang) }} · I.R.I.S.</title>
+{% include "_audit_apple_style.html" %}
+</head>
+<body>
+<a class="skip" href="#timeline">{{ t("audit.skip", lang) }}</a>
+
+<header class="toolbar">
+  <div class="toolbar-in">
+    <p class="brand">
+      <svg class="iris" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+        <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+        <circle cx="12" cy="12" r="5.5" fill="currentColor" opacity=".45"/>
+        <circle cx="12" cy="12" r="2.4" fill="currentColor"/>
+      </svg>
+      <span class="brand-name">{{ t("audit.brand", lang) }}</span>
+      <span class="brand-clinic">{{ clinic }}</span>
+    </p>
+    <nav class="design-switch" aria-label="{{ t('audit.design', lang) }}">
+      <span class="design-label">{{ t("audit.design", lang) }}:</span>
+      <a href="{{ v.links.design.standard }}">{{ t("audit.design.standard", lang) }}</a>
+      <span class="design-sep" aria-hidden="true">/</span>
+      <span aria-current="page">{{ t("audit.design.apple", lang) }}</span>
+    </nav>
+    <nav class="segmented" aria-label="{{ t('audit.lang_label', lang) }}">
+      {%- for code in LANGS %}
+      <a class="segment" href="{{ v.links.lang[code] }}" hreflang="{{ code }}" lang="{{ code }}"
+         {% if code == lang %}aria-current="page"{% endif %}>{{ t("lang.name." ~ code, code) }}</a>
+      {%- endfor %}
+    </nav>
+  </div>
+</header>
+
+<main class="page">
+  <div class="page-head">
+    <h1>{{ t("audit.title", lang) }}</h1>
+    <p class="subtitle">{{ t("audit.subtitle", lang) }}</p>
+    {%- if v.request_id %}
+    <p class="filter-token">
+      <span class="token">{{ glyph("link") }}<span class="mono">{{ t("audit.request", lang, id=v.request_id) }}</span></span>
+      <a class="button" href="{{ v.links.all }}">{{ t("audit.all", lang) }}</a>
+    </p>
+    {%- endif %}
+  </div>
+
+  <div class="overview">
+    {#- 1 integrity -#}
+    <section class="section" aria-labelledby="h-chain">
+      <div class="section-head"><h2 id="h-chain">{{ t("audit.apple.integrity", lang) }}</h2></div>
+      <div class="group">
+        <div class="row status-row {{ 'is-ok' if v.chain_ok else 'is-bad' }}">
+          <span class="tile {{ 'tile-ok' if v.chain_ok else 'tile-bad' }}">{{ glyph("chain" if v.chain_ok else "x") }}</span>
+          <div class="row-main">
+            <p class="status-title">{% if v.chain_ok %}{{ t("audit.chain.ok", lang) }}{% else %}{{ t("audit.chain.broken", lang, seq=v.first_broken) }}{% endif %}</p>
+            {%- if not v.chain_ok and v.broken_count > 1 %}
+            <p class="row-sub">{{ t("audit.chain.broken_rows", lang, n=v.broken_count) }}</p>
+            {%- endif %}
+          </div>
+        </div>
+        {%- if v.chain %}
+        {%- set in_scope = v.entries | map(attribute="seq") | list %}
+        <div class="row strip-row">
+          <ol class="strip" aria-hidden="true">
+            {%- for c in v.chain[-240:] %}
+            <li class="link{{ ' is-broken' if not c.ok }}{{ ' is-out' if v.request_id and c.seq not in in_scope }}" title="#{{ c.seq }}"></li>
+            {%- endfor %}
+          </ol>
+          <p class="row-foot">{{ t("audit.apple.strip", lang) }}{% if v.request_id %} {{ t("audit.apple.strip_scope", lang) }}{% endif %}</p>
+        </div>
+        {%- endif %}
+        <dl class="kv">
+          <div class="row"><dt>{{ t("audit.chain.entries", lang) }}</dt>
+            <dd class="num">{{ v.entry_count }}{% if v.request_id %}<span class="secondary"> · {{ t("audit.chain.in_scope", lang, n=v.scope_count) }}</span>{% endif %}</dd></div>
+          <div class="row"><dt>{{ t("audit.chain.head", lang) }}</dt>
+            <dd>{% if v.head %}<code class="hash" title="{{ v.head }}">{{ v.head_short }}…</code>{% else %}<span class="secondary">{{ t("audit.chain.empty", lang) }}</span>{% endif %}</dd></div>
+        </dl>
+        {%- if not v.chain_ok and v.first_broken in (v.entries | map(attribute="seq") | list) %}
+        <a class="row nav-row is-destructive" href="#e{{ v.first_broken }}">{{ t("audit.apple.jump_broken", lang) }}{{ glyph("chevron") }}</a>
+        {%- endif %}
+        <a class="row nav-row" href="{{ v.links.json }}">{{ glyph("download") }}<span>{{ t("audit.json", lang) }}</span>{{ glyph("chevron") }}</a>
+      </div>
+      <p class="section-foot">{{ t("audit.chain.explain", lang) }}</p>
+    </section>
+
+    {#- 2 coverage -#}
+    <section class="section coverage" aria-labelledby="h-cov">
+      <div class="section-head">
+        <h2 id="h-cov">{{ t("audit.coverage.title", lang) }}</h2>
+        <p class="section-scope">{% if v.request_id %}{{ t("audit.coverage.scope_one", lang, id=v.request_id) }}{% else %}{{ t("audit.coverage.scope_all", lang) }}{% endif %}</p>
+      </div>
+      <div class="group">
+        <div class="row cov-row">
+          <p class="cov-score {{ 'is-full' if v.covered == 6 }}"><span class="cov-num num">{{ v.covered }}</span><span class="cov-of">/ 6</span></p>
+        </div>
+        <ol class="steps">
+          {%- for ev, ok in v.coverage.items() %}
+          <li class="row step {{ 'is-done' if ok else 'is-missing' }}">
+            <span class="tile {{ 'tile-ok' if ok else 'tile-empty' }}">{{ glyph("check" if ok else "empty") }}</span>
+            <span class="step-label">{{ t("audit.step." ~ ev, lang) }}</span>
+            {% if ok %}<span class="sr">({{ t("audit.coverage.done", lang) }})</span>{% else %}<span class="step-state">{{ t("audit.coverage.missing", lang) }}</span>{% endif %}
+          </li>
+          {%- endfor %}
+        </ol>
+      </div>
+      {%- if v.request_id and v.known_request and not v.coverage.misdelivery_caught %}
+      <p class="section-foot">{{ t("audit.coverage.no_misdelivery", lang) }}</p>
+      {%- endif %}
+    </section>
+  </div>
+
+  {#- 3 requests -#}
+  <section class="section requests" aria-labelledby="h-req">
+    <div class="section-head">
+      <h2 id="h-req">{{ t("audit.requests.title", lang) }} <span class="count num">{{ v.requests | length }}</span></h2>
+    </div>
+    {%- if v.requests %}
+    <div class="group table-group">
+      <table class="table">
+        <thead><tr>
+          <th scope="col">{{ t("audit.col.id", lang) }}</th>
+          <th scope="col">{{ t("audit.col.doc", lang) }}</th>
+          <th scope="col">{{ t("audit.col.sender", lang) }}</th>
+          <th scope="col">{{ t("audit.col.contact", lang) }}</th>
+          <th scope="col">{{ t("audit.col.patient", lang) }}</th>
+          <th scope="col">{{ t("audit.col.status", lang) }}</th>
+          <th scope="col" class="r">{{ t("audit.col.coverage", lang) }}</th>
+          <th scope="col">{{ t("audit.col.misdelivery", lang) }}</th>
+          <th scope="col" class="r">{{ t("audit.col.created", lang) }}</th>
+        </tr></thead>
+        <tbody>
+        {%- for r in v.requests %}
+        <tr class="{{ 'is-selected' if r.selected }}">
+          <td><a class="rowlink mono" href="{{ r.href }}" {% if r.selected %}aria-current="true"{% endif %}>{{ r.id }}</a></td>
+          <td>{{ r.doc }}</td>
+          <td>{{ r.expected_name }}</td>
+          <td class="nowrap"><span class="mono">{{ r.contact }}</span> <span class="secondary">· {{ r.channel }}</span></td>
+          <td class="mono secondary">{{ r.patient_ref }}</td>
+          <td><span class="status tone-{{ r.status_tone }}">{{ glyph(status_glyph[r.status_tone]) }}{{ r.status_label }}</span></td>
+          <td class="r num">{{ r.covered }}&thinsp;/&thinsp;6</td>
+          <td>{% for code in r.misdelivery %}<span class="status tone-alert" title="{{ t('misdelivery.' ~ code, lang) }}">{{ glyph("shield") }}{{ code }}</span> {% else %}<span class="secondary">–</span>{% endfor %}</td>
+          <td class="r num secondary nowrap">{{ r.created }}</td>
+        </tr>
+        {%- endfor %}
+        </tbody>
+      </table>
+      {#- compact width: the same rows as a list (only one of the two is ever displayed) -#}
+      <ul class="cells">
+        {%- for r in v.requests %}
+        <li class="cell{{ ' is-selected' if r.selected }}">
+          <a class="cell-link" href="{{ r.href }}" {% if r.selected %}aria-current="true"{% endif %}>
+            <span class="cell-top"><span class="mono cell-id">{{ r.id }}</span> <span class="cell-doc">{{ r.doc }}</span></span>
+            <span class="cell-line">{{ r.expected_name }} · <span class="mono">{{ r.contact }}</span> · <span class="nowrap">{{ r.channel }}</span></span>
+            <span class="cell-line"><span class="mono">{{ r.patient_ref }}</span> · <span class="num">{{ r.covered }}&thinsp;/&thinsp;6</span> · <span class="num">{{ r.created }}</span></span>
+            <span class="cell-tags">
+              <span class="status tone-{{ r.status_tone }}">{{ glyph(status_glyph[r.status_tone]) }}{{ r.status_label }}</span>
+              {%- for code in r.misdelivery %} <span class="status tone-alert">{{ glyph("shield") }}{{ code }}</span>{% endfor %}
+            </span>
+            <span class="cell-chevron">{{ glyph("chevron") }}</span>
+          </a>
+        </li>
+        {%- endfor %}
+      </ul>
+    </div>
+    <p class="section-foot">{{ t("audit.requests.hint", lang) }}</p>
+    {%- else %}
+    <div class="group"><p class="row empty">{{ t("audit.requests.empty", lang) }}</p></div>
+    {%- endif %}
+  </section>
+
+  <div class="lower">
+    {#- 4 timeline -#}
+    <section id="timeline" class="section timeline" aria-labelledby="h-tl" tabindex="-1">
+      <div class="section-head">
+        <h2 id="h-tl">{{ t("audit.timeline.title", lang) }}</h2>
+        <p class="section-scope">{{ scope_text }} · <span class="num">{{ t("audit.timeline.count", lang, n=v.entries | length) }}</span></p>
+      </div>
+      {%- if not v.entries %}
+      <div class="group"><p class="row empty">{% if v.request_id %}{{ t("audit.timeline.unknown_request", lang, id=v.request_id) }}{% else %}{{ t("audit.timeline.empty", lang) }}{% endif %}</p></div>
+      {%- else %}
+      <div class="ev-cols" aria-hidden="true">
+        <span></span><span>{{ t("audit.col.what", lang) }}</span><span>{{ t("audit.col.who", lang) }}</span>
+        <span>{{ t("audit.col.id", lang) }}</span><span class="r">{{ t("audit.col.time", lang) }}</span>
+      </div>
+      {%- endif %}
+      {%- set ns = namespace(day=None) %}
+      {%- for e in v.entries %}
+      {%- if e.day != ns.day %}
+      {%- if ns.day is not none %}</ol>{% endif %}
+      <h3 class="day">{{ e.day }}</h3>
+      <ol class="group events">
+      {%- set ns.day = e.day %}
+      {%- endif %}
+        <li class="row ev tone-{{ e.tone }}{{ ' is-broken' if e.broken }}" id="e{{ e.seq }}">
+          <span class="tile tile-{{ e.tone }}" title="{{ t('audit.tone.' ~ e.tone, lang) }}">{{ glyph("x" if e.tone == "bad" else ev_glyph.get(e.event, "dot")) }}</span>
+          <div class="ev-main">
+            <p class="what"><span class="sr">{{ t("audit.tone." ~ e.tone, lang) }}: </span>{{ e.what }}</p>
+            {%- if e.note %}<p class="note">{{ e.note }}</p>{% endif %}
+            {%- if e.broken %}<p class="broken-flag">{{ glyph("x") }}{{ t("audit.row.broken", lang) }}</p>{% endif %}
+          </div>
+          <p class="ev-meta">
+            <span class="ev-who">{{ e.who }}</span>
+            <span class="ev-req">{% if e.request_id and not v.request_id %}<a class="mono" href="{{ e.href }}">{{ e.request_id }}</a>{% elif e.request_id %}<span class="mono">{{ e.request_id }}</span>{% endif %}</span>
+            <span class="ev-time num"><time datetime="{{ e.iso_local }}">{{ e.time }}</time> <span class="seq">#{{ e.seq }}</span></span>
+          </p>
+          <details class="raw">
+            <summary>{{ t("audit.raw.summary", lang) }}</summary>
+            <dl class="inspector">
+              <div><dt>{{ t("audit.raw.event", lang) }}</dt><dd><code>{{ e.event }}</code></dd></div>
+              <div><dt>{{ t("audit.raw.actor", lang) }}</dt><dd><code>{{ e.actor }}</code></dd></div>
+              <div><dt>{{ t("audit.raw.utc", lang) }}</dt><dd><code>{{ e.ts }}</code></dd></div>
+              <div><dt>{{ t("audit.raw.hash", lang) }}</dt><dd><code class="hash">{{ e.hash }}</code></dd></div>
+              <div><dt>{{ t("audit.raw.prev", lang) }}</dt><dd><code class="hash">{{ e.prev_hash }}</code></dd></div>
+              <div><dt>{{ t("audit.raw.details", lang) }}</dt><dd><pre>{{ e.details_json }}</pre></dd></div>
+            </dl>
+          </details>
+        </li>
+      {%- endfor %}
+      {%- if ns.day is not none %}
+      </ol>
+      {%- endif %}
+    </section>
+
+    {#- 5 misdeliveries: an inspector column beside the timeline on wide windows -#}
+    <aside class="section mis" aria-labelledby="h-mis">
+      <div class="section-head">
+        <h2 id="h-mis">{{ t("audit.mis.title", lang) }}</h2>
+        <p class="section-scope">{{ scope_text }}</p>
+      </div>
+      <ul class="group">
+        {%- for code, found in v.misdelivery.items() %}
+        <li class="row mis-item {{ 'is-caught' if found else 'is-clear' }}">
+          <span class="tile {{ 'tile-alert' if found else 'tile-empty' }}">{{ glyph("shield" if found else "empty") }}</span>
+          <div class="row-main">
+            <h3 class="mis-label">{{ t("misdelivery." ~ code, lang) }}</h3>
+            <p class="mis-state">{% if found %}{{ t("audit.mis.caught", lang) }}{% else %}{{ t("audit.mis.not_caught", lang) }}{% endif %}</p>
+            <p class="mis-how">{{ t("audit.mis.how." ~ code, lang) }}</p>
+            {%- if found %}
+            <ul class="mis-hits">
+              {%- for m in found %}
+              <li class="num"><a href="#e{{ m.seq }}">{{ m.day }} {{ m.time }}</a> ·
+                {% if m.href and not v.request_id %}<a class="mono" href="{{ m.href }}">{{ m.request_id }}</a>{% else %}<span class="mono">{{ m.request_id }}</span>{% endif %}</li>
+              {%- endfor %}
+            </ul>
+            {%- endif %}
+          </div>
+        </li>
+        {%- endfor %}
+      </ul>
+    </aside>
+  </div>
+</main>
+
+<footer class="footer">
+  <p class="internal">{{ glyph("lock") }}{{ t("audit.footer.internal", lang) }}</p>
+  <p>{{ t("audit.footer.tz", lang, tz=v.tz) }}</p>
+</footer>
+</body>
+</html>

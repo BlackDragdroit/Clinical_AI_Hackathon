@@ -211,3 +211,84 @@ def test_empty_log_and_unknown_request_render():
         assert "Noch keine Einträge" in client.get("/audit").text
         r = client.get("/audit?request_id=nope<script>")
     assert r.status_code == 200 and "nope&lt;script&gt;" in r.text and "<script>" not in r.text
+
+
+# --- /audit/apple: the same page in a second (Apple HIG) design ------------------------------------
+
+def test_apple_page_shows_full_coverage_after_scenario(hapi, outbox):
+    ids = _scenario(outbox)
+    with TestClient(app) as client:
+        r = client.get("/audit/apple")
+    assert r.status_code == 200
+    html = r.text
+    assert "Hash-Kette intakt" in html
+    assert re.search(r'class="cov-num num">6</span><span class="cov-of">/ 6', html)
+    for label in ("Anfrage gesendet", "Link geöffnet", "Identität geprüft", "Antwort übermittelt", "In FHIR abgelegt",
+                  "Fehlzustellung erkannt"):
+        assert label in html
+    for rid in ids.values():                                   # filter links stay on the Apple design
+        assert f"/audit/apple?request_id={rid}" in html
+        assert f'href="/audit?request_id={rid}' not in html
+    assert "M1 – wahrscheinlich falsche Adresse" in html and "M3 – Dokument betrifft anderen Patienten" in html
+    assert "verifiziert: Karl Kollege ≠ erwartet: Dr. Eva Brandl" in html
+    assert "Patient/maria-beispiel" in html and "Maria Beispiel" not in html
+    assert "e***@labor-kanal.example" in html and "eva.brandl@" not in html
+    assert "Klinikintern – in Produktion hinter Klinik-Login" in html
+    assert 'href="/audit?lang=de"' in html                      # design switch back to the standard page
+    assert "<script" not in html                                # works without JavaScript
+    for e in audit.entries():
+        assert e["hash"] in html
+
+
+def test_apple_page_english_toggle_keeps_filter(hapi, outbox):
+    ids = _scenario(outbox)
+    with TestClient(app) as client:
+        r = client.get(f"/audit/apple?request_id={ids['r1']}&lang=en")
+    html = r.text
+    assert '<html lang="en">' in html and "Hash chain intact" in html and "Hash-Kette" not in html
+    assert re.search(r'class="cov-num num">5</span><span class="cov-of">/ 6', html)
+    assert f'href="/audit/apple?request_id={ids["r1"]}&amp;lang=de"' in html        # DE segment keeps the filter
+    assert f'href="/audit/apple?request_id={ids["r1"]}&amp;lang=en"' in html        # EN segment (current)
+    assert f'href="/audit?request_id={ids["r1"]}&amp;lang=en"' in html              # design switch keeps both
+    assert f'href="/audit.json?request_id={ids["r1"]}"' in html
+    assert ids["m2"] not in _visible(html.split('id="timeline"', 1)[1])
+
+
+def test_apple_page_m3_never_shows_the_other_patient(hapi, outbox):
+    _scenario(outbox)
+    rid = db.query("SELECT id FROM requests WHERE status = 'rejected'")[0]["id"]
+    with TestClient(app) as client:
+        pages = [client.get(u).text for u in ("/audit/apple?lang=de", "/audit/apple?lang=en",
+                                              f"/audit/apple?request_id={rid}&lang=de",
+                                              f"/audit/apple?request_id={rid}&lang=en")]
+    assert "M3 – Dokument betrifft anderen Patienten" in pages[0] and "M3 – document is about another patient" in pages[1]
+    for text in pages:
+        assert not re.search(r"\bMax\b", text)
+        assert not re.search(r"\b1960\b", text)
+        assert "01.01.1960" not in text and "1960-01-01" not in text
+
+
+def test_apple_page_broken_chain_and_empty_states():
+    with TestClient(app) as client:
+        assert "Noch keine Einträge" in client.get("/audit/apple").text
+        r = client.get("/audit/apple?request_id=nope<script>")
+    assert r.status_code == 200 and "nope&lt;script&gt;" in r.text and "<script" not in r.text
+    for ev in ("request_drafted", "request_sent", "link_opened"):
+        audit.log(ev, "r1", "system:test", {})
+    with db.conn() as c:
+        c.execute("UPDATE audit SET actor = 'mallory' WHERE seq = 2")
+    with TestClient(app) as client:
+        html = client.get("/audit/apple").text
+    assert "Hash-Kette verletzt ab Eintrag #2" in html and "Hash stimmt nicht" in html
+    assert 'href="#e2"' in html and 'class="link is-broken"' in html
+
+
+def test_standard_page_only_gains_the_design_switch(hapi, outbox):
+    ids = _scenario(outbox)
+    with TestClient(app) as client:
+        html = client.get(f"/audit?request_id={ids['r1']}&lang=en").text
+    switch = re.search(r'<nav class="design-switch".*?</nav>', html, re.DOTALL)
+    assert switch and f'href="/audit/apple?request_id={ids["r1"]}&amp;lang=en"' in switch.group(0)
+    rest = html.replace(switch.group(0), "")
+    assert "/audit/apple" not in rest                           # every other link still points at /audit
+    assert 'class="num">5</span><span class="of">/ 6' in rest and "_audit_apple" not in rest

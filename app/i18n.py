@@ -185,6 +185,15 @@ MESSAGES: dict[str, dict[str, str]] = {
         "en": "Times in {tz}, stored as UTC. Patients by reference only, contacts masked.",
     },
 
+    # audit page: design switch (both looks) and the /audit/apple variant
+    "audit.design": {"de": "Design", "en": "Design"},
+    "audit.design.standard": {"de": "Standard", "en": "Standard"},
+    "audit.design.apple": {"de": "Apple", "en": "Apple"},
+    "audit.apple.integrity": {"de": "Integrität", "en": "Integrity"},
+    "audit.apple.strip": {"de": "Ein Glied pro Eintrag, ältester links.", "en": "One link per entry, oldest first."},
+    "audit.apple.strip_scope": {"de": "Gefüllt: Einträge dieser Anfrage.", "en": "Filled: entries of this request."},
+    "audit.apple.jump_broken": {"de": "Zum ersten verletzten Eintrag", "en": "Go to the first broken entry"},
+
     # audit page: who
     "audit.actor.link": {"de": "Link (IP {ip})", "en": "Link (IP {ip})"},
     "audit.actor.eid": {"de": "eID: {name}", "en": "eID: {name}"},

@@ -1,0 +1,12 @@
+# Engine service: CPU only (the models run in the vLLM containers). Tesseract is the second OCR reader.
+FROM python:3.13-slim
+RUN apt-get update && apt-get install -y --no-install-recommends tesseract-ocr tesseract-ocr-deu tesseract-ocr-eng \
+    && rm -rf /var/lib/apt/lists/*
+RUN pip install --no-cache-dir uv==0.5.11
+WORKDIR /srv
+COPY pyproject.toml uv.lock* ./
+RUN uv sync --no-dev --frozen 2>/dev/null || uv sync --no-dev
+COPY core ./core
+COPY engine ./engine
+EXPOSE 8100
+CMD [".venv/bin/uvicorn", "engine.api:app", "--host", "0.0.0.0", "--port", "8100"]

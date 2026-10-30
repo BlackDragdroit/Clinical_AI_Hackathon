@@ -2,6 +2,7 @@
 # Synapse for klinikum.example: config, users @lena.hofer + @befundbruecke, one room, bot invited.
 # Writes MATRIX_ROOM_ID into .env. Idempotent. Owner: SWE 1.
 set -euo pipefail
+export MSYS_NO_PATHCONV=1   # Git Bash on Windows: keep container paths like /data/... as they are
 cd "$(dirname "$0")/.."
 set -a; source .env; set +a
 HS=http://localhost:8008
@@ -50,10 +51,23 @@ if [ -z "${MATRIX_ROOM_ID:-}" ]; then
   echo "== creating room"
   MATRIX_ROOM_ID=$(curl -fs -XPOST "$HS/_matrix/client/v3/createRoom" -H "Authorization: Bearer $LENA" \
     -H 'Content-Type: application/json' \
-    -d "{\"name\":\"BefundBrücke – Anfragen\",\"preset\":\"private_chat\",\"invite\":[\"$MATRIX_BOT_USER\"]}" \
+    -d "{\"name\":\"BefundBr\u00fccke \u2013 Anfragen\",\"preset\":\"private_chat\",\"invite\":[\"$MATRIX_BOT_USER\"]}" \
     | python3 -c 'import json,sys; print(json.load(sys.stdin)["room_id"])')
   sed -i "s|^MATRIX_ROOM_ID=.*|MATRIX_ROOM_ID=$MATRIX_ROOM_ID|" .env
 fi
 curl -fs -XPOST "$HS/_matrix/client/v3/join/$(urlq "$MATRIX_ROOM_ID")" \
   -H "Authorization: Bearer $BOT" -H 'Content-Type: application/json' -d '{}' >/dev/null
-echo "== room $MATRIX_ROOM_ID ready (written to .env)"
+
+# Dashboard as an optional Element widget (room info → Extensions); the chat cards are the main view, so it is
+# not pinned. Lena adds it herself, so Element loads it without the "added by someone else" prompt.
+# Re-running replaces it with a fresh signed URL.
+state() {  # event_type state_key json
+  curl -fs -XPUT "$HS/_matrix/client/v3/rooms/$(urlq "$MATRIX_ROOM_ID")/state/$1/$2" \
+    -H "Authorization: Bearer $LENA" -H 'Content-Type: application/json' -d "$3" >/dev/null
+}
+WIDGET_URL=$(uv run --no-sync python -m app.dashboard)
+state im.vector.modular.widgets bb-dashboard "$(python3 -c 'import json,sys; print(json.dumps({
+  "type": "m.custom", "id": "bb-dashboard", "name": "BefundBrücke Dashboard", "url": sys.argv[1],
+  "creatorUserId": sys.argv[2], "data": {}}))' "$WIDGET_URL" "$DOCTOR_MXID")"
+state io.element.widgets.layout "" '{"widgets":{}}'
+echo "== room $MATRIX_ROOM_ID ready (written to .env), dashboard widget under room info → Extensions"

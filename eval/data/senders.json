@@ -1,0 +1,182 @@
+[
+ {
+  "name": "Dr. Eva Brandl",
+  "org": "Labor Kanalstraße",
+  "kind": "lab",
+  "email": "eva.brandl@labor-kanal.example"
+ },
+ {
+  "name": "Stefan Kern",
+  "org": "Reha Waldblick",
+  "kind": "report",
+  "phone": "+436600000101"
+ },
+ {
+  "name": "Dr. Sabine Bauer",
+  "org": "Zentrallabor Donau",
+  "kind": "lab",
+  "email": "sabine.bauer@zentrallabor-donau.example"
+ },
+ {
+  "name": "Dr. Jasmin Reiter",
+  "org": "Labor Dr. Wimmer",
+  "kind": "lab",
+  "email": "jasmin.reiter@labor-dr-wimmer.example"
+ },
+ {
+  "name": "Christian Aigner",
+  "org": "Klinik am Kurpark",
+  "kind": "report",
+  "phone": "+436999539637"
+ },
+ {
+  "name": "Mag. Max Brunner",
+  "org": "Labor am Ring",
+  "kind": "lab",
+  "email": "max.brunner@labor-am-ring.example"
+ },
+ {
+  "name": "Mag. Nina Horvath",
+  "org": "Labor am Ring",
+  "kind": "lab",
+  "email": "nina.horvath@labor-am-ring.example"
+ },
+ {
+  "name": "Felix Wolf",
+  "org": "Rehaklinik Seeblick",
+  "kind": "report",
+  "phone": "+436606246204"
+ },
+ {
+  "name": "Dr. Markus Lehner",
+  "org": "Labor Dr. Wimmer",
+  "kind": "lab",
+  "email": "markus.lehner@labor-dr-wimmer.example"
+ },
+ {
+  "name": "Dr. Ali Wolf",
+  "org": "Labor am Ring",
+  "kind": "lab",
+  "email": "ali.wolf@labor-am-ring.example"
+ },
+ {
+  "name": "Emine Aigner",
+  "org": "Klinik am Kurpark",
+  "kind": "report",
+  "phone": "+436643209830"
+ },
+ {
+  "name": "Dr. med. Petra Auer",
+  "org": "Zentrallabor Donau",
+  "kind": "lab",
+  "email": "petra.auer@zentrallabor-donau.example"
+ },
+ {
+  "name": "Dr. med. Lisa Müller",
+  "org": "Labor Kanalstraße",
+  "kind": "lab",
+  "email": "lisa.mueller@labor-kanalstrasse.example"
+ },
+ {
+  "name": "Claudia Lang",
+  "org": "Rehazentrum Alpenblick",
+  "kind": "report",
+  "phone": "+436644701398"
+ },
+ {
+  "name": "Dr. Chloé Müller",
+  "org": "Labor Nord",
+  "kind": "lab",
+  "email": "chloe.mueller@labor-nord.example"
+ },
+ {
+  "name": "Dr. Stefan Petrović",
+  "org": "Labor Nord",
+  "kind": "lab",
+  "email": "stefan.petrovic@labor-nord.example"
+ },
+ {
+  "name": "Renate Novak",
+  "org": "Reha Waldblick",
+  "kind": "report",
+  "phone": "+436602315192"
+ },
+ {
+  "name": "Dr. med. Daniel Lehner",
+  "org": "Labor am Ring",
+  "kind": "lab",
+  "email": "daniel.lehner@labor-am-ring.example"
+ },
+ {
+  "name": "Dr. Anna Wimmer",
+  "org": "Labor Nord",
+  "kind": "lab",
+  "email": "anna.wimmer@labor-nord.example"
+ },
+ {
+  "name": "Andreas Moser",
+  "org": "Rehaklinik Seeblick",
+  "kind": "report",
+  "phone": "+436768257702"
+ },
+ {
+  "name": "Dr. Felix Schmid",
+  "org": "Medizinisches Labor Graz-West",
+  "kind": "lab",
+  "email": "felix.schmid@medizinisches-labor-graz-west.example"
+ },
+ {
+  "name": "Dr. Elisabeth Eder",
+  "org": "Labor am Ring",
+  "kind": "lab",
+  "email": "elisabeth.eder@labor-am-ring.example"
+ },
+ {
+  "name": "Martin Bauer",
+  "org": "Rehaklinik Seeblick",
+  "kind": "report",
+  "phone": "+436768947133"
+ },
+ {
+  "name": "Dr. Katharina Weber",
+  "org": "Labor Nord",
+  "kind": "lab",
+  "email": "katharina.weber@labor-nord.example"
+ },
+ {
+  "name": "Dr. Lukas Moser",
+  "org": "Labor Kanalstraße",
+  "kind": "lab",
+  "email": "lukas.moser@labor-kanalstrasse.example"
+ },
+ {
+  "name": "Karl Huber",
+  "org": "Rehaklinik Seeblick",
+  "kind": "report",
+  "phone": "+436993996763"
+ },
+ {
+  "name": "Mag. Emine Pichler",
+  "org": "Zentrallabor Donau",
+  "kind": "lab",
+  "email": "emine.pichler@zentrallabor-donau.example"
+ },
+ {
+  "name": "Dr. Sophie Moser",
+  "org": "Medizinisches Labor Graz-West",
+  "kind": "lab",
+  "email": "sophie.moser@medizinisches-labor-graz-west.example"
+ },
+ {
+  "name": "Jasmin Winkler",
+  "org": "Klinik am Kurpark",
+  "kind": "report",
+  "phone": "+436765910808"
+ },
+ {
+  "name": "Dr. Jürgen Auer",
+  "org": "Labor Dr. Wimmer",
+  "kind": "lab",
+  "email": "juergen.auer@labor-dr-wimmer.example"
+ }
+]

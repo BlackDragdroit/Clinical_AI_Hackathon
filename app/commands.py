@@ -1,5 +1,8 @@
 """Doctor commands, shared by the Matrix bot and the CLI: handle(text, sender) -> reply. Owner: SWE 1.
 
+Anything that is not a !command is a request in plain German or English ("Bitte bei Dr. Eva Brandl …"):
+the engine turns it into the same draft card. Voice notes arrive via from_engine().
+
 Replies are plain text; the bot renders them as HTML (app/matrix_format.py). Copy rules: the first
 line says what happened, one fact per line, the next step is the exact command to type.
 """
@@ -10,7 +13,7 @@ from datetime import date
 
 import httpx
 
-from app import db, intake_service, requests_service
+from app import audit, db, engine_client, intake_service, requests_service
 from app.config import settings
 
 HELP = """Befehle
@@ -83,6 +86,31 @@ def _error(e: Exception) -> str:
     return f"Befehl nicht ausgeführt: {type(e).__name__}\n{e}"
 
 
+def from_engine(res: dict, sender: str, source: str) -> str:
+    """Engine result (plain text or voice) -> draft card, or a question back. Never sends anything."""
+    asr = res.get("asr") or {}
+    meta = {"input": source, "engine": res.get("version"), "llm": (res.get("models") or {}).get("llm"),
+            "asr": asr.get("model"), "audio_sha256": asr.get("audio_sha256"), "ready": bool(res.get("ready")),
+            "missing": res.get("missing", []), "flags": len(res.get("flags", [])), "timings_ms": res.get("timings_ms")}
+    heard = (res.get("input") or {}).get("normalized") or asr.get("text") or ""
+    flags = [f"⚠️ {f}" for f in res.get("flags", [])]
+    if source == "voice" and res.get("contact"):     # speech-to-text gets addresses/numbers wrong (eval/VOICE.md)
+        flags.append("⚠️ Kontakt aus Sprachnachricht erkannt: bitte Adresse/Nummer vor dem Senden Zeichen für Zeichen prüfen")
+    patient = res.get("patient") or {}
+    if not res.get("ready"):
+        audit.log("request_parsed", None, sender, meta)
+        lines = ["Anfrage noch nicht vollständig", f"Verstanden: „{heard}“", res.get("ask_de") or "Bitte genauer angeben."]
+        if patient.get("status") == "ambiguous":
+            lines += [f"• {c['ref']}: {c['name']}, geb. {_dob(c['dob'])}" for c in patient.get("candidates", [])[:3]]
+        return "\n".join(lines + flags)
+    req = requests_service.draft(doc_kind=res["doc_type"], expected_name=res["recipient"], contact=res["contact"]["value"],
+                                 patient_ref=patient["ref"], reason=res.get("reason") or "",
+                                 panel_loinc=(res.get("panel") or {}).get("loinc", []), source=source)
+    audit.log("request_parsed", req["id"], sender, meta)
+    card = draft_card(req).split("\n")
+    return "\n".join(card[:-1] + flags + [f"Verstanden aus: „{heard}“", card[-1]])
+
+
 def handle(text: str, sender: str) -> str:
     if sender not in settings.authorized_senders:
         return ("Keine Berechtigung\nAnfragen dürfen nur Mitglieder des Klinik-Verzeichnisses stellen. "
@@ -91,6 +119,8 @@ def handle(text: str, sender: str) -> str:
     cmd, _, arg = text.partition(" ")
     arg = arg.strip()
     try:
+        if not text.startswith("!"):
+            return from_engine(engine_client.request_text(text), sender, "text")
         if cmd == "!anfrage":
             return draft_card(requests_service.draft(**parse_anfrage(text)))
         if cmd == "!senden":

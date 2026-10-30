@@ -9,7 +9,7 @@ from __future__ import annotations
 import html
 import re
 
-_URL = re.compile(r"https?://[^\s<>()]+")
+_URL = re.compile(r"\[([^\]\n]+)\]\((https?://[^\s)]+)\)|https?://[^\s<>()]+")   # [label](url) or a bare url
 _CMD = re.compile(r"(?<![\w/])(![a-zäöü]+(?: [a-z0-9]{6,})?)")
 
 
@@ -17,9 +17,13 @@ def _inline(line: str) -> str:
     out, pos = [], 0
     for m in _URL.finditer(line):
         out.append(_cmd(html.escape(line[pos:m.start()])))
-        url = m.group(0).rstrip(".,;")
-        out.append(f'<a href="{html.escape(url)}">{html.escape(_label(url))}</a>')
-        pos = m.start() + len(url)
+        if m.group(1):
+            url, label, end = m.group(2), m.group(1), m.end()
+        else:
+            url = m.group(0).rstrip(".,;")
+            label, end = _label(url), m.start() + len(url)
+        out.append(f'<a href="{html.escape(url)}">{html.escape(label)}</a>')
+        pos = end
     out.append(_cmd(html.escape(line[pos:])))
     return "".join(out)
 
@@ -43,7 +47,8 @@ def _headline(line: str) -> str:
         m = _CLAUSE.search(line, 15)
         if m and m.start() < 90:
             cut = m.end() if m.group(1) == ". " else m.start()
-            return f"<strong>{_inline(line[:cut].rstrip())}</strong>{_inline(line[cut:])}"
+            head = line[:cut].rstrip()
+            return f"<strong>{_inline(head)}</strong>{line[len(head):cut]}{_inline(line[cut:])}"   # keep the space
     return f"<strong>{_inline(line)}</strong>"
 
 
@@ -52,5 +57,14 @@ def to_html(text: str) -> str:
     return "<br>".join([_headline(lines[0])] + [_inline(l) for l in lines[1:]])
 
 
-def content(text: str) -> dict:
-    return {"msgtype": "m.text", "body": text, "format": "org.matrix.custom.html", "formatted_body": to_html(text)}
+def content(text: str, reply_to: str | None = None) -> dict:
+    c = {"msgtype": "m.text", "body": text, "format": "org.matrix.custom.html", "formatted_body": to_html(text)}
+    if reply_to:     # Element shows the message as a reply to `reply_to`, with a link to jump there
+        c["m.relates_to"] = {"m.in_reply_to": {"event_id": reply_to}}
+    return c
+
+
+def edit(event_id: str, text: str) -> dict:
+    """Replaces the message `event_id` in place (m.replace); clients without edit support show the '* ' fallback."""
+    new = content(text)
+    return {**content(f"* {text}"), "m.new_content": new, "m.relates_to": {"rel_type": "m.replace", "event_id": event_id}}

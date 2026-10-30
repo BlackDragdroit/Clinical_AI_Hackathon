@@ -15,8 +15,10 @@ SYSTEM = "system:befundbruecke"
 
 
 def process_answer(req: dict, *, verified_name: str, identity_method: str, actor: str, typed_name: str,
-                   typed_dob: str, filename: str, content: str) -> dict:
-    """Returns {'decision', 'sender_message_de', 'answer_id'}. Called by the portal after identity passed."""
+                   typed_dob: str, filename: str, content: str, engine_notes: list[str] | None = None) -> dict:
+    """Returns {'decision', 'sender_message_de', 'answer_id'}. Called by the portal after identity passed.
+    `content` is the engine's canonical Markdown; `engine_notes` (completeness, recency, plausibility) are appended
+    to Dr. Hofer's message on file/review, never on a reject (they describe the other patient's document)."""
     res = run_intake(content, Person.from_full(req["patient_name"], req["patient_dob"]),
                      Person.from_full(typed_name, typed_dob), verified_name, parse_markdown(content).org, identity_method,
                      req["patient_ref"], filename)
@@ -32,12 +34,13 @@ def process_answer(req: dict, *, verified_name: str, identity_method: str, actor
         "bundle_json": json.dumps(res.bundle, ensure_ascii=False) if res.bundle else None,
     })
 
+    notes = (" · " + " · ".join(engine_notes)) if engine_notes else ""
     if decision == "file":
-        _file(req, answer_id, res.bundle, res.doctor_message_de)
+        _file(req, answer_id, res.bundle, res.doctor_message_de + notes)
     elif decision == "review":
         db.update("requests", "id", req["id"], status="review")
         audit.log("review_requested", req["id"], SYSTEM, {"answer": answer_id, "match": _scores(res.match)})
-        notify.doctor(f"{res.doctor_message_de} (Anfrage {req['id']}: !ablegen {req['id']} / !verwerfen {req['id']})", req["id"])
+        notify.doctor(f"{res.doctor_message_de}{notes} (Anfrage {req['id']}: !ablegen {req['id']} / !verwerfen {req['id']})", req["id"])
     else:  # reject: quarantine, never file; no data about the other patient in audit or Matrix
         db.update("requests", "id", req["id"], status="rejected")
         if req["task_ref"]:

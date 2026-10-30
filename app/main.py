@@ -12,14 +12,16 @@ from __future__ import annotations
 
 import asyncio
 import contextlib
+import json
 from contextlib import asynccontextmanager
+from datetime import datetime
 from pathlib import Path
 
 from fastapi import FastAPI, File, Form, Request, UploadFile
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
-from app import audit, bot, db, i18n, intake_service, misdelivery, notify, tokens
+from app import audit, bot, dashboard, db, engine_client, i18n, intake_service, misdelivery, notify, tokens
 from app.config import settings
 from app.identity import eid_mock, policy
 from app.security import sign, unsign
@@ -42,6 +44,7 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(title="BefundBrücke", lifespan=lifespan)
+app.include_router(dashboard.router)
 
 
 def _page(request: Request, name: str, status: int = 200, **ctx) -> HTMLResponse:
@@ -136,20 +139,66 @@ async def answer_submit(request: Request, raw: str, typed_name: str = Form(...),
         return _invalid(request)
     req = db.get("requests", "id", tok["request_id"])
     if upload is not None and upload.filename:
-        content, filename = (await upload.read()).decode("utf-8", errors="replace"), upload.filename
-        # TODO(SWE 2 + MedEng): PDF upload -> text extraction, or store as attachment + review
+        data, filename, ctype = await upload.read(), upload.filename, upload.content_type
     else:
-        content, filename = text, "formular.md"
-    if not content.strip():
+        data, filename, ctype = text.encode("utf-8"), "formular.md", "text/markdown"
+
+    def form_error(msg: str) -> HTMLResponse:
         return _page(request, "answer.html", 400, raw=raw, req=req, doc_label=DOC_LABEL[req["doc_type"]],
-                     doctor=settings.doctor_name, sender=sess["name"], error="Bitte Datei hochladen oder Text eingeben.")
+                     doctor=settings.doctor_name, sender=sess["name"], error=msg)
+    if not data.strip():
+        return form_error("Bitte Datei hochladen oder Text eingeben.")
+    eng = engine_client.document(data, filename, ctype, json.loads(req.get("panel_loinc") or "[]"),
+                                 datetime.fromisoformat(req["created_at"]), req["doc_type"])
+    if not eng["ok"]:
+        return form_error("Das Dokument konnte nicht sicher gelesen werden. Bitte als PDF/Text senden oder den Inhalt einfügen.")
+    if eng["needs_readback"]:          # scan/photo: the sender confirms what we read before anything is processed
+        rb_id = db.new_id()
+        db.insert("readbacks", {"id": rb_id, "request_id": req["id"], "created_at": db.now(), "typed_name": typed_name,
+                                "typed_dob": typed_dob, "filename": filename, "markdown": eng["canonical_markdown"],
+                                "items": eng["readback"],
+                                "engine_json": {k: eng[k] for k in ("path", "models", "flags", "check_lines_de", "input")}})
+        audit.log("readback_shown", req["id"], f"eid:{sess['pseud']} {sess['name']}",
+                  {"items": len(eng["readback"]), "models": eng["models"],
+                   "disagree": sum(1 for i in eng["readback"] if i["agree"] is False)})
+        return _page(request, "readback.html", raw=raw, rb_id=rb_id, items=eng["readback"])
+    return _finish(request, raw, req, sess, typed_name, typed_dob, filename, eng["canonical_markdown"], eng, len(data))
+
+
+def _finish(request: Request, raw: str, req: dict, sess: dict, typed_name: str, typed_dob: str, filename: str,
+            markdown: str, eng: dict, n_bytes: int, corrected: int | None = None) -> HTMLResponse:
     tokens.mark_used(raw)
     actor = f"eid:{sess['pseud']} {sess['name']}"
     db.update("requests", "id", req["id"], status="answered")
-    audit.log("answer_sent", req["id"], actor, {"filename": filename, "bytes": len(content.encode())})
-    out = intake_service.process_answer(req, verified_name=sess["name"], identity_method=sess["method"], actor=actor,
-                                        typed_name=typed_name, typed_dob=typed_dob, filename=filename, content=content)
+    audit.log("answer_sent", req["id"], actor, {"filename": filename, "bytes": n_bytes, "read_by": eng.get("path"),
+                                               "sha256": (eng.get("input") or {}).get("sha256")})
+    method = sess["method"]
+    notes = list(eng.get("check_lines_de") or []) + [f"⚠️ {f}" for f in eng.get("flags") or []]
+    if corrected is not None:
+        method += "; Werte vom Absender per Read-back bestätigt"
+        notes.append(f"Scan/Foto gelesen ({(eng.get('models') or {}).get('ocr_vlm') or 'OCR'}), Werte vom Absender bestätigt"
+                     + (f", {corrected} korrigiert" if corrected else ""))
+    out = intake_service.process_answer(req, verified_name=sess["name"], identity_method=method, actor=actor,
+                                        typed_name=typed_name, typed_dob=typed_dob, filename=filename, content=markdown,
+                                        engine_notes=notes)
     return _page(request, "receipt.html", message=out["sender_message_de"], receipt=out["answer_id"])
+
+
+@app.post("/r/{raw}/readback", response_class=HTMLResponse)
+async def readback_confirm(request: Request, raw: str):
+    tok, sess = tokens.resolve(raw), _session(request, raw)
+    form = await request.form()
+    rb = db.get("readbacks", "id", str(form.get("rb_id", "")))
+    if not tok or not sess or not rb or rb["request_id"] != tok["request_id"]:
+        return _invalid(request)
+    req = db.get("requests", "id", tok["request_id"])
+    items = json.loads(rb["items"])
+    confirmed = {i["key"]: str(form.get(f"v:{i['key']}", i["value"] or "")).strip() for i in items}
+    changed = [i["key"] for i in items if confirmed[i["key"]] != (i["value"] or "")]
+    audit.log("readback_confirmed", req["id"], f"eid:{sess['pseud']} {sess['name']}", {"items": len(items), "changed": changed})
+    markdown = engine_client.apply_readback(rb["markdown"], confirmed)
+    return _finish(request, raw, req, sess, rb["typed_name"], rb["typed_dob"], rb["filename"], markdown,
+                   json.loads(rb["engine_json"]), len(markdown.encode()), corrected=len(changed))
 
 
 @app.get("/sms", response_class=HTMLResponse)

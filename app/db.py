@@ -32,7 +32,9 @@ CREATE TABLE IF NOT EXISTS requests (
     reason TEXT NOT NULL DEFAULT '',
     status TEXT NOT NULL,
     task_ref TEXT,                       -- Task/123 on HAPI
-    lint_warnings TEXT NOT NULL DEFAULT '[]'
+    lint_warnings TEXT NOT NULL DEFAULT '[]',
+    panel_loinc TEXT NOT NULL DEFAULT '[]',  -- tests the request expects (engine), for the completeness check
+    source TEXT NOT NULL DEFAULT 'command'   -- command | text | voice
 );
 CREATE TABLE IF NOT EXISTS tokens (
     token_hash TEXT PRIMARY KEY,         -- sha256 of the raw link token; the raw token is never stored
@@ -74,12 +76,36 @@ CREATE TABLE IF NOT EXISTS sms_outbox (
     to_number TEXT NOT NULL,
     body TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS readbacks (
+    id TEXT PRIMARY KEY,
+    request_id TEXT NOT NULL REFERENCES requests(id),
+    created_at TEXT NOT NULL,
+    typed_name TEXT NOT NULL,
+    typed_dob TEXT NOT NULL,
+    filename TEXT NOT NULL,
+    markdown TEXT NOT NULL,                  -- canonical Markdown as read by OCR, before confirmation
+    items TEXT NOT NULL,                     -- read-back items (value, agree) shown to the sender
+    engine_json TEXT NOT NULL
+);
 CREATE TABLE IF NOT EXISTS matrix_outbox (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     ts TEXT NOT NULL,
     request_id TEXT,
     text TEXT NOT NULL,
     sent_at TEXT
+);
+CREATE TABLE IF NOT EXISTS matrix_cards (
+    request_id TEXT PRIMARY KEY REFERENCES requests(id),
+    event_id TEXT NOT NULL,              -- the bot's card for this request, edited in place (app/status_message.py)
+    text TEXT NOT NULL,                  -- what the card says now
+    last_seq INTEGER NOT NULL DEFAULT 0  -- last audit seq a ping was considered for
+);
+CREATE TABLE IF NOT EXISTS matrix_actions (
+    event_id TEXT NOT NULL,              -- a bot message that offers buttons (app/reactions.py)
+    key TEXT NOT NULL,                   -- ✅ | ❌
+    command TEXT NOT NULL,               -- e.g. !ablegen ab12cd34
+    used_at TEXT,                        -- set on the first authorised tap; the message's buttons are then spent
+    PRIMARY KEY (event_id, key)
 );
 """
 
@@ -109,9 +135,17 @@ def conn() -> Iterator[sqlite3.Connection]:
         con.close()
 
 
+MIGRATIONS = {"requests": {"panel_loinc": "TEXT NOT NULL DEFAULT '[]'", "source": "TEXT NOT NULL DEFAULT 'command'"}}
+
+
 def init_db() -> None:
     with conn() as c:
         c.executescript(SCHEMA)
+        for table, cols in MIGRATIONS.items():
+            have = {r["name"] for r in c.execute(f"PRAGMA table_info({table})")}
+            for col, decl in cols.items():
+                if col not in have:
+                    c.execute(f"ALTER TABLE {table} ADD COLUMN {col} {decl}")
 
 
 def insert(table: str, row: dict[str, Any]) -> None:

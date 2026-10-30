@@ -4,6 +4,7 @@ WORKDIR /srv
 COPY pyproject.toml uv.lock* ./
 RUN uv sync --no-dev --frozen 2>/dev/null || uv sync --no-dev
 COPY core ./core
+COPY engine ./engine
 COPY app ./app
 COPY scenario ./scenario
 EXPOSE 8000

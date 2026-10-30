@@ -280,7 +280,7 @@ def test_apple_page_broken_chain_and_empty_states():
     with TestClient(app) as client:
         html = client.get("/audit/apple").text
     assert "Hash-Kette verletzt ab Eintrag #2" in html and "Hash stimmt nicht" in html
-    assert 'href="#e2"' in html and 'class="link is-broken"' in html
+    assert 'href="#e2"' in html
 
 
 def test_standard_page_only_gains_the_design_switch(hapi, outbox):

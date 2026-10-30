@@ -104,17 +104,6 @@
             {%- endif %}
           </div>
         </div>
-        {%- if v.chain %}
-        {%- set in_scope = v.entries | map(attribute="seq") | list %}
-        <div class="row strip-row">
-          <ol class="strip" aria-hidden="true">
-            {%- for c in v.chain[-240:] %}
-            <li class="link{{ ' is-broken' if not c.ok }}{{ ' is-out' if v.request_id and c.seq not in in_scope }}" title="#{{ c.seq }}"></li>
-            {%- endfor %}
-          </ol>
-          <p class="row-foot">{{ t("audit.apple.strip", lang) }}{% if v.request_id %} {{ t("audit.apple.strip_scope", lang) }}{% endif %}</p>
-        </div>
-        {%- endif %}
         <dl class="kv">
           <div class="row"><dt>{{ t("audit.chain.entries", lang) }}</dt>
             <dd class="num">{{ v.entry_count }}{% if v.request_id %}<span class="secondary"> · {{ t("audit.chain.in_scope", lang, n=v.scope_count) }}</span>{% endif %}</dd></div>
@@ -133,16 +122,13 @@
     <section class="section coverage" aria-labelledby="h-cov">
       <div class="section-head">
         <h2 id="h-cov">{{ t("audit.coverage.title", lang) }}</h2>
-        <p class="section-scope">{% if v.request_id %}{{ t("audit.coverage.scope_one", lang, id=v.request_id) }}{% else %}{{ t("audit.coverage.scope_all", lang) }}{% endif %}</p>
+        <p class="cov-score {{ 'is-full' if v.covered == 6 }}"><span class="cov-num num">{{ v.covered }}</span><span class="cov-of">/ 6</span></p>
       </div>
       <div class="group">
-        <div class="row cov-row">
-          <p class="cov-score {{ 'is-full' if v.covered == 6 }}"><span class="cov-num num">{{ v.covered }}</span><span class="cov-of">/ 6</span></p>
-        </div>
         <ol class="steps">
           {%- for ev, ok in v.coverage.items() %}
           <li class="row step {{ 'is-done' if ok else 'is-missing' }}">
-            <span class="tile {{ 'tile-ok' if ok else 'tile-empty' }}">{{ glyph("check" if ok else "empty") }}</span>
+            <span class="mark">{{ glyph("check" if ok else "empty") }}</span>
             <span class="step-label">{{ t("audit.step." ~ ev, lang) }}</span>
             {% if ok %}<span class="sr">({{ t("audit.coverage.done", lang) }})</span>{% else %}<span class="step-state">{{ t("audit.coverage.missing", lang) }}</span>{% endif %}
           </li>
@@ -172,7 +158,6 @@
           <th scope="col">{{ t("audit.col.status", lang) }}</th>
           <th scope="col" class="r">{{ t("audit.col.coverage", lang) }}</th>
           <th scope="col">{{ t("audit.col.misdelivery", lang) }}</th>
-          <th scope="col" class="r">{{ t("audit.col.created", lang) }}</th>
         </tr></thead>
         <tbody>
         {%- for r in v.requests %}
@@ -180,12 +165,11 @@
           <td><a class="rowlink mono" href="{{ r.href }}" {% if r.selected %}aria-current="true"{% endif %}>{{ r.id }}</a></td>
           <td>{{ r.doc }}</td>
           <td>{{ r.expected_name }}</td>
-          <td class="nowrap"><span class="mono">{{ r.contact }}</span> <span class="secondary">· {{ r.channel }}</span></td>
+          <td class="nowrap mono">{{ r.contact }}</td>
           <td class="mono secondary">{{ r.patient_ref }}</td>
           <td><span class="status tone-{{ r.status_tone }}">{{ glyph(status_glyph[r.status_tone]) }}{{ r.status_label }}</span></td>
           <td class="r num">{{ r.covered }}&thinsp;/&thinsp;6</td>
           <td>{% for code in r.misdelivery %}<span class="status tone-alert" title="{{ t('misdelivery.' ~ code, lang) }}">{{ glyph("shield") }}{{ code }}</span> {% else %}<span class="secondary">–</span>{% endfor %}</td>
-          <td class="r num secondary nowrap">{{ r.created }}</td>
         </tr>
         {%- endfor %}
         </tbody>
@@ -197,7 +181,7 @@
           <a class="cell-link" href="{{ r.href }}" {% if r.selected %}aria-current="true"{% endif %}>
             <span class="cell-top"><span class="mono cell-id">{{ r.id }}</span> <span class="cell-doc">{{ r.doc }}</span></span>
             <span class="cell-line">{{ r.expected_name }} · <span class="mono">{{ r.contact }}</span> · <span class="nowrap">{{ r.channel }}</span></span>
-            <span class="cell-line"><span class="mono">{{ r.patient_ref }}</span> · <span class="num">{{ r.covered }}&thinsp;/&thinsp;6</span> · <span class="num">{{ r.created }}</span></span>
+            <span class="cell-line"><span class="mono">{{ r.patient_ref }}</span> · <span class="num">{{ r.covered }}&thinsp;/&thinsp;6</span></span>
             <span class="cell-tags">
               <span class="status tone-{{ r.status_tone }}">{{ glyph(status_glyph[r.status_tone]) }}{{ r.status_label }}</span>
               {%- for code in r.misdelivery %} <span class="status tone-alert">{{ glyph("shield") }}{{ code }}</span>{% endfor %}
@@ -208,7 +192,6 @@
         {%- endfor %}
       </ul>
     </div>
-    <p class="section-foot">{{ t("audit.requests.hint", lang) }}</p>
     {%- else %}
     <div class="group"><p class="row empty">{{ t("audit.requests.empty", lang) }}</p></div>
     {%- endif %}
@@ -224,10 +207,6 @@
       {%- if not v.entries %}
       <div class="group"><p class="row empty">{% if v.request_id %}{{ t("audit.timeline.unknown_request", lang, id=v.request_id) }}{% else %}{{ t("audit.timeline.empty", lang) }}{% endif %}</p></div>
       {%- else %}
-      <div class="ev-cols" aria-hidden="true">
-        <span></span><span>{{ t("audit.col.what", lang) }}</span><span>{{ t("audit.col.who", lang) }}</span>
-        <span>{{ t("audit.col.id", lang) }}</span><span class="r">{{ t("audit.col.time", lang) }}</span>
-      </div>
       {%- endif %}
       {%- set ns = namespace(day=None) %}
       {%- for e in v.entries %}
@@ -280,7 +259,6 @@
           <div class="row-main">
             <h3 class="mis-label">{{ t("misdelivery." ~ code, lang) }}</h3>
             <p class="mis-state">{% if found %}{{ t("audit.mis.caught", lang) }}{% else %}{{ t("audit.mis.not_caught", lang) }}{% endif %}</p>
-            <p class="mis-how">{{ t("audit.mis.how." ~ code, lang) }}</p>
             {%- if found %}
             <ul class="mis-hits">
               {%- for m in found %}

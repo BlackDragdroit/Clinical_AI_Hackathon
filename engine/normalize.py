@@ -44,6 +44,9 @@ def _join_emails(toks: list[str]) -> list[str]:
             while (end + 2 < n and p[end + 1][1].lower() in JOIN and _wordlike(p[end + 2][1])
                    and not p[end][2] and not p[end + 1][2] and not p[end + 1][0] and not p[end + 2][0]):
                 end += 2
+            if end + 1 < n and p[end + 1][1].lower() in AT:
+                i += 1                                      # "Eder at eva dot eder at lab…": the later 'at' is the address
+                continue
             right = range(i + 1, end + 1)
             dotted = any("." in p[k][1] or JOIN.get(p[k][1].lower()) == "." for k in right)
             tld = p[end][1].split(".")[-1]

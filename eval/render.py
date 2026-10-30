@@ -10,6 +10,7 @@ from __future__ import annotations
 import io
 import random
 import re
+from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFilter
 
@@ -22,6 +23,10 @@ def md_to_pdf(md: str) -> bytes:
     from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
     st = getSampleStyleSheet()
+    font = _unicode_font()
+    if font:                                   # built-in Helvetica cannot encode ş, ć, ž (names become "Ayne")
+        for name in ("BodyText", "Heading1", "Heading3"):
+            st[name].fontName = font
     body = st["BodyText"]
     flow, table = [], []
 
@@ -32,6 +37,7 @@ def md_to_pdf(md: str) -> bytes:
         if table:
             t = Table(table, repeatRows=1)
             t.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.5, colors.grey), ("FONTSIZE", (0, 0), (-1, -1), 9),
+                                   ("FONTNAME", (0, 0), (-1, -1), font or "Helvetica"),
                                    ("BACKGROUND", (0, 0), (-1, 0), colors.whitesmoke)]))
             flow.extend([t, Spacer(1, 0.3 * cm)])
             table.clear()
@@ -58,6 +64,18 @@ def md_to_pdf(md: str) -> bytes:
     buf = io.BytesIO()
     SimpleDocTemplate(buf, pagesize=A4, leftMargin=2 * cm, rightMargin=2 * cm, topMargin=2 * cm).build(flow)
     return buf.getvalue()
+
+
+def _unicode_font() -> str | None:
+    from reportlab.pdfbase import pdfmetrics
+    from reportlab.pdfbase.ttfonts import TTFont
+    for path in ("C:/Windows/Fonts/arial.ttf", "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+                 "/Library/Fonts/Arial Unicode.ttf", "/System/Library/Fonts/Supplemental/Arial.ttf"):
+        if Path(path).exists():
+            if "Uni" not in pdfmetrics.getRegisteredFontNames():
+                pdfmetrics.registerFont(TTFont("Uni", path))
+            return "Uni"
+    return None
 
 
 def pdf_to_image(pdf: bytes, dpi: int = 200) -> Image.Image:

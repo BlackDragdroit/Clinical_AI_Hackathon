@@ -43,7 +43,8 @@ LABELS = {"recipient_name": "Empfänger/in", "contact": "Kontakt (E-Mail oder Ha
           "patient": "Patient/in mit Geburtsdatum"}
 
 
-_SPOKEN_TITLE = [(re.compile(r"\b(?:Doktor(?:in)?|Doctor)\b"), "Dr."), (re.compile(r"\bProfessor(?:in)?\b"), "Prof.")]
+_SPOKEN_TITLE = [(re.compile(r"\b(?:Doktor(?:in)?|Doctor)\b"), "Dr."), (re.compile(r"\bProfessor(?:in)?\b"), "Prof."),
+                 (re.compile(r"\bMagist(?:er|ra)\b"), "Mag.")]
 
 
 def clean_name(name: str | None) -> str | None:

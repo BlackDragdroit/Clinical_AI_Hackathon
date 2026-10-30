@@ -35,6 +35,7 @@ def fake_llm(monkeypatch):
     ("stefan unterstrich kern ät reha minus waldblick punkt example.", "stefan_kern@reha-waldblick.example."),
     ("plus vier drei sechs sechs null null null null null eins null eins", "+436600000101"),
     ("null sechs sechs null null null null null eins null eins", "06600000101"),
+    ("Doktor Eder at elisabeth dot eder at labor dash am dash ring dot example", "Doktor Eder at elisabeth.eder@labor-am-ring.example"),
 ])
 def test_dictation_is_written_out(spoken, written):
     assert normalize(spoken) == written

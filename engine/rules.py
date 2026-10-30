@@ -22,7 +22,7 @@ class Hit:
     extra: dict = field(default_factory=dict)
 
 
-EMAIL = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
+EMAIL = re.compile(r"[\w.%+-]+@[\w.-]+\.[A-Za-z]{2,}")
 PHONE = re.compile(r"(?<![\w/])(?:\+|00)?\d[\d \-/]{5,}\d(?![\w/])")
 PATIENT_REF = re.compile(r"\bPatient/[A-Za-z0-9\-.]{1,64}\b")
 _M = (r"(?:Jänner|Jaenner|Januar|January|Jan|Februar|February|Feb|März|Maerz|March|Mar|April|Apr|Mai|May|Juni|June|Jun|"
@@ -31,12 +31,10 @@ DATE = re.compile(rf"\b(?:\d{{4}}-\d{{1,2}}-\d{{1,2}}|\d{{1,2}}\.\s?\d{{1,2}}\.\
                   rf"\d{{1,2}}\.?\s+{_M}\.?\s+\d{{4}}|{_M}\s+\d{{1,2}},?\s+\d{{4}})\b", re.I)
 DOB_CUE = re.compile(r"(?:geb\.?|geboren(?: am)?|born(?: on)?|\*|dob|geburtsdatum|date of birth|birth ?date|jg\.?|jahrgang)\s*:?\s*$", re.I)
 
-TITLE = r"(?:Univ\.-Prof\.|Prof\.|Professor(?:in)?|DDr\.|Dr\.|Dr|Doktor(?:in)?|Doctor|med\.|Mag\.|DI|OÄ|OA|Frau|Herrn|Herr|Fr\.|Hr\.|Mrs\.?|Mr\.?|Ms\.?|Miss)"
-NAME = r"[A-ZÄÖÜ][a-zäöüß]+(?:-[A-ZÄÖÜ][a-zäöüß]+)?"
-PERSON_TITLED = re.compile(rf"(?:{TITLE}\s+)+{NAME}(?:\s+{NAME}){{0,2}}")
-PERSON_CUED = re.compile(rf"(?:(?<=\bPatientin )|(?<=\bPatient )|(?<=\bpatient )|(?<=\bPat\. )|(?<=\bfür )|(?<=\bfor )|"
-                         rf"(?<=\bbei )|(?<=\bvon )|(?<=\bfrom )|(?<=\bask )|(?<=\ban ))({NAME}(?:\s+{NAME}){{1,2}})")
-PERSON_BARE = re.compile(rf"\b{NAME}\s+{NAME}\b")
+TITLE = r"(?:Univ\.-Prof\.|Prof\.|Professor(?:in)?|DDr\.|Dr\.|Dr|Doktor(?:in)?|Doctor|med\.|Mag\.|Magister|Magistra|DI|OÄ|OA|Frau|Herrn|Herr|Fr\.|Hr\.|Mrs\.?|Mr\.?|Ms\.?|Miss)"
+_UP = "A-Z" + "".join(c for c in map(chr, range(0xC0, 0x250)) if c.isupper())
+_LO = "a-z" + "".join(c for c in map(chr, range(0xDF, 0x250)) if c.islower())
+NAME = rf"[{_UP}][{_LO}]+(?:-[{_UP}][{_LO}]+)?"          # Latin letters incl. é ć ş ž, double-barrelled
 # capitalised words that are not names (German capitalises nouns)
 STOP = {w.lower() for w in """Labor Lab Laboratory Reha Rehab Rehaklinik Klinik Klinikum Krankenhaus Spital Hospital Praxis
     Institut Zentrum Clinic Ordination Gerinnung Befund Laborbefund Blutbild Werte Bitte Please Grund Reason Anfrage
@@ -44,7 +42,13 @@ STOP = {w.lower() for w in """Labor Lab Laboratory Reha Rehab Rehaklinik Klinik 
     Thanks Kanalstraße Waldblick Beispielstadt Die Der Das Den Dem Ich Wir Sie Er Es Und Oder Von Bei Für For From The
     Ask Request Patientin Patient Geb Geboren Born Gerinnungswerte Nierenwerte Leberwerte Hallo Hi Liebe Lieber
     Montag Dienstag Mittwoch Donnerstag Freitag Samstag Sonntag Monday Tuesday Wednesday Thursday Friday Heute Morgen
-    INR Discharge Summary Results Lab Blood Coagulation Kidney Liver Austria Österreich Wien Vienna""".split()}
+    INR Discharge Summary Results Lab Blood Coagulation Kidney Liver Austria Österreich Wien Vienna Blutzucker
+    Blutfette Cholesterin Entzündungswerte Nierenfunktion Leberfunktion Elektrolyte Glukose Kreatinin Thrombozyten
+    Kontrolle Verlauf Termin Station Zimmer Ambulanz Danke Dringend Urgent Thank""".split()}
+ORG_PREFIX = ("labor", "lab", "reha", "klinik", "zentral", "zentrum", "praxis", "spital", "kranken", "ordination",
+              "institut", "hospital", "clinic", "medizin", "gesundheit", "ambulatorium")
+RECIPIENT_AFTER = re.compile(r"^[\s,]*(?:\([^)]*\)\s*|[^.;:\n]{0,45}?,\s*)?(?:anschreiben|kontaktieren|anrufen|fragen|anfragen|bitten|schreiben|"
+                             r"contact|ask|email|text)\b", re.I)
 ORG_WORD = r"(?:Labor|Laboratory|Lab|Reha|Rehaklinik|Rehabilitationszentrum|Klinik|Klinikum|Krankenhaus|Spital|Hospital|Praxis|Ordination|Institut|Zentrum|Clinic)"
 ORG = re.compile(rf"\b(?:{ORG_WORD}(?:\s+[A-ZÄÖÜ][\wäöüß.-]+){{1,3}}|(?:[A-ZÄÖÜ][\wäöüß.-]+\s+){{1,2}}{ORG_WORD})\b")
 REASON = [re.compile(r"(?:Grund|Reason|Anlass|Indikation|Fragestellung)\s*:\s*(?P<r>[^\n]+?)\s*[.!]?\s*$", re.I | re.M),
@@ -53,40 +57,61 @@ REASON = [re.compile(r"(?:Grund|Reason|Anlass|Indikation|Fragestellung)\s*:\s*(?
                      r"(?:(?:geplanten|planned|anstehenden|upcoming|elektiven|elective)\s+)?[\wäöüß-]+)", re.I)]
 RECIPIENT_CUE = re.compile(r"(?:\bbei|\ban|\bfrom|\bask|\bto|\bbitten sie|\bplease ask)\s*$", re.I)
 PATIENT_CUE = re.compile(r"(?:\bpatientin|\bpatient|\bpat\.|\bfür|\bfor|\bof|\bzu|\bregarding|\bbetreffend)\s*$", re.I)
-DR = {"dr", "prof", "mag", "ddr", "univ.-prof", "oä", "oa", "di", "doktor", "doktorin", "doctor", "professor", "professorin"}
+DR = {"dr", "prof", "mag", "ddr", "univ.-prof", "oä", "oa", "di", "doktor", "doktorin", "doctor", "professor", "professorin", "magister", "magistra"}
 LAY = {"frau", "herr", "herrn", "fr", "hr", "mrs", "mr", "ms", "miss"}
 
 
-def _trim_person(text: str, start: int, end: int) -> Hit | None:
-    """Cut a person match at the first non-name word ('Dr. Eva Brandl Labor' -> 'Dr. Eva Brandl')."""
-    keep, seen_name = [], False
-    for t in re.finditer(r"\S+", text[start:end]):
-        w = t.group(0)
-        is_title = re.fullmatch(TITLE, w) is not None
-        if not is_title and w.lower().strip(".,") in STOP:
-            break
-        keep.append(t)
-        seen_name |= not is_title
-    if not seen_name:
-        return None
-    s, e = start + keep[0].start(), start + keep[-1].end()
-    titles = [t.group(0) for t in keep if re.fullmatch(TITLE, t.group(0))]
-    names = [t.group(0) for t in keep if re.fullmatch(TITLE, t.group(0)) is None]
-    return Hit(text[s:e], s, e, extra={"titles": titles, "name_tokens": names})
+def _is_org(core: str) -> bool:
+    w = core.lower().strip(".,;:()")
+    return w.startswith(ORG_PREFIX) and w not in ("labor",) or w in ("labor",)
 
 
 def persons(text: str) -> list[Hit]:
+    """Runs of titles + capitalised name tokens. A run needs a title + a name, or two names. Runs are split at a
+    title that follows a name ('Nierenwerte Frau Maria Beispiel'), and a run right after an organisation word
+    that starts with a title belongs to the organisation ('Labor Dr. Wimmer')."""
     hits: list[Hit] = []
-    for rx in (PERSON_TITLED, PERSON_CUED, PERSON_BARE):
-        for m in rx.finditer(text):
-            g = 1 if rx is PERSON_CUED else 0
-            h = _trim_person(text, m.start(g), m.end(g))
-            if not h or any(h.start < o.end and o.start < h.end for o in hits):
-                continue
-            if rx is not PERSON_TITLED and len(h.extra["name_tokens"]) < 2:
-                continue
-            hits.append(h)
-    return sorted(hits, key=lambda h: h.start)
+    run: list[tuple[str, int, int, bool]] = []
+    state = {"org": False}
+
+    def close() -> None:
+        while run and run[-1][3]:
+            run.pop()
+        names = [t for t in run if not t[3]]
+        titles = [t for t in run if t[3]]
+        if names and (titles or len(names) >= 2) and not state["org"]:
+            s0, e0 = run[0][1], run[-1][2]
+            hits.append(Hit(text[s0:e0], s0, e0, extra={"titles": [t[0] for t in titles], "name_tokens": [t[0] for t in names]}))
+        run.clear()
+        state["org"] = False
+
+    prev_org = False
+    for m in re.finditer(r"\S+", text):
+        w = m.group(0)
+        lead = len(w) - len(w.lstrip("(\"'„“"))
+        core = w[lead:].rstrip(",;:!?)\"'“”")
+        trail_punct = len(core) < len(w) - lead
+        is_title = re.fullmatch(TITLE, core) is not None
+        bare = core[:-1] if core.endswith(".") and not is_title else core
+        sentence_end = bare != core
+        is_name = (not is_title and re.fullmatch(NAME, bare) is not None and bare.lower() not in STOP and not _is_org(bare))
+        start = m.start() + lead
+        if is_title and run and not run[-1][3] and not state["org"]:
+            close()                                          # a new person starts at a title after a name
+        if is_title or is_name:
+            if not run:
+                state["org"] = prev_org and is_title            # "Labor Dr. Wimmer" is a lab, not a person
+            elif state["org"] and is_title and any(not t[3] for t in run):
+                run.clear()
+                state["org"] = False
+            run.append((bare if is_name else core, start, start + len(bare if is_name else core), is_title))
+            if lead or trail_punct or sentence_end:
+                close()
+        else:
+            close()
+        prev_org = _is_org(core) or (prev_org and (is_name or is_title) and not trail_punct)
+    close()
+    return hits
 
 
 def dates(text: str) -> list[Hit]:
@@ -189,14 +214,22 @@ def extract(text: str) -> dict[str, Hit | None]:
             rec += 2
         if PATIENT_CUE.search(before) or (von and titles & LAY):
             pat += 2
+        if RECIPIENT_AFTER.search(text[p.end:p.end + 40]):
+            rec += 2
         if titles & DR:
             rec += 1
         if titles & LAY:
             pat += 0.5
         scores.append((p, pat, rec))
-    patient = max((s for s in scores if s[1] > 0), key=lambda s: (s[1], -s[2]), default=None)
-    recipient = max((s for s in scores if s[2] > 0 and (patient is None or s[0] is not patient[0])),
-                    key=lambda s: (s[2], -s[1]), default=None)
+    # joint assignment: best (patient, recipient) pair, different people, each with a positive score
+    best, patient, recipient = 0.0, None, None
+    for a in [None, *scores]:
+        for b in [None, *scores]:
+            if (a and b and a[0] is b[0]) or (a and a[1] <= 0) or (b and b[2] <= 0):
+                continue
+            total = (a[1] - 0.25 * a[2] if a else 0) + (b[2] - 0.25 * b[1] if b else 0)
+            if total > best:
+                best, patient, recipient = total, a, b
     rec_hit = recipient[0] if recipient else None
     contact = None
     if cs:

@@ -2,6 +2,7 @@
 # Synapse for klinikum.example: config, users @lena.hofer + @befundbruecke, one room, bot invited.
 # Writes MATRIX_ROOM_ID into .env. Idempotent. Owner: SWE 1.
 set -euo pipefail
+export MSYS_NO_PATHCONV=1   # Git Bash on Windows: keep container paths like /data/... as they are
 cd "$(dirname "$0")/.."
 set -a; source .env; set +a
 HS=http://localhost:8008
@@ -50,7 +51,7 @@ if [ -z "${MATRIX_ROOM_ID:-}" ]; then
   echo "== creating room"
   MATRIX_ROOM_ID=$(curl -fs -XPOST "$HS/_matrix/client/v3/createRoom" -H "Authorization: Bearer $LENA" \
     -H 'Content-Type: application/json' \
-    -d "{\"name\":\"BefundBrücke – Anfragen\",\"preset\":\"private_chat\",\"invite\":[\"$MATRIX_BOT_USER\"]}" \
+    -d "{\"name\":\"BefundBr\u00fccke \u2013 Anfragen\",\"preset\":\"private_chat\",\"invite\":[\"$MATRIX_BOT_USER\"]}" \
     | python3 -c 'import json,sys; print(json.load(sys.stdin)["room_id"])')
   sed -i "s|^MATRIX_ROOM_ID=.*|MATRIX_ROOM_ID=$MATRIX_ROOM_ID|" .env
 fi

@@ -1,0 +1,2734 @@
+[
+{
+"ref": "Patient/maria-beispiel",
+"name": "Maria Beispiel",
+"dob": "1961-03-12",
+"gender": "female"
+},
+{
+"ref": "Patient/max-beispiel",
+"name": "Max Beispiel",
+"dob": "1960-01-01",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0000",
+"name": "Paul Lang",
+"dob": "1929-04-18",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0001",
+"name": "Elisabeth Schuster",
+"dob": "1974-10-02",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0002",
+"name": "Barbara Baumgartner",
+"dob": "1973-10-16",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0003",
+"name": "Johann Leitner",
+"dob": "2023-10-15",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0004",
+"name": "Renate Demir",
+"dob": "1995-07-22",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0005",
+"name": "Claudia Novak",
+"dob": "1967-04-27",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0006",
+"name": "Monika Müller",
+"dob": "1950-01-04",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0007",
+"name": "Ayşe Winkler",
+"dob": "1961-06-12",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0008",
+"name": "Ingrid Schmid",
+"dob": "1976-07-14",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0009",
+"name": "Sophie Brunner",
+"dob": "2014-11-19",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0010",
+"name": "Jürgen Kaya",
+"dob": "1973-10-05",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0011",
+"name": "Markus Lechner",
+"dob": "1997-02-17",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0012",
+"name": "Sophie Schmid",
+"dob": "1953-11-15",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0013",
+"name": "Barbara Koller",
+"dob": "1972-04-30",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0014",
+"name": "Chloé Pichler",
+"dob": "1998-08-12",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0015",
+"name": "Mehmet Fischer",
+"dob": "2021-11-02",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0016",
+"name": "Eva Maier",
+"dob": "2016-04-02",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0017",
+"name": "Karl Winkler",
+"dob": "1995-07-26",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0018",
+"name": "Katharina Lang",
+"dob": "2010-10-17",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0019",
+"name": "Georg Berger",
+"dob": "1977-01-06",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0020",
+"name": "Katharina Wolf",
+"dob": "2000-01-22",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0021",
+"name": "Julia Steiner",
+"dob": "1971-07-23",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0022",
+"name": "Emine Pichler",
+"dob": "2014-12-20",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0023",
+"name": "Christian Schwarz",
+"dob": "1956-04-07",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0024",
+"name": "Lena Fuchs",
+"dob": "1949-01-17",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0025",
+"name": "Gertrude Binder",
+"dob": "1967-01-30",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0026",
+"name": "Johann Egger",
+"dob": "1958-02-18",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0027",
+"name": "Andreas Moser",
+"dob": "1973-04-21",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0028",
+"name": "Paul Brunner",
+"dob": "1989-11-18",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0029",
+"name": "Emine Lehner",
+"dob": "2020-03-14",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0030",
+"name": "Claudia Haas",
+"dob": "2008-06-28",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0031",
+"name": "Theresa Wimmer",
+"dob": "2014-07-23",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0032",
+"name": "Monika Petrović",
+"dob": "1981-12-09",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0033",
+"name": "Mehmet Beispiel",
+"dob": "1981-09-22",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0034",
+"name": "Theresa Lehner",
+"dob": "1959-11-15",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0035",
+"name": "Mehmet Gruber",
+"dob": "1928-09-28",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0036",
+"name": "Jürgen Lechner",
+"dob": "1986-01-26",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0037",
+"name": "Jakob Schuster",
+"dob": "1945-02-24",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0038",
+"name": "Zoran Schuster",
+"dob": "1995-03-07",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0039",
+"name": "Petra Schuster",
+"dob": "2014-10-01",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0040",
+"name": "Monika Baumgartner",
+"dob": "1990-03-13",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0041",
+"name": "Christina Moser",
+"dob": "1995-08-31",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0042",
+"name": "Daniel Lang",
+"dob": "1948-03-30",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0043",
+"name": "Karl Schwarz",
+"dob": "2016-05-23",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0044",
+"name": "Jürgen Hofer",
+"dob": "2026-10-14",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0045",
+"name": "Ali Schuster",
+"dob": "2025-01-09",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0046",
+"name": "Jürgen Mayr",
+"dob": "1992-09-15",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0047",
+"name": "Günther Wallner",
+"dob": "1978-08-20",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0048",
+"name": "Jasmin Müller",
+"dob": "1982-04-10",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0049",
+"name": "Barbara Maier",
+"dob": "2012-12-05",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0050",
+"name": "Sabine Lang",
+"dob": "1974-12-05",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0051",
+"name": "Theresa Brunner",
+"dob": "1988-01-02",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0052",
+"name": "Jasmin Koller",
+"dob": "1966-11-17",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0053",
+"name": "Monika Schmid",
+"dob": "1976-07-03",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0054",
+"name": "Gertrude Novak",
+"dob": "1968-01-04",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0055",
+"name": "Claudia Lechner",
+"dob": "1998-05-02",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0056",
+"name": "Johann Hofer",
+"dob": "1939-08-16",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0057",
+"name": "Maria Demir",
+"dob": "1999-12-06",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0058",
+"name": "Lukas Eder",
+"dob": "1957-06-02",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0059",
+"name": "Emine Lehner",
+"dob": "2004-11-30",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0060",
+"name": "Theresa Schmid",
+"dob": "2024-02-25",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0061",
+"name": "Christina Schneider",
+"dob": "2007-12-11",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0062",
+"name": "Andreas Winkler",
+"dob": "2010-03-19",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0063",
+"name": "Julia Auer",
+"dob": "1937-03-16",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0064",
+"name": "Markus Wolf",
+"dob": "1948-05-14",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0065",
+"name": "Ali Jovanović",
+"dob": "2011-01-30",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0066",
+"name": "Lukas Aigner",
+"dob": "1983-09-09",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0067",
+"name": "Renate Moser",
+"dob": "1997-04-11",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0068",
+"name": "Jasmin Fischer",
+"dob": "1993-04-19",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0069",
+"name": "David Maier",
+"dob": "2006-10-31",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0070",
+"name": "Mehmet Gruber",
+"dob": "1971-10-20",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0071",
+"name": "Hannah Schmidt",
+"dob": "2009-05-25",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0072",
+"name": "Zoran Reiter",
+"dob": "2019-08-23",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0073",
+"name": "Margarethe Kovacs",
+"dob": "1963-09-25",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0074",
+"name": "Eva Petrović",
+"dob": "1997-03-14",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0075",
+"name": "Jürgen Schuster",
+"dob": "1952-10-18",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0076",
+"name": "Fatma Leitner",
+"dob": "1947-10-08",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0077",
+"name": "Lena Beispiel",
+"dob": "2017-05-10",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0078",
+"name": "Ayşe Berger",
+"dob": "1931-08-12",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0079",
+"name": "Katharina Lehner",
+"dob": "2009-10-21",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0080",
+"name": "Jakob Wagner",
+"dob": "2022-06-26",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0081",
+"name": "Thomas Schneider",
+"dob": "1987-08-18",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0082",
+"name": "Zoran Wallner",
+"dob": "1933-03-09",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0083",
+"name": "Lukas Yilmaz",
+"dob": "1989-08-18",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0084",
+"name": "Claudia Novak",
+"dob": "1958-10-15",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0085",
+"name": "Eva Horvath",
+"dob": "2003-10-10",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0086",
+"name": "Petra Berger",
+"dob": "1992-03-21",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0087",
+"name": "Sophie Wimmer",
+"dob": "1950-03-08",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0088",
+"name": "Petra Aigner",
+"dob": "1985-09-09",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0089",
+"name": "Mustafa Weber",
+"dob": "1977-05-24",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0090",
+"name": "Michael Lehner",
+"dob": "1972-07-28",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0091",
+"name": "Franz Beispiel",
+"dob": "1993-08-02",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0092",
+"name": "Wolfgang Beispiel",
+"dob": "2022-01-31",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0093",
+"name": "David Eder",
+"dob": "1955-11-06",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0094",
+"name": "Chloé Wallner",
+"dob": "2009-10-13",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0095",
+"name": "Gertrude Fischer",
+"dob": "2017-03-23",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0096",
+"name": "Karl Schuster",
+"dob": "1992-10-09",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0097",
+"name": "Felix Aigner",
+"dob": "2003-04-21",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0098",
+"name": "Anna Wagner",
+"dob": "2016-06-16",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0099",
+"name": "Jürgen Maier",
+"dob": "2000-07-16",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0100",
+"name": "Mehmet Horvath",
+"dob": "2025-08-08",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0101",
+"name": "Johann Fischer",
+"dob": "2024-09-21",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0102",
+"name": "Zoran Müller",
+"dob": "2007-01-18",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0103",
+"name": "Dragan Novak",
+"dob": "2026-04-19",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0104",
+"name": "Nina Winkler",
+"dob": "1995-03-18",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0105",
+"name": "Daniel Petrović",
+"dob": "1992-11-21",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0106",
+"name": "Thomas Fuchs",
+"dob": "2017-12-07",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0107",
+"name": "Max Koller",
+"dob": "2005-08-25",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0108",
+"name": "Daniel Fischer",
+"dob": "2016-08-01",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0109",
+"name": "Dragan Ebner",
+"dob": "2015-12-30",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0110",
+"name": "Wolfgang Ebner",
+"dob": "2017-11-26",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0111",
+"name": "Wolfgang Hofer",
+"dob": "2009-04-20",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0112",
+"name": "Claudia Petrović",
+"dob": "1975-09-10",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0113",
+"name": "Lisa Steiner",
+"dob": "1986-02-21",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0114",
+"name": "Dragan Jovanović",
+"dob": "2004-05-17",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0115",
+"name": "Ayşe Mayr",
+"dob": "1963-08-22",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0116",
+"name": "Jakob Aigner",
+"dob": "1950-07-07",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0117",
+"name": "Lisa Fuchs",
+"dob": "1982-10-17",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0118",
+"name": "Lena Yilmaz",
+"dob": "1965-12-06",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0119",
+"name": "Jakob Kovacs",
+"dob": "1999-01-20",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0120",
+"name": "Eva Bauer",
+"dob": "1993-07-23",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0121",
+"name": "Zoran Brunner",
+"dob": "2022-09-14",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0122",
+"name": "Claudia Mayer",
+"dob": "1994-08-25",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0123",
+"name": "Petra Koller",
+"dob": "2026-05-31",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0124",
+"name": "Theresa Gruber",
+"dob": "2014-05-08",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0125",
+"name": "Andreas Aigner",
+"dob": "2006-10-04",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0126",
+"name": "Florian Berger",
+"dob": "2001-01-16",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0127",
+"name": "Ingrid Jovanović",
+"dob": "1970-11-24",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0128",
+"name": "Petra Winkler",
+"dob": "1970-09-02",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0129",
+"name": "Karl Schuster",
+"dob": "2000-05-13",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0130",
+"name": "Christian Horvath",
+"dob": "2025-03-21",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0131",
+"name": "Lukas Schuster",
+"dob": "1999-07-25",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0132",
+"name": "Martin Hofer",
+"dob": "2025-12-25",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0133",
+"name": "Christian Steiner",
+"dob": "1959-01-29",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0134",
+"name": "Ingrid Weber",
+"dob": "1979-11-24",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0135",
+"name": "Ali Wolf",
+"dob": "2007-08-28",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0136",
+"name": "Theresa Schuster",
+"dob": "1949-03-17",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0137",
+"name": "Stefan Novak",
+"dob": "1986-10-30",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0138",
+"name": "Josef Winkler",
+"dob": "1975-01-25",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0139",
+"name": "Anna Schuster",
+"dob": "1996-03-24",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0140",
+"name": "Zoran Aigner",
+"dob": "1969-04-10",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0141",
+"name": "Maria Leitner",
+"dob": "2013-02-15",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0142",
+"name": "Lisa Bauer",
+"dob": "2011-03-04",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0143",
+"name": "Eva Jovanović",
+"dob": "1973-08-11",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0144",
+"name": "Stefan Beispiel",
+"dob": "2002-12-13",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0145",
+"name": "Karl Winkler",
+"dob": "1985-09-21",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0146",
+"name": "Günther Demir",
+"dob": "1980-09-07",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0147",
+"name": "Christian Schmidt",
+"dob": "1960-01-27",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0148",
+"name": "Petra Gruber",
+"dob": "1966-12-07",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0149",
+"name": "Franz Fuchs",
+"dob": "1966-08-06",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0150",
+"name": "Julia Wagner",
+"dob": "1961-11-12",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0151",
+"name": "Felix Steiner",
+"dob": "2026-09-08",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0152",
+"name": "Nina Fuchs",
+"dob": "2003-11-04",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0153",
+"name": "Dragan Beispiel",
+"dob": "1998-07-23",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0154",
+"name": "Fatma Egger",
+"dob": "1977-10-20",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0155",
+"name": "Stefan Fuchs",
+"dob": "1977-04-27",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0156",
+"name": "Lukas Pichler",
+"dob": "2002-08-29",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0157",
+"name": "Peter Horvath",
+"dob": "1979-04-04",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0158",
+"name": "Renate Haas",
+"dob": "1950-09-24",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0159",
+"name": "Renate Huber",
+"dob": "2024-04-26",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0160",
+"name": "Günther Wagner",
+"dob": "1994-08-27",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0161",
+"name": "Sophie Schuster",
+"dob": "1980-05-23",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0162",
+"name": "Anna Lang",
+"dob": "1997-11-24",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0163",
+"name": "Josef Wimmer",
+"dob": "1972-02-27",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0164",
+"name": "Hannah Wimmer",
+"dob": "2015-12-26",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0165",
+"name": "Chloé Koller",
+"dob": "1949-01-05",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0166",
+"name": "Paul Petrović",
+"dob": "2019-04-28",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0167",
+"name": "Wolfgang Wolf",
+"dob": "1995-06-02",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0168",
+"name": "Chloé Aigner",
+"dob": "1951-04-17",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0169",
+"name": "Emine Jovanović",
+"dob": "2018-11-15",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0170",
+"name": "Zoë Mayer",
+"dob": "1957-03-09",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0171",
+"name": "Lena Kaya",
+"dob": "1957-06-20",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0172",
+"name": "Emine Ebner",
+"dob": "1975-05-13",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0173",
+"name": "Michael Petrović",
+"dob": "1973-05-27",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0174",
+"name": "Peter Schwarz",
+"dob": "1969-05-07",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0175",
+"name": "Felix Pichler",
+"dob": "1965-08-15",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0176",
+"name": "Paul Ebner",
+"dob": "1981-08-21",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0177",
+"name": "Karl Jovanović",
+"dob": "1957-05-18",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0178",
+"name": "Johanna Schmidt",
+"dob": "2003-06-19",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0179",
+"name": "Elisabeth Horvath",
+"dob": "2004-12-07",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0180",
+"name": "Daniel Aigner",
+"dob": "2007-06-19",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0181",
+"name": "Jürgen Huber",
+"dob": "1986-09-21",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0182",
+"name": "Margarethe Egger",
+"dob": "2016-05-28",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0183",
+"name": "Jasmin Wolf",
+"dob": "2023-12-27",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0184",
+"name": "Daniel Eder",
+"dob": "1958-02-16",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0185",
+"name": "David Schmid",
+"dob": "1992-11-08",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0186",
+"name": "Paul Mayer",
+"dob": "2001-05-25",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0187",
+"name": "Peter Wagner",
+"dob": "1977-11-14",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0188",
+"name": "Christina Koller",
+"dob": "1952-04-11",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0189",
+"name": "Günther Pichler",
+"dob": "1984-01-08",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0190",
+"name": "Johann Schmidt",
+"dob": "1975-10-22",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0191",
+"name": "Theresa Baumgartner",
+"dob": "1974-03-18",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0192",
+"name": "Emine Reiter",
+"dob": "2017-06-23",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0193",
+"name": "Lukas Haas",
+"dob": "1980-03-25",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0194",
+"name": "Georg Lechner",
+"dob": "1972-09-16",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0195",
+"name": "Martin Berger",
+"dob": "1986-05-01",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0196",
+"name": "Josef Pichler",
+"dob": "1988-02-26",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0197",
+"name": "Lisa Brunner",
+"dob": "1964-09-06",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0198",
+"name": "Felix Gruber",
+"dob": "2008-04-07",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0199",
+"name": "Markus Ebner",
+"dob": "1995-05-30",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0200",
+"name": "Karl Lehner",
+"dob": "1970-07-10",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0201",
+"name": "Margarethe Winkler",
+"dob": "1974-12-10",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0202",
+"name": "Lukas Petrović",
+"dob": "2004-03-28",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0203",
+"name": "Ayşe Hofer",
+"dob": "1979-10-11",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0204",
+"name": "Johanna Bauer",
+"dob": "1968-07-27",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0205",
+"name": "Jasmin Yilmaz",
+"dob": "2007-02-22",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0206",
+"name": "Gertrude Huber",
+"dob": "2000-08-13",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0207",
+"name": "Christina Wolf",
+"dob": "1956-05-29",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0208",
+"name": "Lisa Steiner",
+"dob": "1966-08-07",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0209",
+"name": "Ali Ćosić",
+"dob": "1968-10-22",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0210",
+"name": "Nina Mayr",
+"dob": "1947-10-10",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0211",
+"name": "Lukas Mayr",
+"dob": "1952-07-18",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0212",
+"name": "Mehmet Wallner",
+"dob": "1996-04-23",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0213",
+"name": "Theresa Wagner",
+"dob": "1996-11-24",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0214",
+"name": "Ayşe Horvath",
+"dob": "1946-10-07",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0215",
+"name": "Elisabeth Fischer",
+"dob": "1964-12-22",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0216",
+"name": "Ayşe Auer",
+"dob": "2005-05-02",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0217",
+"name": "Nina Schuster",
+"dob": "1981-04-02",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0218",
+"name": "Franz Schmidt",
+"dob": "1986-01-14",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0219",
+"name": "Katharina Wallner",
+"dob": "1963-05-11",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0220",
+"name": "Lisa Aigner",
+"dob": "2000-04-01",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0221",
+"name": "Jasmin Jovanović",
+"dob": "1990-05-10",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0222",
+"name": "Christina Wolf",
+"dob": "1989-01-16",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0223",
+"name": "Johanna Mayer",
+"dob": "1968-12-01",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0224",
+"name": "Johanna Schuster",
+"dob": "1998-01-20",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0225",
+"name": "Zoran Yilmaz",
+"dob": "2007-03-04",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0226",
+"name": "Monika Schuster",
+"dob": "2024-02-18",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0227",
+"name": "Christian Wagner",
+"dob": "1999-11-16",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0228",
+"name": "Paul Wallner",
+"dob": "1996-09-25",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0229",
+"name": "Florian Demir",
+"dob": "2015-01-08",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0230",
+"name": "Eva Demir",
+"dob": "1992-06-03",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0231",
+"name": "Christian Novak",
+"dob": "2016-06-26",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0232",
+"name": "Daniel Eder",
+"dob": "2011-01-11",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0233",
+"name": "Ingrid Wimmer",
+"dob": "1975-06-30",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0234",
+"name": "Karl Moser",
+"dob": "1949-10-22",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0235",
+"name": "Wolfgang Maier",
+"dob": "1972-03-03",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0236",
+"name": "Ingrid Eder",
+"dob": "2014-07-20",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0237",
+"name": "Lisa Steiner",
+"dob": "1968-10-17",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0238",
+"name": "Elisabeth Maier",
+"dob": "1981-05-20",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0239",
+"name": "Felix Wagner",
+"dob": "2015-01-25",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0240",
+"name": "Elisabeth Novak",
+"dob": "1937-01-21",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0241",
+"name": "Andrea Schuster",
+"dob": "1962-01-28",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0242",
+"name": "Nina Schuster",
+"dob": "1989-05-27",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0243",
+"name": "Wolfgang Lang",
+"dob": "1999-04-10",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0244",
+"name": "David Leitner",
+"dob": "1984-03-17",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0245",
+"name": "Elisabeth Weber",
+"dob": "1967-07-24",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0246",
+"name": "Lisa Lang",
+"dob": "1972-07-11",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0247",
+"name": "Petra Yilmaz",
+"dob": "1993-01-30",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0248",
+"name": "Paul Egger",
+"dob": "2010-12-08",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0249",
+"name": "David Lang",
+"dob": "2017-10-01",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0250",
+"name": "Daniel Yilmaz",
+"dob": "1976-12-03",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0251",
+"name": "Christina Binder",
+"dob": "1957-08-01",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0252",
+"name": "Katharina Brunner",
+"dob": "1959-01-04",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0253",
+"name": "Jasmin Winkler",
+"dob": "1967-01-26",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0254",
+"name": "Elisabeth Wagner",
+"dob": "2006-07-22",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0255",
+"name": "Maria Weber",
+"dob": "1962-08-12",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0256",
+"name": "Margarethe Binder",
+"dob": "1967-03-10",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0257",
+"name": "Zoran Huber",
+"dob": "2019-01-28",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0258",
+"name": "Günther Lehner",
+"dob": "1953-08-15",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0259",
+"name": "Lena Mayer",
+"dob": "1995-06-01",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0260",
+"name": "Fatma Binder",
+"dob": "1984-12-03",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0261",
+"name": "Katharina Pichler",
+"dob": "1972-10-22",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0262",
+"name": "Sophie Novak",
+"dob": "1966-03-06",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0263",
+"name": "Margarethe Schmidt",
+"dob": "1953-11-16",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0264",
+"name": "Mehmet Binder",
+"dob": "1974-08-10",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0265",
+"name": "Josef Eder",
+"dob": "1980-12-03",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0266",
+"name": "Christina Beispiel",
+"dob": "1948-06-02",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0267",
+"name": "Jürgen Berger",
+"dob": "1980-09-25",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0268",
+"name": "Markus Koller",
+"dob": "1986-02-14",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0269",
+"name": "Fatma Schwarz",
+"dob": "1975-08-29",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0270",
+"name": "Emine Wagner",
+"dob": "1990-08-16",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0271",
+"name": "Andrea Schmid",
+"dob": "2018-10-31",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0272",
+"name": "Michael Demir",
+"dob": "2018-11-07",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0273",
+"name": "Lukas Mayer",
+"dob": "1978-06-25",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0274",
+"name": "Julia Baumgartner",
+"dob": "1969-03-19",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0275",
+"name": "Julia Maier",
+"dob": "1938-02-13",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0276",
+"name": "Nina Mayr",
+"dob": "1981-04-13",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0277",
+"name": "Katharina Auer",
+"dob": "2000-09-01",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0278",
+"name": "Nina Demir",
+"dob": "1995-10-20",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0279",
+"name": "Lisa Beispiel",
+"dob": "2021-05-05",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0280",
+"name": "Anna Gruber",
+"dob": "1965-08-28",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0281",
+"name": "Elisabeth Schneider",
+"dob": "1981-04-02",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0282",
+"name": "Günther Hofer",
+"dob": "1993-07-02",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0283",
+"name": "Christina Wallner",
+"dob": "1992-12-02",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0284",
+"name": "Fatma Aigner",
+"dob": "1969-03-12",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0285",
+"name": "Mustafa Bauer",
+"dob": "2017-02-02",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0286",
+"name": "Emine Kaya",
+"dob": "1992-04-05",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0287",
+"name": "Jakob Kovacs",
+"dob": "1970-08-04",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0288",
+"name": "Sophie Schwarz",
+"dob": "1972-08-02",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0289",
+"name": "Maria Binder",
+"dob": "1966-03-04",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0290",
+"name": "Paul Schuster",
+"dob": "2000-03-26",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0291",
+"name": "Christina Pichler",
+"dob": "1958-09-01",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0292",
+"name": "Zoran Fischer",
+"dob": "1957-06-22",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0293",
+"name": "Lukas Kaya",
+"dob": "2025-05-24",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0294",
+"name": "Max Maier",
+"dob": "1965-06-24",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0295",
+"name": "Ali Jovanović",
+"dob": "2012-09-23",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0296",
+"name": "Mustafa Eder",
+"dob": "2010-11-16",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0297",
+"name": "Claudia Pichler",
+"dob": "2004-05-13",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0298",
+"name": "Johanna Lang",
+"dob": "2002-08-10",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0299",
+"name": "Daniel Eder",
+"dob": "2002-01-10",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0300",
+"name": "Theresa Beispiel",
+"dob": "1950-07-12",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0301",
+"name": "Daniel Berger",
+"dob": "1962-05-08",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0302",
+"name": "Elisabeth Beispiel",
+"dob": "2009-04-19",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0303",
+"name": "Lisa Lehner",
+"dob": "1972-05-15",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0304",
+"name": "Franz Fuchs",
+"dob": "2011-10-25",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0305",
+"name": "Martin Petrović",
+"dob": "2003-06-06",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0306",
+"name": "Ayşe Wallner",
+"dob": "1966-01-22",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0307",
+"name": "Nina Kaya",
+"dob": "1989-11-03",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0308",
+"name": "Nina Schneider",
+"dob": "1987-06-12",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0309",
+"name": "Jakob Lang",
+"dob": "2019-05-08",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0310",
+"name": "Ali Petrović",
+"dob": "1983-03-22",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0311",
+"name": "Wolfgang Koller",
+"dob": "2021-06-27",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0312",
+"name": "Lisa Schmidt",
+"dob": "2025-11-02",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0313",
+"name": "Lisa Wagner",
+"dob": "1954-02-26",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0314",
+"name": "Barbara Müller",
+"dob": "1974-06-27",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0315",
+"name": "Johann Schwarz",
+"dob": "1955-06-10",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0316",
+"name": "Sabine Baumgartner",
+"dob": "1994-04-27",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0317",
+"name": "Lukas Bauer",
+"dob": "2011-06-07",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0318",
+"name": "Thomas Brunner",
+"dob": "1982-08-08",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0319",
+"name": "Lisa Lechner",
+"dob": "1965-05-08",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0320",
+"name": "Fatma Binder",
+"dob": "1970-09-06",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0321",
+"name": "Andrea Koller",
+"dob": "1994-05-01",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0322",
+"name": "Christian Kovacs",
+"dob": "1971-01-17",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0323",
+"name": "Renate Petrović",
+"dob": "1958-10-17",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0324",
+"name": "Dragan Lang",
+"dob": "1991-03-09",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0325",
+"name": "Renate Wolf",
+"dob": "2013-02-20",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0326",
+"name": "Lena Petrović",
+"dob": "1993-05-25",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0327",
+"name": "Paul Brunner",
+"dob": "1981-02-12",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0328",
+"name": "Lisa Ćosić",
+"dob": "2012-03-05",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0329",
+"name": "Paul Kovacs",
+"dob": "1976-07-13",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0330",
+"name": "Lisa Weber",
+"dob": "1983-04-05",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0331",
+"name": "Florian Ebner",
+"dob": "1972-02-12",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0332",
+"name": "Fatma Berger",
+"dob": "1966-10-04",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0333",
+"name": "Johanna Berger",
+"dob": "1979-06-09",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0334",
+"name": "Peter Schmid",
+"dob": "1947-06-04",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0335",
+"name": "Markus Kovacs",
+"dob": "1973-10-01",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0336",
+"name": "Renate Binder",
+"dob": "1998-08-17",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0337",
+"name": "Lukas Baumgartner",
+"dob": "1953-08-08",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0338",
+"name": "Chloé Maier",
+"dob": "2011-07-03",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0339",
+"name": "Chloé Mayr",
+"dob": "2010-12-12",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0340",
+"name": "Fatma Wimmer",
+"dob": "2000-01-07",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0341",
+"name": "Barbara Steiner",
+"dob": "2007-03-28",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0342",
+"name": "Petra Kovacs",
+"dob": "2018-03-01",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0343",
+"name": "Barbara Lang",
+"dob": "1963-02-09",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0344",
+"name": "Johann Mayr",
+"dob": "1975-05-28",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0345",
+"name": "Eva Schuster",
+"dob": "1979-01-17",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0346",
+"name": "Barbara Gruber",
+"dob": "1992-09-30",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0347",
+"name": "Maria Wallner",
+"dob": "2002-05-11",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0348",
+"name": "Gertrude Lang",
+"dob": "1968-06-10",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0349",
+"name": "Renate Beispiel",
+"dob": "2020-08-18",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0350",
+"name": "Hannah Wallner",
+"dob": "2006-10-02",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0351",
+"name": "Petra Petrović",
+"dob": "1955-07-27",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0352",
+"name": "Thomas Wimmer",
+"dob": "2002-01-06",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0353",
+"name": "Christina Winkler",
+"dob": "1990-03-03",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0354",
+"name": "Barbara Aigner",
+"dob": "1979-01-12",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0355",
+"name": "Renate Aigner",
+"dob": "1974-01-01",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0356",
+"name": "Theresa Horvath",
+"dob": "2001-03-06",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0357",
+"name": "Christian Schmidt",
+"dob": "2004-08-11",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0358",
+"name": "Peter Gruber",
+"dob": "2018-09-12",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0359",
+"name": "Andrea Winkler",
+"dob": "1965-12-24",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0360",
+"name": "Mehmet Huber",
+"dob": "1953-01-30",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0361",
+"name": "Felix Novak",
+"dob": "1998-08-01",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0362",
+"name": "Sabine Schneider",
+"dob": "2007-12-25",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0363",
+"name": "Nina Winkler",
+"dob": "1934-06-17",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0364",
+"name": "Petra Egger",
+"dob": "1956-11-15",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0365",
+"name": "Maria Koller",
+"dob": "1965-10-10",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0366",
+"name": "Georg Jovanović",
+"dob": "1981-11-01",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0367",
+"name": "Renate Kovacs",
+"dob": "2009-11-25",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0368",
+"name": "Ali Wagner",
+"dob": "1983-11-02",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0369",
+"name": "Katharina Müller",
+"dob": "1995-06-24",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0370",
+"name": "Michael Schuster",
+"dob": "1965-06-23",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0371",
+"name": "Lisa Haas",
+"dob": "2020-08-29",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0372",
+"name": "Claudia Haas",
+"dob": "2023-08-08",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0373",
+"name": "David Egger",
+"dob": "1970-03-15",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0374",
+"name": "Claudia Horvath",
+"dob": "1980-05-28",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0375",
+"name": "Jürgen Schneider",
+"dob": "1972-01-13",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0376",
+"name": "Ayşe Fischer",
+"dob": "1994-08-05",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0377",
+"name": "Emine Weber",
+"dob": "1999-02-26",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0378",
+"name": "Theresa Winkler",
+"dob": "2002-06-10",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0379",
+"name": "Mehmet Demir",
+"dob": "2012-12-21",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0380",
+"name": "Ayşe Ebner",
+"dob": "1943-03-28",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0381",
+"name": "Jasmin Winkler",
+"dob": "1952-03-11",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0382",
+"name": "Mehmet Petrović",
+"dob": "1961-09-30",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0383",
+"name": "Ayşe Lang",
+"dob": "1949-02-10",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0384",
+"name": "Sophie Schwarz",
+"dob": "1993-02-22",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0385",
+"name": "Georg Lechner",
+"dob": "1982-03-23",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0386",
+"name": "Michael Egger",
+"dob": "2001-05-04",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0387",
+"name": "Max Kaya",
+"dob": "1993-06-16",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0388",
+"name": "Jürgen Ćosić",
+"dob": "1982-01-20",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0389",
+"name": "Josef Horvath",
+"dob": "1997-02-21",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0390",
+"name": "Lukas Novak",
+"dob": "1966-05-27",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0391",
+"name": "Peter Ćosić",
+"dob": "1994-04-26",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0392",
+"name": "Daniel Demir",
+"dob": "1968-08-04",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0393",
+"name": "Mustafa Binder",
+"dob": "1962-12-07",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0394",
+"name": "Mehmet Berger",
+"dob": "1992-05-29",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0395",
+"name": "Martin Kaya",
+"dob": "1995-08-28",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0396",
+"name": "Hannah Novak",
+"dob": "1991-09-14",
+"gender": "female"
+},
+{
+"ref": "Patient/bb-0397",
+"name": "Mustafa Mayr",
+"dob": "1951-04-28",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0398",
+"name": "Josef Aigner",
+"dob": "1951-07-03",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0399",
+"name": "Stefan Schwarz",
+"dob": "2003-09-25",
+"gender": "male"
+},
+{
+"ref": "Patient/bb-0202-ns",
+"name": "Lukas Petrović",
+"dob": "2026-02-21",
+"gender": "male",
+"trap_of": "Patient/bb-0202",
+"trap": "namesake"
+},
+{
+"ref": "Patient/bb-0347-ns",
+"name": "Maria Wallner",
+"dob": "2025-07-20",
+"gender": "female",
+"trap_of": "Patient/bb-0347",
+"trap": "namesake"
+},
+{
+"ref": "Patient/bb-0248-ns",
+"name": "Paul Egger",
+"dob": "1987-07-21",
+"gender": "male",
+"trap_of": "Patient/bb-0248",
+"trap": "namesake"
+},
+{
+"ref": "Patient/bb-0179-ns",
+"name": "Elisabeth Horvath",
+"dob": "2012-10-02",
+"gender": "female",
+"trap_of": "Patient/bb-0179",
+"trap": "namesake"
+},
+{
+"ref": "Patient/bb-0278-ns",
+"name": "Nina Demir",
+"dob": "1985-01-30",
+"gender": "female",
+"trap_of": "Patient/bb-0278",
+"trap": "namesake"
+},
+{
+"ref": "Patient/bb-0353-ns",
+"name": "Christina Winkler",
+"dob": "1988-07-10",
+"gender": "female",
+"trap_of": "Patient/bb-0353",
+"trap": "namesake"
+},
+{
+"ref": "Patient/bb-0289-ns",
+"name": "Maria Binder",
+"dob": "1955-04-17",
+"gender": "female",
+"trap_of": "Patient/bb-0289",
+"trap": "namesake"
+},
+{
+"ref": "Patient/bb-0012-ns",
+"name": "Sophie Schmid",
+"dob": "1969-10-07",
+"gender": "female",
+"trap_of": "Patient/bb-0012",
+"trap": "namesake"
+},
+{
+"ref": "Patient/bb-0247-ns",
+"name": "Petra Yilmaz",
+"dob": "1984-01-03",
+"gender": "female",
+"trap_of": "Patient/bb-0247",
+"trap": "namesake"
+},
+{
+"ref": "Patient/bb-0104-ns",
+"name": "Nina Winkler",
+"dob": "1988-06-04",
+"gender": "female",
+"trap_of": "Patient/bb-0104",
+"trap": "namesake"
+},
+{
+"ref": "Patient/bb-0102-ns",
+"name": "Zoran Müller",
+"dob": "2015-04-21",
+"gender": "male",
+"trap_of": "Patient/bb-0102",
+"trap": "namesake"
+},
+{
+"ref": "Patient/bb-0306-ns",
+"name": "Ayşe Wallner",
+"dob": "1950-07-08",
+"gender": "female",
+"trap_of": "Patient/bb-0306",
+"trap": "namesake"
+},
+{
+"ref": "Patient/bb-0025-ns",
+"name": "Gertrude Binder",
+"dob": "1955-08-19",
+"gender": "female",
+"trap_of": "Patient/bb-0025",
+"trap": "namesake"
+},
+{
+"ref": "Patient/bb-0221-ns",
+"name": "Jasmin Jovanović",
+"dob": "1988-09-24",
+"gender": "female",
+"trap_of": "Patient/bb-0221",
+"trap": "namesake"
+},
+{
+"ref": "Patient/bb-0354-ns",
+"name": "Barbara Aigner",
+"dob": "2003-07-15",
+"gender": "female",
+"trap_of": "Patient/bb-0354",
+"trap": "namesake"
+},
+{
+"ref": "Patient/bb-0387-ns",
+"name": "Max Kaya",
+"dob": "2015-03-06",
+"gender": "male",
+"trap_of": "Patient/bb-0387",
+"trap": "namesake"
+},
+{
+"ref": "Patient/bb-0204-ns",
+"name": "Johanna Bauer",
+"dob": "1981-10-05",
+"gender": "female",
+"trap_of": "Patient/bb-0204",
+"trap": "namesake"
+},
+{
+"ref": "Patient/bb-0072-ns",
+"name": "Zoran Reiter",
+"dob": "2035-07-02",
+"gender": "male",
+"trap_of": "Patient/bb-0072",
+"trap": "namesake"
+},
+{
+"ref": "Patient/bb-0351-ns",
+"name": "Petra Petrović",
+"dob": "1947-10-03",
+"gender": "female",
+"trap_of": "Patient/bb-0351",
+"trap": "namesake"
+},
+{
+"ref": "Patient/bb-0381-ns",
+"name": "Jasmin Winkler",
+"dob": "1933-03-22",
+"gender": "female",
+"trap_of": "Patient/bb-0381",
+"trap": "namesake"
+},
+{
+"ref": "Patient/bb-0313-ns",
+"name": "Lisa Wagner",
+"dob": "1933-12-22",
+"gender": "female",
+"trap_of": "Patient/bb-0313",
+"trap": "namesake"
+},
+{
+"ref": "Patient/bb-0010-ns",
+"name": "Jürgen Kaya",
+"dob": "1971-02-27",
+"gender": "male",
+"trap_of": "Patient/bb-0010",
+"trap": "namesake"
+},
+{
+"ref": "Patient/bb-0033-ns",
+"name": "Mehmet Beispiel",
+"dob": "1993-09-06",
+"gender": "male",
+"trap_of": "Patient/bb-0033",
+"trap": "namesake"
+},
+{
+"ref": "Patient/bb-0382-ns",
+"name": "Mehmet Petrović",
+"dob": "1938-06-28",
+"gender": "male",
+"trap_of": "Patient/bb-0382",
+"trap": "namesake"
+},
+{
+"ref": "Patient/bb-0309-ns",
+"name": "Jakob Lang",
+"dob": "2035-03-09",
+"gender": "male",
+"trap_of": "Patient/bb-0309",
+"trap": "namesake"
+},
+{
+"ref": "Patient/bb-0077-tw",
+"name": "Lina Beispiel",
+"dob": "2017-05-10",
+"gender": "female",
+"trap_of": "Patient/bb-0077",
+"trap": "twin"
+},
+{
+"ref": "Patient/bb-0399-tw",
+"name": "Stephan Schwarz",
+"dob": "2003-09-25",
+"gender": "male",
+"trap_of": "Patient/bb-0399",
+"trap": "twin"
+},
+{
+"ref": "Patient/bb-0326-tw",
+"name": "Lina Petrović",
+"dob": "1993-05-25",
+"gender": "female",
+"trap_of": "Patient/bb-0326",
+"trap": "twin"
+},
+{
+"ref": "Patient/bb-0058-tw",
+"name": "Lucas Eder",
+"dob": "1957-06-02",
+"gender": "male",
+"trap_of": "Patient/bb-0058",
+"trap": "twin"
+},
+{
+"ref": "Patient/bb-0107-tw",
+"name": "Marx Koller",
+"dob": "2005-08-25",
+"gender": "male",
+"trap_of": "Patient/bb-0107",
+"trap": "twin"
+},
+{
+"ref": "Patient/bb-0352-tw",
+"name": "Tomas Wimmer",
+"dob": "2002-01-06",
+"gender": "male",
+"trap_of": "Patient/bb-0352",
+"trap": "twin"
+},
+{
+"ref": "Patient/bb-0021-tw",
+"name": "Julian Steiner",
+"dob": "1971-07-23",
+"gender": "female",
+"trap_of": "Patient/bb-0021",
+"trap": "twin"
+},
+{
+"ref": "Patient/bb-0081-tw",
+"name": "Tomas Schneider",
+"dob": "1987-08-18",
+"gender": "male",
+"trap_of": "Patient/bb-0081",
+"trap": "twin"
+},
+{
+"ref": "Patient/bb-0262-tw",
+"name": "Sofie Novak",
+"dob": "1966-03-06",
+"gender": "female",
+"trap_of": "Patient/bb-0262",
+"trap": "twin"
+},
+{
+"ref": "Patient/bb-0143-tw",
+"name": "Evi Jovanović",
+"dob": "1973-08-11",
+"gender": "female",
+"trap_of": "Patient/bb-0143",
+"trap": "twin"
+},
+{
+"ref": "Patient/bb-0009-tw",
+"name": "Sofie Brunner",
+"dob": "2014-11-19",
+"gender": "female",
+"trap_of": "Patient/bb-0009",
+"trap": "twin"
+},
+{
+"ref": "Patient/bb-0387-tw",
+"name": "Marx Kaya",
+"dob": "1993-06-16",
+"gender": "male",
+"trap_of": "Patient/bb-0387",
+"trap": "twin"
+},
+{
+"ref": "Patient/bb-0384-tw",
+"name": "Sofie Schwarz",
+"dob": "1993-02-22",
+"gender": "female",
+"trap_of": "Patient/bb-0384",
+"trap": "twin"
+},
+{
+"ref": "Patient/bb-0273-tw",
+"name": "Lucas Mayer",
+"dob": "1978-06-25",
+"gender": "male",
+"trap_of": "Patient/bb-0273",
+"trap": "twin"
+},
+{
+"ref": "Patient/bb-0157-tw",
+"name": "Petra Horvath",
+"dob": "1979-04-04",
+"gender": "male",
+"trap_of": "Patient/bb-0157",
+"trap": "twin"
+}
+]

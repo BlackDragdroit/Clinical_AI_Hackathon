@@ -30,3 +30,8 @@ Append after each milestone: what works, what's next, known issues.
 - G2 and the misdelivery tests on that clean stack, via `scripts/dev/flow.sh r1|r2|m1|m2|m3`: r1 and r2 filed with a ✅ in Matrix; m1 and m2 got a 403 with nothing shown, identity FAILED + misdelivery_caught; m3 not filed (Observation count unchanged), with ⚠️ in Matrix. Audit 6/6, chain intact.
 - FTAPI is deliberately not used; the README says so (tagline, trust boundaries, replaceability table).
 - Still open (not SWE 1): HL7 validator run (`make validate`, MedEng); the address lint (MedEng) still runs as a stub, so the M1 audit label reads "M1/M2".
+
+## MedEng: first HL7 validator run (Fri 00:40)
+- Works: `make validate` on bundles built by core for request 1 (lab, 4 Observations + DiagnosticReport + DocumentReference + Provenance) and request 2 (rehab DocumentReference + Provenance): TOTAL_ERRORS=0. The only error before was Provenance.policy on example.org (fixed in core/fhir_build.py, Biostat informed via PR).
+- Next: rerun on bundles filed through the live stack (G2); optional: narrative (dom-6 warnings, 10 + 6, best practice only).
+- Known issues: first validator run needs ~8 min to download packages and 3 GB RAM; on Windows `core/intake.py` needs PYTHONIOENCODING=utf-8 to print the ✅ message.

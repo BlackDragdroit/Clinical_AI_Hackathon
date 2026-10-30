@@ -27,7 +27,9 @@ OBS_CAT = "http://terminology.hl7.org/CodeSystem/observation-category"
 V3_INTERP = "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"
 V2_0074 = "http://terminology.hl7.org/CodeSystem/v2-0074"
 PROV_TYPE = "http://terminology.hl7.org/CodeSystem/provenance-participant-type"
-IDENTITY_POLICY_URI = "https://example.org/befundbruecke/policy/identity-v1"   # TODO: point at README anchor
+# the identity check per document type, as documented (README design answer 2); the HL7 validator rejects example.org
+IDENTITY_POLICY_URI = ("https://github.com/BlackDragdroit/Clinical_AI_Hackathon"
+                       "#2-which-identity-check-per-document-type-and-why")
 
 UCUM_MAP = {
     "10^9/l": "10*9/L", "10^9/L": "10*9/L", "g/l": "10*9/L", "G/L": "10*9/L", "10^12/l": "10*12/L", "T/L": "10*12/L",

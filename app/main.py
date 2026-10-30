@@ -21,12 +21,13 @@ from fastapi import FastAPI, File, Form, Request, UploadFile
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
-from app import audit, bot, dashboard, db, engine_client, intake_service, misdelivery, notify, tokens
+from app import audit, bot, dashboard, db, engine_client, i18n, intake_service, misdelivery, notify, tokens
 from app.config import settings
 from app.identity import eid_mock, policy
 from app.security import sign, unsign
 
 templates = Jinja2Templates(directory=str(Path(__file__).resolve().parent / "templates"))
+i18n.install(templates)
 SESSION = "bb_session"
 NEUTRAL = f"{settings.clinic_name} hat eine sichere Dokumentenanfrage an Sie gerichtet."
 DOC_LABEL = {"lab": "Laborbefund", "report": "Entlassungsbericht"}
@@ -207,12 +208,31 @@ def sms_inbox(request: Request):
 
 @app.get("/audit", response_class=HTMLResponse)
 def audit_page(request: Request, request_id: str | None = None):
-    # TODO(MedEng): filter UI, coverage per request, chain status badge; protect behind clinic login in prod
-    return _page(request, "audit.html", entries=audit.entries(request_id), chain_ok=audit.verify_chain(),
-                 coverage=audit.coverage(request_id))
+    # clinic-internal: in production this sits behind the clinic login (footer says so)
+    lang = i18n.resolve_lang(request)
+    resp = _page(request, "audit.html", v=audit.view(request_id, lang), lang=lang)
+    if request.query_params.get("lang"):
+        i18n.remember(resp, lang)
+    return resp
+
+
+@app.get("/audit/apple", response_class=HTMLResponse)
+def audit_page_apple(request: Request, request_id: str | None = None):
+    # same data and query params as /audit, second look (formal audit record) for side-by-side review
+    lang = i18n.resolve_lang(request)
+    resp = _page(request, "audit_apple.html", v=audit.view(request_id, lang, base="/audit/apple"), lang=lang)
+    if request.query_params.get("lang"):
+        i18n.remember(resp, lang)
+    return resp
 
 
 @app.get("/audit.json")
 def audit_json(request_id: str | None = None):
-    return JSONResponse({"chain_ok": audit.verify_chain(), "coverage": audit.coverage(request_id),
-                         "entries": audit.entries(request_id)})
+    v = audit.view(request_id)
+    return JSONResponse({"chain_ok": v["chain_ok"], "coverage": v["coverage"], "entries": audit.entries(request_id),
+                         "first_broken": v["first_broken"], "entry_count": v["entry_count"], "last_hash": v["head"],
+                         "request_id": v["request_id"],
+                         "requests": [{k: r[k] for k in ("id", "status", "patient_ref", "expected_name", "contact",
+                                                         "covered", "misdelivery")} for r in v["requests"]],
+                         "misdelivery": {code: [{"request_id": m["request_id"], "seq": m["seq"]} for m in found]
+                                         for code, found in v["misdelivery"].items()}})

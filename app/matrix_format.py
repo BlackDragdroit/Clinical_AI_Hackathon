@@ -66,11 +66,12 @@ _COLOR = {"check": "#17693f", "x": "#b0241c", "warn": "#9a6200", "search": "#1f5
 
 
 def _tone(phase: str) -> str:
-    if phase.startswith(("Nicht abgelegt", "Falsche Person", "Gesperrt", "Verworfen")):
+    if phase.startswith(("Nicht abgelegt", "Falsche Person", "Gesperrt", "Verworfen",
+                         "Not filed", "Wrong person", "Blocked", "Discarded")):
         return "bad"
-    if phase.startswith("Abgelegt"):
+    if phase.startswith(("Abgelegt", "Filed")):
         return "ok"
-    return "warn" if "prüf" in phase else "accent"
+    return "warn" if "prüf" in phase or "review" in phase else "accent"
 
 
 def _compact(line: str) -> str:
@@ -99,7 +100,7 @@ def _rich(line_html: str, plain: str) -> str:
         key = (m.group(1).count("●"), _tone(m.group(2)))
         line_html = (line_html.replace(m.group(1), _img(BRIDGES[key], f"{key[0]}/5"), 1) if key in BRIDGES
                      else f'<font color="{_COLOR[key[1]]}">{line_html.replace(m.group(1), "", 1).lstrip()}</font>')
-    if plain.startswith("Verstanden aus"):
+    if plain.startswith(("Verstanden aus", "Understood from")):
         line_html = f'<font color="{_GREY}">{line_html}</font>'
     return line_html
 

@@ -29,6 +29,35 @@ PHASE = {
     "blocked": "Gesperrt – zu viele Fehlversuche",
 }
 VIA = {"email": "E-Mail", "sms": "SMS"}
+# a request written or spoken in English gets its card and pings in English (requests.lang)
+PHASE_EN = {
+    "sent": "Sent – waiting for the link to be opened",
+    "opened": "Link opened – waiting for ID Austria",
+    "identified": "Identity confirmed – waiting for the document",
+    "answered": "Document received – being checked",
+    "filed": "Filed",
+    "review": "Match uncertain – please review",
+    "rejected": "Not filed – document is about another patient",
+    "discarded": "Discarded",
+    "blocked": "Blocked – too many failed attempts",
+}
+VIA_EN = {"email": "email", "sms": "SMS"}
+DOC_EN = {"lab": "Lab result", "report": "Discharge report"}
+_ALERT_EN = ((re.compile(r"^Dokument betrifft anderen Patienten: in Quarantäne, nichts abgelegt\.$"),
+              "Document is about another patient: quarantined, nothing filed."),
+             (re.compile(r"^(.*) hat den Link geöffnet, nicht (.*)\. Nichts offengelegt\.$"), r"\1 opened the link, not \2. Nothing shown."))
+
+
+def _en(req: dict) -> bool:
+    return (req.get("lang") or "de") == "en"
+
+
+def _alert(req: dict, text: str) -> str:
+    if _en(req):
+        for pattern, english in _ALERT_EN:
+            if pattern.match(text):
+                return pattern.sub(english, text)
+    return text
 # notify-outbox messages the card and its pings replace (texts from core/intake.py, app/main.py, intake_service)
 REPLACED = ("✅ Antwort", "🔍 ", "⚠️ Fehlzustellung", "⚠️ Antwort NICHT abgelegt: Das übermittelte")
 _DRAFTED = re.compile(r"^Anfrage (\w+): Entwurf")
@@ -54,23 +83,30 @@ def _card(request_id: str) -> tuple[dict, dict]:
 
 def text(req: dict, card: dict, checks: list[str] | None = None) -> str:
     """`checks`: the draft reply's own warning lines (address lint, engine flags, what the engine heard)."""
-    head = f"{card['doc']} · {card['patient']}"
+    en = _en(req)
+    head = f"{DOC_EN.get(req['doc_type'], card['doc']) if en else card['doc']} · {card['patient']}"
+    to = "to" if en else "an"
     if req["status"] == "draft":
-        lines = [f"{head}, geb. {_dob(req['patient_dob'])}", f"an {req['expected_name']} · {req['contact']}"]
-        lines += checks if checks is not None else [f"⚠️ Kontakt prüfen: {w}" for w in json.loads(req["lint_warnings"] or "[]")]
-        return "\n".join(lines + [f"„{reactions.SENDEN}“ tippen · Anfrage {req['id']}"])
+        lines = [f"{head}, {'born' if en else 'geb.'} {_dob(req['patient_dob'])}", f"{to} {req['expected_name']} · {req['contact']}"]
+        lines += checks if checks is not None else [f"⚠️ {'Check contact' if en else 'Kontakt prüfen'}: {w}"
+                                                    for w in json.loads(req["lint_warnings"] or "[]")]
+        last_line = (f"Tap „{reactions.SENDEN}“ · Request {req['id']}" if en
+                     else f"„{reactions.SENDEN}“ tippen · Anfrage {req['id']}")
+        return "\n".join(lines + [last_line])
     dots = "".join("●" if s["state"] == "done" else "○" for s in card["steps"])
     last = max((s["ts"] for s in card["steps"] if s["ts"]), default=None)
-    phase = PHASE.get(req["status"], req["status"])
+    phase = (PHASE_EN if en else PHASE).get(req["status"], req["status"])
     if req["status"] == "review" and not any(e["event"] == "review_requested" for e in audit.entries(req["id"])):
-        phase = f"Nicht abgelegt – FHIR-Prüfung fehlgeschlagen · erneut prüfen: !ablegen {req['id']}"
+        phase = (f"Not filed – FHIR validation failed · retry: !ablegen {req['id']}" if en
+                 else f"Nicht abgelegt – FHIR-Prüfung fehlgeschlagen · erneut prüfen: !ablegen {req['id']}")
     elif req["status"] in ("sent", "opened") and card["steps"][2]["state"] == "error":   # failed identity check
-        phase = f"Falsche Person – wartet weiter auf {req['expected_name']}"
-    lines = [head, f"an {req['expected_name']} · {VIA.get(req['contact_kind'], req['contact_kind'])}",
-             f"{dots}  {phase}" + (f" · {_time(last)}" if last else "")]
+        phase = (f"Wrong person – still waiting for {req['expected_name']}" if en
+                 else f"Falsche Person – wartet weiter auf {req['expected_name']}")
+    via = (VIA_EN if en else VIA).get(req["contact_kind"], req["contact_kind"])
+    lines = [head, f"{to} {req['expected_name']} · {via}", f"{dots}  {phase}" + (f" · {_time(last)}" if last else "")]
     if req["status"] == "filed":
         lines += _result(req)
-    return "\n".join(lines + [f"⚠️ {a}" for a in card["alerts"]])
+    return "\n".join(lines + [f"⚠️ {_alert(req, a)}" for a in card["alerts"]])
 
 
 def _result(req: dict) -> list[str]:
@@ -82,13 +118,13 @@ def _result(req: dict) -> list[str]:
     main = next((r for t in ("DiagnosticReport", "DocumentReference") for r in refs if r.startswith(t + "/")), None)
     out = [" · ".join(summary)] if summary and req["doc_type"] == "lab" else []   # a report is read in full, not here
     if main:
-        out.append(f"[Befund öffnen]({settings.hapi_public_url}/{main})")
+        out.append(f"[{'Open result' if _en(req) else 'Befund öffnen'}]({settings.hapi_public_url}/{main})")
     return out
 
 
 def card_text(request_id: str, reply: str | None = None) -> str:
     """The card; for a draft, `reply` (commands' draft answer) supplies the warning lines to keep."""
-    checks = [line for line in reply.split("\n") if line.startswith(("⚠️", "Verstanden aus"))] if reply else None
+    checks = [line for line in reply.split("\n") if line.startswith(("⚠️", "Verstanden aus", "Understood from"))] if reply else None
     return text(*_card(request_id), checks)
 
 
@@ -142,7 +178,8 @@ def saved(request_id: str, event_id: str, text_now: str) -> None:
 
 
 def _head(req: dict) -> str:
-    return f"{dashboard.DOC.get(req['doc_type'], req['doc_type'])} · {req['patient_name']}"
+    doc = (DOC_EN if _en(req) else dashboard.DOC).get(req["doc_type"], req["doc_type"])
+    return f"{doc} · {req['patient_name']}"
 
 
 def card_event(request_id: str) -> str | None:
@@ -156,7 +193,7 @@ def pings() -> list[tuple[str, str, dict[str, str], int]]:
     out = []
     for row in db.query("SELECT * FROM matrix_cards"):
         req = db.get("requests", "id", row["request_id"])
-        head = _head(req)
+        head, en = _head(req), _en(req)
         decided = False
         for ev in audit.entries(row["request_id"]):
             decided = decided or ev["event"] == "review_decided"
@@ -164,16 +201,20 @@ def pings() -> list[tuple[str, str, dict[str, str], int]]:
                 continue
             d, rid = ev["details"], req["id"]
             if ev["event"] == "review_requested":
-                out.append((rid, f"🔍 {head}: {REVIEW_Q}",
+                out.append((rid, f"🔍 {head}: {'Match uncertain. File or discard?' if en else REVIEW_Q}",
                             {reactions.ABLEGEN: f"!ablegen {rid}", reactions.VERWERFEN: f"!verwerfen {rid}"}, ev["seq"]))
             elif ev["event"] == "answer_filed" and not decided:      # after a review she tapped it herself
-                out.append((rid, f"✅ {head} ist da.", {}, ev["seq"]))
+                out.append((rid, f"✅ {head} {'has arrived' if en else 'ist da'}.", {}, ev["seq"]))
             elif ev["event"] == "misdelivery_caught" and d.get("type") == "M3":
-                out.append((rid, f"⛔ {head}: Dokument betrifft anderen Patienten. Nicht abgelegt. "
+                out.append((rid, f"⛔ {head}: Document is about another patient. Not filed. Link used up – send a new "
+                                 f"request for the right document." if en else
+                                 f"⛔ {head}: Dokument betrifft anderen Patienten. Nicht abgelegt. "
                                  f"Link verbraucht – für das richtige Dokument neue Anfrage stellen.", {}, ev["seq"]))
             elif ev["event"] == "misdelivery_caught":
-                out.append((rid, f"⚠️ {head}: {d.get('verified', 'Unbekannt')} hat den Link geöffnet, nicht "
-                                 f"{d.get('expected', 'die angefragte Person')}. Nichts offengelegt.", {}, ev["seq"]))
+                who, expected = d.get("verified", "Unknown" if en else "Unbekannt"), d.get("expected", "")
+                out.append((rid, f"⚠️ {head}: {who} opened the link, not {expected or 'the requested person'}. Nothing shown."
+                                 if en else f"⚠️ {head}: {who} hat den Link geöffnet, nicht "
+                                 f"{expected or 'die angefragte Person'}. Nichts offengelegt.", {}, ev["seq"]))
     return out
 
 
@@ -183,8 +224,11 @@ def decided(command: str) -> list[tuple[str, str]]:
     m = _CMD.match(command.strip())
     if not m or m.group(1) == "senden" or not (req := db.get("requests", "id", m.group(2))):
         return []
-    outcome = "abgelegt" if m.group(1) == "ablegen" else "verworfen"
-    text = f"🔍 {_head(req)}: Zuordnung unsicher → {outcome} · {_time(db.now())}"
+    if _en(req):
+        text = f"🔍 {_head(req)}: Match uncertain → {'filed' if m.group(1) == 'ablegen' else 'discarded'} · {_time(db.now())}"
+    else:
+        outcome = "abgelegt" if m.group(1) == "ablegen" else "verworfen"
+        text = f"🔍 {_head(req)}: Zuordnung unsicher → {outcome} · {_time(db.now())}"
     rows = db.query("SELECT DISTINCT event_id FROM matrix_actions WHERE command = ?", (f"!ablegen {req['id']}",))
     return [(r["event_id"], text) for r in rows]
 

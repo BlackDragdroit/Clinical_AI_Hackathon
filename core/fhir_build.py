@@ -166,8 +166,8 @@ def build(doc: ParsedDoc, patient_ref: str, sender_name: str, sender_org: str,
     entity_ref: Optional[str] = None
 
     if doc.kind == "lab":
-        taken = parse_datetime(doc.fields.get("Sample taken") or doc.fields.get("Abnahme") or doc.fields.get("Entnahme") or "")
-        reported = parse_datetime(doc.fields.get("Reported") or doc.fields.get("Befundet") or doc.fields.get("Bericht") or "")
+        taken = parse_datetime(doc.fields.get("Sample taken") or doc.fields.get("Probenentnahme") or doc.fields.get("Abnahme") or doc.fields.get("Entnahme") or "")
+        reported = parse_datetime(doc.fields.get("Reported") or doc.fields.get("Befunddatum") or doc.fields.get("Befundet") or doc.fields.get("Bericht") or "")
         validator_name = (doc.fields.get("Validated by") or doc.fields.get("Validiert von") or "").split(",")[0].strip()
         performer_ref = sender_ref
         if validator_name and validator_name.lower() not in sender_name.lower():

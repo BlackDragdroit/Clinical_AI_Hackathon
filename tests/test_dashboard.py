@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import re
 
 from fastapi.testclient import TestClient
@@ -97,3 +98,30 @@ def test_events_stream_sends_snapshot(hapi, outbox, monkeypatch):
         return [chunk async for chunk in resp.body_iterator]
     chunks = asyncio.run(collect())
     assert len(chunks) == 1 and chunks[0].startswith("data: ") and "Maria Beispiel" in chunks[0]
+
+
+def test_dashboard_requires_signed_key():
+    """GET /dashboard without a valid ?k= returns 404 (not found / no data exposed)."""
+    with TestClient(app) as client:
+        r_no_key = client.get("/dashboard")
+        r_empty_key = client.get("/dashboard?k=")
+        r_bad_key = client.get("/dashboard?k=abc.def.ghi")
+    assert r_no_key.status_code == 404
+    assert r_empty_key.status_code == 404
+    assert r_bad_key.status_code == 404
+
+
+def test_dashboard_events_streams_json():
+    """GET /dashboard/events with a valid key returns text/event-stream content-type."""
+    k = sign({}, dashboard.PURPOSE, 60)
+    with TestClient(app) as client:
+        r = client.get(f"/dashboard/events?k={k}", headers={"Accept": "text/event-stream"})
+    # StreamingResponse returns 200 with the right media type
+    assert r.status_code == 200
+    assert "text/event-stream" in r.headers.get("content-type", "")
+
+
+def test_dashboard_doc_labels():
+    """DOC dict maps 'lab' → German label and 'report' → German label."""
+    assert dashboard.DOC.get("lab") == "Laborbefund"
+    assert dashboard.DOC.get("report") == "Entlassungsbericht"

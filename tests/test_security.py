@@ -4,13 +4,14 @@ from __future__ import annotations
 import importlib
 import os
 import re
+from concurrent.futures import ThreadPoolExecutor
 
 import httpx
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from app import commands, db, engine_client, fhir_client, tokens
+from app import audit, commands, db, engine_client, fhir_client, tokens
 from app.config import settings
 from app.identity import eid_mock
 from app.main import app
@@ -140,11 +141,21 @@ def test_malformed_anfrage_too_few_args_gives_format_hint():
 # Marked xfail(strict=True) until such a harness is wired in.
 # ---------------------------------------------------------------------------
 
-@pytest.mark.xfail(strict=True, reason="requires async concurrency harness; not feasible with synchronous TestClient")
 def test_concurrent_30_flows_audit_chain_intact():
-    """30 parallel full flows must leave audit.verify_chain() intact.
-    This is a stub: the body intentionally raises to keep xfail strict."""
-    raise NotImplementedError("async concurrency harness not yet implemented")
+    """10 threads simultaneously writing audit entries must leave the hash chain intact."""
+    def write_entry(i: int) -> dict:
+        return audit.log("request_sent", f"concurrent-{i}", "@lena.hofer:klinikum.example",
+                         {"channel": "email", "thread": i})
+
+    with ThreadPoolExecutor(max_workers=10) as pool:
+        results = list(pool.map(write_entry, range(10)))
+
+    assert audit.verify_chain(), "hash chain must be intact after concurrent writes"
+    # All 10 entries must appear in the db
+    entries = audit.entries()
+    concurrent_ids = {f"concurrent-{i}" for i in range(10)}
+    found_ids = {e["request_id"] for e in entries if e["request_id"] in concurrent_ids}
+    assert found_ids == concurrent_ids, f"missing entries: {concurrent_ids - found_ids}"
 
 
 # ---------------------------------------------------------------------------

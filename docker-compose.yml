@@ -41,10 +41,41 @@ services:
       MATRIX_HOMESERVER: http://synapse:8008
       DB_PATH: /data/befundbruecke.sqlite
       VAR_DIR: /data
+      AUDIT_TOKEN: ""              # empty = no auth in dev; set a random secret for production
+      QUARANTINE_TTL_DAYS: "30"    # days before rejected/quarantined answers are eligible for purge
+      TOKEN_TTL_DAYS: "90"         # days before used/expired tokens are eligible for purge
     volumes:
       - app-data:/data
     ports: ["8000:8000"]
     depends_on: [synapse, hapi, mailpit]
+
+  # ---------------------------------------------------------------------------
+  # PORTAL_ONLY example (commented out — copy into a docker-compose.override.yml
+  # or a separate compose file for a two-container production deployment).
+  #
+  # Run this container in the clinic's DMZ / internet-facing pod.
+  # It serves only the public portal routes (link open, eID login, answer form,
+  # SMS inbox).  The /audit, /audit.json and /dashboard routes are NOT mounted.
+  # The internal `app` container above stays inside the clinic network.
+  #
+  # app-portal:
+  #   image: befundbruecke          # built once: `docker build -t befundbruecke .`
+  #   env_file: .env
+  #   environment:
+  #     PORTAL_ONLY: "1"            # only portal_router is mounted; clinic routes omitted
+  #     AUDIT_TOKEN: "change-me"    # set a strong random secret; protects /audit on the internal container
+  #     HAPI_URL: http://hapi:8080/fhir
+  #     SMTP_HOST: mailpit
+  #     MAILPIT_API: http://mailpit:8025/api/v1
+  #     MATRIX_HOMESERVER: http://synapse:8008
+  #     DB_PATH: /data/befundbruecke.sqlite
+  #     VAR_DIR: /data
+  #     BASE_URL: https://portal.klinikum.example  # public HTTPS URL for generated links
+  #   volumes:
+  #     - app-data:/data            # shared volume so both containers use the same SQLite DB
+  #   ports: ["443:8000"]
+  #   depends_on: [synapse, hapi, mailpit]
+  # ---------------------------------------------------------------------------
 
 volumes:
   synapse-data:

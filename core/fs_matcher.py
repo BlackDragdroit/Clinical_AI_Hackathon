@@ -142,6 +142,11 @@ def parse_dob(s: str | None) -> Optional[date]:
     if m:
         d, mo, y = map(int, m.groups())
         return _safe_date(y, mo, d)
+    m = re.search(r"(\d{1,2})[./](\d{1,2})[./](\d{2})(?!\d)", s)               # 12.3.61 (2-digit year)
+    if m:
+        d, mo, y2 = map(int, m.groups())
+        y = (2000 + y2) if y2 <= 30 else (1900 + y2)
+        return _safe_date(y, mo, d)
     m = re.search(r"(\d{1,2})\.?\s+([a-zäöü]+)\.?\s+(\d{4})", s)               # 12 March 1961 / 12. März 1961
     if m and m.group(2) in _MONTHS:
         return _safe_date(int(m.group(3)), _MONTHS[m.group(2)], int(m.group(1)))
@@ -289,7 +294,12 @@ def compare(a: Person, b: Person, W: Weights = DEFAULT) -> MatchResult:
     # safety rules on top of the score: auto-filing needs an exact birth date and no disagreeing family name;
     # everything weaker goes to the doctor (review) or is rejected by the score
     hard_block = lv["dob"] != "exact" or lv["family"] == "disagree"
-    if score >= W.t_file and not hard_block:
+    # hard reject: same family name but birth year off by more than 1 year -> namesake, not same person
+    hard_reject = (lv["family"] == "agree" and a.dob is not None and b.dob is not None
+                   and abs(a.dob.year - b.dob.year) > 1)
+    if hard_reject:
+        decision = "reject"
+    elif score >= W.t_file and not hard_block:
         decision = "file"
     elif score <= W.t_reject:
         decision = "reject"

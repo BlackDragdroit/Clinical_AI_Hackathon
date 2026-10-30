@@ -213,6 +213,14 @@ def test_empty_log_and_unknown_request_render():
     assert r.status_code == 200 and "nope&lt;script&gt;" in r.text and "<script>" not in r.text
 
 
+def test_audit_apple_returns_200_with_audit_title():
+    """/audit/apple returns 200 and the page title contains 'Audit'."""
+    with TestClient(app) as client:
+        r = client.get("/audit/apple")
+    assert r.status_code == 200
+    assert "Audit" in r.text
+
+
 # --- /audit/apple: the same page in a second (Apple HIG) design ------------------------------------
 
 def test_apple_page_shows_full_coverage_after_scenario(hapi, outbox):

@@ -32,8 +32,14 @@ down:            ## stop the stack (keeps volumes)
 reset:           ## stop the stack AND delete its volumes (synapse users, hapi data, app db)
 	docker compose down -v
 
-logs:            ## follow app logs
-	docker compose logs -f app
+logs:            ## follow all container logs
+	docker compose logs -f
+
+shell:           ## open a bash shell in the running app container
+	docker compose exec app bash
+
+purge:           ## call POST /admin/purge (TTL-based cleanup of quarantine + tokens)
+	curl -s -X POST http://localhost:8000/admin/purge | python3 -m json.tool
 
 seed:            ## (re)load the scenario patient into HAPI
 	$(RUN) python -m scripts.seed_hapi
@@ -66,4 +72,4 @@ engine-data:     ## build the engine test sets (patients, requests, documents) u
 engine-eval:     ## run the engine on the test sets -> eval/RESULTS.md (CIs, model ladder)
 	$(RUN) python -m eval.run_eval
 
-.PHONY: help env install test dev up down reset logs seed validate metrics jury-eval engine gpu-up gpu-smoke engine-data engine-eval
+.PHONY: help env install test dev up down reset logs shell purge seed validate metrics jury-eval engine gpu-up gpu-smoke engine-data engine-eval

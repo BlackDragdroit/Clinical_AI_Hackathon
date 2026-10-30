@@ -4,6 +4,14 @@ Speech-to-text writes 'eva punkt brandl at labor minus kanal punkt example' or '
 Only unambiguous dictation is rewritten: a spoken 'at' needs a dotted domain after it, a digit run needs at least
 six digits. The normalized text is what the rules and the model read, what every value is grounded in, and what
 Dr. Hofer sees on the confirmation card ("verstanden: …"), so a wrong rewrite is visible before anything is sent.
+
+Wave-4 additions
+----------------
+* Names after titles (dr., mag., prof.) are title-cased when all-lowercase (dictation artefact).
+* E-mail addresses that were typed/dictated in ALL CAPS are lowercased.
+* "komma" → ",", "schrägstrich" / "slash" → "/" as standalone word substitutions.
+  "schrägstrich" / "slash" are also used by _join_slash() so that "Patient schrägstrich id" →
+  "Patient/id", enabling the PATIENT_REF regex in rules.py to match voice commands.
 """
 from __future__ import annotations
 
@@ -13,7 +21,16 @@ import unicodedata
 AT = {"at", "ät", "@", "klammeraffe", "affenschwanz", "at-zeichen"}
 JOIN = {"punkt": ".", "dot": ".", ".": ".",
         "minus": "-", "bindestrich": "-", "strich": "-", "dash": "-", "hyphen": "-", "-": "-",
-        "unterstrich": "_", "underscore": "_", "_": "_"}
+        "unterstrich": "_", "underscore": "_", "_": "_",
+        "komma": ","}
+# spoken slash alternatives — kept separate so _join_slash can recognise them
+_SLASH_WORDS = {"schrägstrich", "schraegstrich", "slash"}
+# titles that introduce a name token — used for title-casing lowercase dictation
+_TITLE_WORDS = re.compile(
+    r"(?:Univ\.-Prof\.|Prof\.|Professor(?:in)?|DDr\.|Dr\.|Dr|Doktor(?:in)?|Doctor|"
+    r"med\.|Mag\.|Magister|Magistra|DI|OÄ|OA|Frau|Herrn|Herr|Fr\.|Hr\.|Mrs\.?|Mr\.?|Ms\.?|Miss)",
+    re.I,
+)
 DIGITS = {"null": "0", "zero": "0", "oh": "0", "eins": "1", "ein": "1", "one": "1", "zwei": "2", "zwo": "2",
           "two": "2", "drei": "3", "three": "3", "vier": "4", "four": "4", "fünf": "5", "fuenf": "5", "five": "5",
           "sechs": "6", "six": "6", "sieben": "7", "seven": "7", "acht": "8", "eight": "8", "neun": "9", "nine": "9"}
@@ -95,14 +112,98 @@ def _join_numbers(toks: list[str]) -> list[str]:
     return out
 
 
+# ---------------------------------------------------------------------------
+# slash joining: "Patient schrägstrich id" → "Patient/id"
+# ---------------------------------------------------------------------------
+
+def _join_slash(toks: list[str]) -> list[str]:
+    """Replace 'word schrägstrich word' (and 'slash') with 'word/word'."""
+    out: list[str] = []
+    i, n = 0, len(toks)
+    while i < n:
+        if (i + 2 < n and toks[i + 1].lower() in _SLASH_WORDS
+                and re.fullmatch(r"[A-Za-z0-9äöüÄÖÜß]+", toks[i])
+                and re.fullmatch(r"[A-Za-z0-9äöüÄÖÜß_\-.]+", toks[i + 2])):
+            out.append(toks[i] + "/" + toks[i + 2])
+            i += 3
+        else:
+            out.append(toks[i])
+            i += 1
+    return out
+
+
+# ---------------------------------------------------------------------------
+# title-case names that follow a title word when they are all-lowercase
+# ---------------------------------------------------------------------------
+
+def _titlecase_after_title(toks: list[str]) -> list[str]:
+    """Title-case consecutive lowercase name tokens that follow a title word (dr., mag., prof. …).
+
+    Only rewrites tokens that are purely alphabetic and all-lowercase — the hallmark of dictated
+    text where the ASR engine did not capitalise the name.  Mixed-case and already-capitalised
+    tokens are left untouched so typed text is never altered.
+    """
+    out = list(toks)
+    in_title_run = False
+    for i, tok in enumerate(out):
+        core = tok.rstrip(".,;:")
+        if _TITLE_WORDS.fullmatch(core):
+            in_title_run = True
+            continue
+        if in_title_run:
+            bare = core
+            # a continuation token is a lowercase alpha word, optionally followed by punctuation
+            if bare.isalpha() and bare.islower():
+                trail = tok[len(core):]
+                out[i] = bare.title() + trail
+                # stay in the run so the next name token is also title-cased
+            else:
+                in_title_run = False
+        else:
+            in_title_run = False
+    return out
+
+
+# ---------------------------------------------------------------------------
+# lowercase e-mail addresses that arrived in ALL CAPS
+# ---------------------------------------------------------------------------
+
+_EMAIL_UPPER = re.compile(r"[A-Z][A-Z0-9._%+-]*@[A-Z0-9][A-Z0-9.\-]*\.[A-Z]{2,}")
+
+
+def _lowercase_emails(text: str) -> str:
+    """Lowercase email addresses that are fully uppercase (dictation/OCR artefact)."""
+    return _EMAIL_UPPER.sub(lambda m: m.group(0).lower(), text)
+
+
+# ---------------------------------------------------------------------------
+# standalone word substitutions (komma → , etc.)
+# ---------------------------------------------------------------------------
+
+_WORD_SUB = re.compile(r"\b(komma)\b", re.I)
+
+
+def _word_substitutions(text: str) -> str:
+    return _WORD_SUB.sub(lambda m: "," if m.group(1).lower() == "komma" else m.group(0), text)
+
+
 def normalize(text: str) -> str:
-    """NFC, single spaces, dictated e-mail addresses and phone numbers written out."""
-    text = unicodedata.normalize("NFC", text or "").replace(" ", " ")
+    """NFC, single spaces, dictated e-mail addresses and phone numbers written out.
+
+    Wave-4: also title-cases names after title words when all-lowercase, lowercases
+    ALL-CAPS email addresses, expands 'komma' → ',' and 'schrägstrich'/'slash' → '/'.
+    """
+    text = unicodedata.normalize("NFC", text or "").replace(" ", " ")
+    text = _word_substitutions(text)
     lines = []
     for line in text.splitlines():
         toks = line.split()
-        lines.append(" ".join(_join_numbers(_join_emails(toks))))
-    return "\n".join(lines).strip()
+        toks = _titlecase_after_title(toks)
+        toks = _join_slash(toks)
+        toks = list(_join_numbers(_join_emails(toks)))
+        lines.append(" ".join(toks))
+    text = "\n".join(lines).strip()
+    return _lowercase_emails(text)
 
 
 _DE = {"bitte", "und", "der", "die", "das", "von", "bei", "für", "mit", "anfordern", "anfragen", "geb", "frau", "herrn",

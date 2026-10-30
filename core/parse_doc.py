@@ -127,6 +127,10 @@ def parse_markdown(text: str) -> ParsedDoc:
             else:
                 patient_name = rest.strip()
             continue
+        m = re.match(r"^Geburtsdatum\s*:\s*(.+)$", s, re.I)
+        if m and not dob_raw:
+            dob_raw = m.group(1).strip()
+            continue
         m = re.match(r"^([A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß /\-]{1,40}):\s*(.+)$", s)
         if m and (current is None or re.search(r"(written|sent|validated|signed|reported|erstellt|gesendet|befundet|validiert|unterschrieben) ?(by|von)?$", m.group(1).strip(), re.I)):
             fields[m.group(1).strip()] = m.group(2).strip()

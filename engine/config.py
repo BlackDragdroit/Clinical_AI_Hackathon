@@ -16,6 +16,7 @@ class EngineSettings:
     llm_url: str = _env("ENGINE_LLM_URL", "")                         # e.g. http://gpu:8001/v1 ; "" = rules only
     llm_model: str = _env("ENGINE_LLM_MODEL", "numind/NuExtract3")
     llm_mode: str = _env("ENGINE_LLM_MODE", "nuextract")               # nuextract | json_schema
+    llm_fields: str = _env("ENGINE_LLM_FIELDS", "core")                # core (4 fields, ~40 % faster on CPU) | all
     # speech -> text
     asr_url: str = _env("ENGINE_ASR_URL", "")                          # e.g. http://gpu:8002/v1
     asr_model: str = _env("ENGINE_ASR_MODEL", "Qwen/Qwen3-ASR-1.7B")

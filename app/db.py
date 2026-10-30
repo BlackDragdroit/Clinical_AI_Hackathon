@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS matrix_cards (
 );
 CREATE TABLE IF NOT EXISTS matrix_actions (
     event_id TEXT NOT NULL,              -- a bot message that offers buttons (app/reactions.py)
-    key TEXT NOT NULL,                   -- ✅ | ❌
+    key TEXT NOT NULL,                   -- Senden | Ablegen | Verwerfen (older rows: ✅ | ❌)
     command TEXT NOT NULL,               -- e.g. !ablegen ab12cd34
     used_at TEXT,                        -- set on the first authorised tap; the message's buttons are then spent
     PRIMARY KEY (event_id, key)

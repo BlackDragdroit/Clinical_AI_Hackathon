@@ -1,9 +1,12 @@
-"""Reactions as buttons: tapping ✅ / ❌ under a bot message runs the command that message offers. Owner: SWE 1.
+"""Reactions as buttons: tapping "Senden", "Ablegen" or "Verwerfen" under a bot message runs the command that message
+offers. Owner: SWE 1.
 
-When the bot posts a message that names `!senden <id>`, or `!ablegen <id>` / `!verwerfen <id>`, it reacts
-with ✅ (and ❌) itself, so Dr. Hofer only has to tap the pill. The command then goes through
-commands.handle like a typed one, so AUTHORIZED_SENDERS applies unchanged. Each message's buttons work
-once: after the first authorised tap, further taps on that message do nothing.
+When the bot posts a message that names `!senden <id>`, or `!ablegen <id>` / `!verwerfen <id>`, it reacts with that
+word itself, so Dr. Hofer only has to tap the pill (a reaction key can be any string; Element shows it as a text pill,
+so the chat needs no emoji). Emoji taps still count: ✅ / 👍 press a message's Senden or Ablegen, ❌ / 👎 its
+Verwerfen, and older messages keep their ✅ / ❌ pills. The command then goes through commands.handle like a typed
+one, so AUTHORIZED_SENDERS applies unchanged. Each message's buttons work once: after the first authorised tap,
+further taps on that message do nothing.
 """
 from __future__ import annotations
 
@@ -12,14 +15,17 @@ import re
 from app import commands, db
 from app.config import settings
 
-YES, NO = "✅", "❌"
+SENDEN, ABLEGEN, VERWERFEN = "Senden", "Ablegen", "Verwerfen"
+_KEY = {"senden": SENDEN, "ablegen": ABLEGEN, "verwerfen": VERWERFEN}   # the button each command gets
+# an emoji tap presses the message's yes or no button; "✅" / "❌" were the buttons before the words
+YES, NO = (SENDEN, ABLEGEN, "✅"), (VERWERFEN, "❌")
 ALIASES = {"✅": YES, "👍": YES, "❌": NO, "👎": NO}
 _CMD = re.compile(r"!(senden|ablegen|verwerfen) ([a-z0-9]{8})\b")
-_KEY = {"senden": YES, "ablegen": YES, "verwerfen": NO}
 
 
 def buttons(text: str) -> dict[str, str]:
-    """{reaction key: command} offered by a bot message, e.g. {'✅': '!ablegen ab12cd34', '❌': '!verwerfen ab12cd34'}."""
+    """{reaction key: command} offered by a bot message,
+    e.g. {'Ablegen': '!ablegen ab12cd34', 'Verwerfen': '!verwerfen ab12cd34'}."""
     out: dict[str, str] = {}
     for verb, rid in _CMD.findall(text):
         out.setdefault(_KEY[verb], f"!{verb} {rid}")
@@ -48,8 +54,10 @@ def spend(command: str) -> None:
 
 def handle(event_id: str, key: str, sender: str) -> tuple[str, str] | None:
     """A reaction arrived. Returns (command run, the bot's reply), or None if the reaction is not a button."""
-    key = ALIASES.get(key.replace("️", ""))
-    rows = db.query("SELECT * FROM matrix_actions WHERE event_id = ? AND key = ? AND used_at IS NULL", (event_id, key))
+    key = key.replace("\ufe0f", "")                    # ✅️ (emoji presentation) is ✅
+    keys = ALIASES.get(key, (key,))                    # a word presses only its own button
+    rows = [r for r in db.query("SELECT * FROM matrix_actions WHERE event_id = ? AND used_at IS NULL", (event_id,))
+            if r["key"] in keys]
     if not rows:
         return None
     command = rows[0]["command"]

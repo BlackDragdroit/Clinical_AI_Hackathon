@@ -25,7 +25,7 @@ from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from starlette.concurrency import run_in_threadpool
 
-from app import audit, bot, dashboard, db, engine_client, i18n, intake_service, misdelivery, notify, tokens
+from app import audit, bot, dashboard, db, engine_client, i18n, intake_service, misdelivery, notify, report, tokens
 from app.config import settings
 from app.identity import eid_mock, policy
 from app.security import sign, unsign
@@ -52,6 +52,7 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(title="BefundBrücke", lifespan=lifespan)
 app.include_router(dashboard.router)
+app.include_router(report.router)
 
 
 def _tr(request: Request, key: str, **kw) -> str:

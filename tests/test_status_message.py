@@ -67,7 +67,8 @@ def test_card_is_edited_through_to_filed(hapi, outbox):
     assert event_id == "$card" and lines[0] == "Laborbefund · Maria Beispiel" and lines[1] == "an Dr. Eva Brandl · E-Mail"
     assert re.match(r"●●●●●  Abgelegt · \d\d:\d\d$", lines[2])
     assert lines[3] == "INR (prothrombin time): 1.0 · aPTT: 31 s · Platelets: 245 10^9/L · Fibrinogen: 3.1 g/L"
-    assert re.match(rf"\[Befund öffnen\]\({re.escape(settings.hapi_public_url)}/DiagnosticReport/\d+\)$", lines[4])
+    # the readable report page (app/report.py), signed for this request; the FHIR resources are linked from there
+    assert re.match(rf"\[Befund öffnen\]\({re.escape(settings.base_url)}/befund/{rid}\?k=[\w.-]+\)$", lines[4])
 
 
 def test_report_card_shows_only_the_link(hapi, outbox):
@@ -79,7 +80,7 @@ def test_report_card_shows_only_the_link(hapi, outbox):
         _answer(client, link_path(re.search(r"https?://\S+", sms["body"]).group(0)), "stefan", "rehab-report-maria-beispiel.md")
     lines = status_message.card_text(rid).split("\n")
     assert re.match(r"●●●●●  Abgelegt", lines[2]) and len(lines) == 4
-    assert lines[3].startswith("[Befund öffnen](") and "DocumentReference/" in lines[3]
+    assert lines[3].startswith(f"[Befund öffnen]({settings.base_url}/befund/")
 
 
 def test_request_sent_outside_matrix_gets_a_card_only_after_bot_start(hapi, outbox):

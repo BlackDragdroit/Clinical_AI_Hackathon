@@ -118,7 +118,8 @@ def _result(req: dict, en: bool | None = None) -> list[str]:
     main = next((r for t in ("DiagnosticReport", "DocumentReference") for r in refs if r.startswith(t + "/")), None)
     out = [" · ".join(summary)] if summary and req["doc_type"] == "lab" else []   # a report is read in full, not here
     if main:
-        out.append(f"[{'Open result' if (_en(req) if en is None else en) else 'Befund öffnen'}]({settings.hapi_public_url}/{main})")
+        from app import report        # a readable page for Dr. Hofer; the FHIR resources are linked from there
+        out.append(f"[{'Open result' if (_en(req) if en is None else en) else 'Befund öffnen'}]({report.url(req['id'])})")
     return out
 
 

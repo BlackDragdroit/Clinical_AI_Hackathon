@@ -31,6 +31,11 @@ Append after each milestone: what works, what's next, known issues.
 - FTAPI is deliberately not used; the README says so (tagline, trust boundaries, replaceability table).
 - Still open (not SWE 1): HL7 validator run (`make validate`, MedEng); the address lint (MedEng) still runs as a stub, so the M1 audit label reads "M1/M2".
 
+## MedEng: address lint + DE/EN texts (Thu evening)
+- Works: `lint_address` warns on the draft card before `!senden`, covering look-alikes (I/l/1, O/0, rn/m, vv/w), uppercase in the domain, non-ASCII characters, edit distance ≤ 2 to a known domain, and phone numbers (no +43, foreign, landline, wrong length). `classify_identity_failure` returns M1 (the contact had warnings) or M2. New `app/i18n.py` holds the DE/EN catalogue, `t()`, language resolution (?lang= > cookie > Accept-Language) and Jinja `install()`. `make test`: 57 passed, 0 xfailed.
+- Next: HL7 validator run; the audit page (uses `i18n` + `misdelivery_label`); SWE 2 can wire the portal EN toggle with the 2 lines in the `i18n.py` docstring.
+- Known issues: on Windows, core's `ZoneInfo("Europe/Vienna")` needs the `tzdata` package (not in pyproject); tests ran with `uv run --with tzdata`. Not yet run on the live stack.
+
 ## MedEng: first HL7 validator run (Fri 00:40)
 - Works: `make validate` on bundles built by core for request 1 (lab, 4 Observations + DiagnosticReport + DocumentReference + Provenance) and request 2 (rehab DocumentReference + Provenance): TOTAL_ERRORS=0. The only error before was Provenance.policy on example.org (fixed in core/fhir_build.py, Biostat informed via PR).
 - Next: rerun on bundles filed through the live stack (G2); optional: narrative (dom-6 warnings, 10 + 6, best practice only).

@@ -147,3 +147,20 @@ def test_link_claim_is_atomic(hapi, outbox):
     _send(REQ1)
     raw = link_path(outbox[0]["link"]).rsplit("/", 1)[1]
     assert tokens.claim(raw) and not tokens.claim(raw)
+
+
+def test_wrong_doc_type_goes_to_review(hapi, outbox):
+    """Lab request answered with a discharge report must go to review, not be auto-filed (P1 / O1)."""
+    rid = _send(REQ1)          # REQ1 is a `labor` (doc_type=lab) request
+    with TestClient(app) as client:
+        # Submit a discharge/rehab report (doc kind=report) in answer to a lab request
+        r = _answer(client, link_path(outbox[0]["link"]), "eva", "rehab-report-maria-beispiel.md")
+    # The sender sees the "under review" receipt, not the success message
+    assert "sicher übermittelt" not in r.text
+    req_row = db.get("requests", "id", rid)
+    assert req_row["status"] == "review", f"Expected review, got {req_row['status']}"
+    assert not hapi.posted, "Wrong-doc-type answer must not be filed on HAPI"
+    # Dr. Hofer's Matrix message must mention the mismatch
+    msgs = [m["text"] for m in db.query("SELECT text FROM matrix_outbox WHERE request_id = ?", (rid,))]
+    assert any("Falscher Dokumenttyp" in m or "Laborbefund" in m for m in msgs), \
+        f"Expected mismatch reason in doctor notification, got: {msgs}"

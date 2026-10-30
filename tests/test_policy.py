@@ -50,3 +50,14 @@ def test_same_person_matches(expected, given, family):
 ])
 def test_other_person_does_not_match(expected, given, family):
     assert not policy.names_match(expected, eid(given, family))
+
+
+def test_eid_extra_given_name_allowed():
+    """eID 'Eva Maria Brandl': extra eID given name must not block a typed subset in order."""
+    # eID has extra middle name; Dr. Hofer typed only the first given name
+    assert policy.names_match("Dr. Eva Brandl", eid("Eva Maria", "Brandl"))    # title + first given only
+    assert policy.names_match("Eva Brandl", eid("Eva Maria", "Brandl"))        # no title, first given only
+    assert policy.names_match("Eva Maria Brandl", eid("Eva Maria", "Brandl"))  # exact match, both given names
+    assert policy.names_match("Maria Brandl", eid("Eva Maria", "Brandl"))      # second given name only, in order
+    # eID has no given name at all → typed given name cannot be verified → must NOT match
+    assert not policy.names_match("Eva Brandl", eid("", "Brandl"))

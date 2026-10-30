@@ -34,6 +34,8 @@ EQUIV_GROUPS = [
     {"2089-1", "13457-7"},                                   # LDL gemessen | berechnet
     {"17861-6", "2000-8"}, {"19123-9", "2601-3"}, {"2777-1", "14879-1"},   # Ca, Mg, Phosphat
     {"48065-7", "30240-6"}, {"67151-1", "6598-7"}, {"62292-8", "1989-3"},  # D-Dimer, Troponin T, Vitamin D
+    # ELGA preferred codes folded in as aliases (P16) — same measurement, different unit or panel flavour
+    {"10835-7", "43583-4"},                                  # Lipoprotein(a) g/L | nmol/L
 ]
 _EQUIV = {c: g for g in EQUIV_GROUPS for c in g}
 
@@ -123,6 +125,126 @@ PLAUSIBLE.update({"26464-8": PLAUSIBLE["6690-2"], "26453-1": PLAUSIBLE["789-8"],
                   "14682-9": [(units("umol/L", "umol/l"), 5, 2500)], "5894-1": [(units("%"), 3, 200)],
                   "4548-4": [(units("%"), 2, 25)], "59261-8": [(units("mmol/mol"), 10, 250)],
                   "3016-3": [(units("mU/L", "mIU/L", "uIU/mL", "u[iU]/mL", "uU/ml", "mU/l"), 0, 500)]})
+
+# ── P16: ELGA preferred codes folded into lexicon (78 new codes from elga_lab_loinc_de.csv) ──────
+# Coagulation
+PLAUSIBLE.update({
+    "3243-3":  [(units("s", "sec"), 5, 200)],          # Thrombinzeit
+    "27811-9": [(units("%"), 40, 200)],                 # AT III Aktivität
+})
+# CBC differentials — absolute counts (10^9/L) and relative (%)
+_ABS_DIFF = [(G_PER_L, 0, 50)]
+_REL_DIFF = [(units("%"), 0, 100)]
+PLAUSIBLE.update({
+    "30428-7": [(units("fL", "fl"), 40, 150)],          # MCV
+    "28539-5": [(units("pg"), 10, 50)],                 # MCH
+    "28540-3": [(units("g/dL", "g/dl", "g/L", "g/l"), 20, 400)],  # MCHC
+    "30385-9": [(units("%"), 5, 30)],                   # RDW-CV
+    "32623-1": [(units("fL", "fl"), 2, 30)],            # MPV
+    "26499-4": [*_ABS_DIFF],                            # Neutrophile Gran. abs.
+    "26511-6": [*_REL_DIFF],                            # Neutrophile Gran. rel.
+    "26474-7": [*_ABS_DIFF],                            # Lymphozyten abs.
+    "26478-8": [*_REL_DIFF],                            # Lymphozyten rel.
+    "26484-6": [*_ABS_DIFF],                            # Monozyten abs.
+    "26485-3": [*_REL_DIFF],                            # Monozyten rel.
+    "26449-9": [*_ABS_DIFF],                            # Eosinophile Gr. abs.
+    "26450-7": [*_REL_DIFF],                            # Eosinophile Gr. rel.
+    "26444-0": [*_ABS_DIFF],                            # Basophile Gr. abs.
+    "30180-4": [*_REL_DIFF],                            # Basophile Gr. rel.
+    "51584-1": [*_ABS_DIFF],                            # Unreife Gran. abs.
+    "38518-7": [*_REL_DIFF],                            # Unreife Gran. rel.
+    "14196-0": [*_ABS_DIFF],                            # Retikulozyten abs.
+    "4679-7":  [*_REL_DIFF],                            # Retikulozyten rel.
+    "30341-2": [(units("mm/h"), 0, 150)],               # Blutsenkung
+})
+# Kidney / electrolytes
+PLAUSIBLE.update({
+    "62238-1": [(units("mL/min/{1.73'm2}", "mL/min/1.73m2", "mL/min"), 5, 200)],  # GFR CKD-EPI
+    "33914-3": [(units("mL/min/{1.73'm2}", "mL/min/1.73m2", "mL/min"), 5, 200)],  # GFR MDRD
+    "98980-6": [(units("mL/min/{1.73'm2}", "mL/min/1.73m2", "mL/min"), 5, 200)],  # GFR Krea-Cys
+    "3084-1":  [(units("mg/dL", "mg/dl"), 1, 20), (units("umol/L", "umol/l"), 60, 1200)],  # Harnsäure
+    "33863-2": [(units("mg/L", "mg/l"), 0.1, 20)],     # Cystatin C
+    "2075-0":  [(units("mmol/L", "mmol/l", "mEq/L"), 70, 130)],  # Chlorid
+    "29265-6": [(units("mmol/L", "mmol/l"), 1, 4)],    # Calcium albuminkorr.
+    "2692-2":  [(units("mosm/kg"), 200, 400)],          # Osmolalität
+})
+# Liver
+PLAUSIBLE.update({
+    "2324-2":  [(units("U/L", "U/l", "IU/L"), 0, 3000)],   # Gamma-GT
+    "6768-6":  [(units("U/L", "U/l", "IU/L"), 0, 5000)],   # Alk. Phosphatase
+    "1975-2":  [(units("mg/dL", "mg/dl"), 0.1, 50)],       # Bilirubin gesamt
+    "1968-7":  [(units("mg/dL", "mg/dl"), 0, 30)],         # Bilirubin direkt
+    "2532-0":  [(units("U/L", "U/l", "IU/L"), 0, 10000)],  # LDH
+    "2098-2":  [(units("U/L", "U/l", "IU/L"), 0, 20000)],  # Cholinesterase
+    "1751-7":  [(units("g/L", "g/l"), 10, 60)],            # Albumin
+    "2885-2":  [(units("g/L", "g/l"), 30, 120)],           # Totalprotein
+    "16362-6": [(units("umol/L", "umol/l"), 0, 300)],      # Ammoniak
+})
+# Pancreas / muscle
+PLAUSIBLE.update({
+    "2157-6":  [(units("U/L", "U/l", "IU/L"), 0, 100000)],  # CK
+    "32673-6": [(units("U/L", "U/l", "IU/L"), 0, 5000)],    # CK-MB
+    "2639-3":  [(units("ug/L", "µg/L", "ug/l"), 0, 5000)],  # Myoglobin
+})
+# Inflammation
+PLAUSIBLE.update({
+    "30522-7": [(units("mg/L", "mg/l"), 0, 1000)],          # CRP hs
+    "33959-8": [(units("ng/mL", "ng/ml", "ug/L", "µg/L"), 0, 1000)],  # Procalcitonin
+    "26881-3": [(units("pg/mL", "pg/ml"), 0, 100000)],      # IL-6
+})
+# Glucose / hormones
+PLAUSIBLE.update({
+    "1558-6":  [(units("mg/dL", "mg/dl"), 10, 2000)],       # Glucose nüchtern (oGTT)
+    "20448-7": [(units("u[iU]/mL", "uIU/mL", "uU/ml", "µU/mL"), 0, 3000)],  # Insulin
+    "1986-9":  [(units("ng/mL", "ng/ml"), 0, 50)],          # C-Peptid
+})
+# Lipids
+PLAUSIBLE.update({
+    "2571-8":  [(units("mg/dL", "mg/dl"), 10, 3000), (units("mmol/L", "mmol/l"), 0.1, 35)],  # Triglyceride
+    "2085-9":  [(units("mg/dL", "mg/dl"), 5, 200), (units("mmol/L", "mmol/l"), 0.1, 5)],     # HDL-Cholesterin
+    "43396-1": [(units("mg/dL", "mg/dl"), 10, 400)],        # Non HDL-Chol.
+    "10835-7": [(units("g/L", "g/l"), 0, 10)],              # Lipoprotein(a) g/L
+    "43583-4": [(units("nmol/L", "nmol/l"), 0, 500)],       # Lipoprotein(a) nmol/L
+})
+# Cardiac
+PLAUSIBLE.update({
+    "30934-4": [(units("ng/L", "ng/l", "pg/mL", "pg/ml"), 0, 100000)],  # BNP
+})
+# Iron
+PLAUSIBLE.update({
+    "4542-7":  [(units("g/L", "g/l"), 0.1, 4)],            # Haptoglobin
+})
+# Vitamins
+PLAUSIBLE.update({
+    "2132-9":  [(units("pg/mL", "pg/ml"), 50, 10000)],      # Vitamin B12
+    "2284-8":  [(units("ng/mL", "ng/ml"), 1, 100)],         # Folsäure
+})
+# Tumor markers
+PLAUSIBLE.update({
+    "2857-1":  [(units("ug/L", "µg/L", "ug/l", "ng/mL", "ng/ml"), 0, 10000)],  # PSA
+    "2039-6":  [(units("ug/L", "µg/L", "ug/l", "ng/mL", "ng/ml"), 0, 10000)],  # CEA
+})
+# Blood gas
+PLAUSIBLE.update({
+    "2744-1":  [(units("1", ""), 6.5, 8.0)],                # pH art.
+    "2019-8":  [(units("mm[Hg]", "mmhg", "mm Hg"), 10, 120)],  # pCO2 art.
+    "2703-7":  [(units("mm[Hg]", "mmhg", "mm Hg"), 10, 700)],  # pO2 art.
+    "1960-4":  [(units("mmol/L", "mmol/l"), 5, 50)],        # Bikarbonat art.
+    "2524-7":  [(units("mmol/L", "mmol/l"), 0.1, 30)],      # Laktat
+})
+# Urine
+PLAUSIBLE.update({
+    "5803-2":  [(units("1", ""), 4, 9)],                    # pH /U
+    "20408-1": [(units("/uL", "/ul", "/µL"), 0, 500000)],   # Leuko /U
+    "20409-9": [(units("/uL", "/ul", "/µL"), 0, 500000)],   # Ery. /U
+    "2161-8":  [(units("mg/dL", "mg/dl"), 0, 5000)],        # Kreatinin /U
+    "1754-1":  [(units("mg/L", "mg/l"), 0, 50000)],         # Albumin /U
+    "9318-7":  [(units("mg/g{Krea}", "mg/g"), 0, 50000)],   # Alb./Kreat.-Ratio /U
+})
+# Other
+PLAUSIBLE.update({
+    "2143-6":  [(units("ug/dL", "µg/dL", "ug/dl"), 0, 300)],    # Cortisol
+})
 
 
 def plausible(code: str | None, value: float | None, unit: str) -> str | None:

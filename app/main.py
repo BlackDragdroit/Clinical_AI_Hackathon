@@ -241,7 +241,8 @@ def _finish(request: Request, raw: str, req: dict, sess: dict, typed_name: str, 
     try:
         out = intake_service.process_answer(req, verified_name=sess["name"], identity_method=method, actor=actor,
                                             typed_name=typed_name, typed_dob=typed_dob, filename=filename,
-                                            content=markdown, engine_notes=notes)
+                                            content=markdown, engine_notes=notes,
+                                            doc_type_mismatch=(eng.get("checks") or {}).get("doc_type"))
     except Exception as e:
         return _processing_failed(request, raw, req, sess, e)
     return _page(request, "receipt.html", ok=out["decision"] != "reject", receipt=out["answer_id"],

@@ -15,14 +15,19 @@ SYSTEM = "system:befundbruecke"
 
 
 def process_answer(req: dict, *, verified_name: str, identity_method: str, actor: str, typed_name: str,
-                   typed_dob: str, filename: str, content: str, engine_notes: list[str] | None = None) -> dict:
+                   typed_dob: str, filename: str, content: str, engine_notes: list[str] | None = None,
+                   doc_type_mismatch: dict | None = None) -> dict:
     """Returns {'decision', 'sender_message_de', 'answer_id'}. Called by the portal after identity passed.
     `content` is the engine's canonical Markdown; `engine_notes` (completeness, recency, plausibility) are appended
-    to Dr. Hofer's message on file/review, never on a reject (they describe the other patient's document)."""
+    to Dr. Hofer's message on file/review, never on a reject (they describe the other patient's document).
+    `doc_type_mismatch` comes from engine checks: {"requested": "lab", "received": "report"} (or None)."""
     res = run_intake(content, Person.from_full(req["patient_name"], req["patient_dob"]),
                      Person.from_full(typed_name, typed_dob), verified_name, parse_markdown(content).org, identity_method,
                      req["patient_ref"], filename)
     decision = res.decision
+    # Downgrade file -> review when the sender sent the wrong document type (e.g. discharge report instead of lab).
+    if decision == "file" and doc_type_mismatch:
+        decision = "review"
     # TODO(MedEng): downgrade file -> review when policy.auto_file_allowed is False (possession-only path)
     answer_id = db.new_id()
     db.insert("answers", {
@@ -35,12 +40,19 @@ def process_answer(req: dict, *, verified_name: str, identity_method: str, actor
     })
 
     notes = (" · " + " · ".join(engine_notes)) if engine_notes else ""
+    mismatch_note = ""
+    if doc_type_mismatch:
+        from engine.checks import DOC_LABEL
+        req_label = DOC_LABEL.get(doc_type_mismatch["requested"], doc_type_mismatch["requested"])
+        rec_label = DOC_LABEL.get(doc_type_mismatch["received"], doc_type_mismatch["received"])
+        mismatch_note = f" ⚠️ Falscher Dokumenttyp: angefragt {req_label}, erhalten {rec_label}."
     if decision == "file":
         _file(req, answer_id, res.bundle, res.doctor_message_de + notes)
     elif decision == "review":
         db.update("requests", "id", req["id"], status="review")
-        audit.log("review_requested", req["id"], SYSTEM, {"answer": answer_id, "match": _scores(res.match)})
-        notify.doctor(f"{res.doctor_message_de}{notes} (Anfrage {req['id']}: !ablegen {req['id']} / !verwerfen {req['id']})", req["id"])
+        audit.log("review_requested", req["id"], SYSTEM, {"answer": answer_id, "match": _scores(res.match),
+                                                          "doc_type_mismatch": doc_type_mismatch})
+        notify.doctor(f"{res.doctor_message_de}{notes}{mismatch_note} (Anfrage {req['id']}: !ablegen {req['id']} / !verwerfen {req['id']})", req["id"])
     else:  # reject: quarantine, never file; no data about the other patient in audit or Matrix
         db.update("requests", "id", req["id"], status="rejected")
         if req["task_ref"]:

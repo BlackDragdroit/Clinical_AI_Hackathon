@@ -21,7 +21,8 @@ case "${1:-}" in
   m3) cmd=$R1; who=eva; doc=$MAX; tn="Max Beispiel"; td=01.01.1960 ;;
   *) sed -n 2,9p "$0"; exit 2 ;;
 esac
-id=$(N=1 $MX "$cmd" | grep -oE 'Anfrage [a-z0-9]{8}' | head -1 | cut -d' ' -f2)
+# the card is followed by its ✅ reaction (not a message), so read a few events and take the newest card
+id=$(N=6 $MX "$cmd" | grep -oE 'Anfrage [a-z0-9]{8}' | tail -1 | cut -d' ' -f2)
 [ -n "$id" ] || { echo "no draft card from the bot (is the stack up? see: docker compose logs app)"; exit 1; }
 N=1 $MX "!senden $id" >/dev/null
 if [ "$1" = r2 ]; then
@@ -42,4 +43,4 @@ fi
 sleep 3
 curl -s "localhost:8000/audit.json?request_id=$id" | python3 -c 'import json,sys
 a=json.load(sys.stdin); print("audit:", ", ".join(e["event"] + ("(" + (e["details"].get("result") or e["details"].get("type") or "") + ")" if (e["details"].get("result") or e["details"].get("type")) else "") for e in a["entries"]))'
-WAIT=0 N=1 $MX | cut -c1-220
+WAIT=0 N=6 $MX | grep -v '^@lena' | tail -3 | cut -c1-220

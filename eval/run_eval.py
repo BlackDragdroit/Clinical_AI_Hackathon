@@ -296,7 +296,7 @@ def main() -> None:
                  ("ENGINE_ASR_URL", a.asr_url), ("ENGINE_OCR_URL", a.ocr_url)):
         if v:
             os.environ[k] = v
-    use = a.rung != "rules"
+    use = not a.rung.startswith("rules")
     if a.task == "requests":
         items = _load(f"requests_{a.set}.jsonl")[: a.limit]
         if not items:

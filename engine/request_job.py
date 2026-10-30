@@ -158,19 +158,11 @@ def run(text: str, directory: Directory | None = None, use_llm: bool = True, use
     patient: PatientMatch = resolve(directory, pname, dob_iso, ref)
     t_patient = time.perf_counter()
 
-    missing = [k for k in ("recipient_name", "contact", "doc_type") if not fields.get(k)]
-    if patient.status not in ("unique", "explicit"):
-        missing.append("patient")
-    ask = None
-    if missing:
-        ask = "Bitte noch angeben: " + ", ".join(LABELS[m] for m in missing) + "."
-        if patient.note_de and "patient" in missing:
-            ask += f" ({patient.note_de})"
     reason_text = fields["reason"]["value"] if fields["reason"] else None
     if panel and (not reason_text or panel["label_de"].lower() not in reason_text.lower()):
         reason_text = f"{panel['label_de']} – {reason_text}" if reason_text else panel["label_de"]
 
-    return {
+    out = {
         "version": VERSION,
         "input": {"text": text, "normalized": norm, "language": lang},
         "fields": fields,
@@ -179,13 +171,31 @@ def run(text: str, directory: Directory | None = None, use_llm: bool = True, use
         "contact": {"kind": contact_kind, "value": contact_value} if contact_value else None,
         "panel": panel,
         "reason": reason_text,
-        "patient": patient.as_dict(),
+        "patient_query": {"name": pname, "dob_iso": dob_iso, "ref": ref},
         "flags": flags,
         "dropped_ungrounded": dropped,
-        "missing": missing,
-        "ready": not missing,
-        "ask_de": ask,
         "models": {"llm": res.model or None, "llm_error": res.error, "llm_cached": res.cached},
         "timings_ms": {"rules": int((t_rules - t0) * 1000), "llm": res.ms, "merge": int((t_merge - t_rules) * 1000) - res.ms,
                        "patient": int((t_patient - t_merge) * 1000), "total": int((time.perf_counter() - t0) * 1000)},
     }
+    return _complete(out, patient)
+
+
+def _complete(out: dict, patient: PatientMatch) -> dict:
+    missing = [k for k in ("recipient_name", "contact", "doc_type") if not out["fields"].get(k)]
+    if patient.status not in ("unique", "explicit"):
+        missing.append("patient")
+    ask = None
+    if missing:
+        ask = "Bitte noch angeben: " + ", ".join(LABELS[m] for m in missing) + "."
+        if patient.note_de and "patient" in missing:
+            ask += f" ({patient.note_de})"
+    out.update(patient=patient.as_dict(), missing=missing, ready=not missing, ask_de=ask)
+    return out
+
+
+def resolve_patient(out: dict, directory: Directory) -> dict:
+    """Redo the patient step with another directory: the engine on the GPU box cannot see the clinic's FHIR server,
+    so the app finishes the lookup itself (app/engine_client.py)."""
+    q = out.get("patient_query") or {}
+    return _complete(out, resolve(directory, q.get("name"), q.get("dob_iso"), q.get("ref")))

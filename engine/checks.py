@@ -9,7 +9,7 @@ from datetime import datetime
 
 from engine._core import KNOWN, ParsedDoc, parse_datetime, resolve
 from engine.config import settings
-from engine.lexicon import plausible
+from engine.lexicon import ELGA, plausible, same_test
 
 SAMPLE_KEYS = ("Sample taken", "Collected", "Abnahme", "Entnahme", "Probenentnahme", "Abnahmedatum", "Probe")
 DOC_LABEL = {"lab": "Laborbefund", "report": "Bericht"}
@@ -25,6 +25,8 @@ def _sample_time(doc: ParsedDoc) -> datetime | None:
 
 
 def _name(code: str) -> str:
+    if code in ELGA:
+        return ELGA[code][0]
     syns = KNOWN.get(code, ("", []))[1]
     return syns[0].upper() if syns and len(syns[0]) <= 5 else (syns[0].capitalize() if syns else code)
 
@@ -51,8 +53,8 @@ def run(doc: ParsedDoc, requested_loinc: list[str] | None = None, requested_at: 
         lines.append("Werte plausibel" if not out["sanity"] else f"⚠️ {len(out['sanity'])} Wert(e) prüfen")
 
     if requested_loinc:
-        got = [c for c in requested_loinc if c in codes]
-        missing = [c for c in requested_loinc if c not in codes]
+        got = [c for c in requested_loinc if any(same_test(c, d) for d in codes)]
+        missing = [c for c in requested_loinc if c not in got]
         out["completeness"] = {"requested": requested_loinc, "delivered": got, "missing": missing}
         line = f"{len(got)}/{len(requested_loinc)} angefragte Parameter"
         if missing:

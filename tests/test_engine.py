@@ -199,3 +199,28 @@ def test_photo_rendering_is_an_image_the_engine_routes_to_ocr():
     for img in (photo(pdf, seed=3), scan(pdf, seed=3)):
         r = document_job.read(img, "foto.jpg", use_models=False)
         assert r["input"]["kind"] == "image" and not r["ok"]          # no OCR configured -> asks for another format
+
+
+# ---------------------------------------------------------------- ELGA (Austrian lab codes)
+def test_elga_codes_have_valid_check_digits_and_names():
+    from engine._core import is_valid
+    from engine.lexicon import ELGA, EQUIV_GROUPS
+    assert len(ELGA) > 100 and all(is_valid(c) for c in ELGA)
+    assert all(is_valid(c) for g in EQUIV_GROUPS for c in g)
+    assert ELGA["26464-8"][0] == "Leukozyten"
+
+
+def test_austrian_codes_count_for_completeness():
+    md = doc("lab-result-maria-beispiel.md").replace("| INR (prothrombin time) | 1.0 | | 0.8 to 1.2 | 6301-6 |",
+                                                     "| PTZ (Quick) | 95 | % | 70 to 120 | 5894-1 |")
+    r = document_job.read(md.encode(), "x.md", requested_loinc=COAG)
+    assert "4/4 angefragte Parameter" in r["check_lines_de"]
+
+
+def test_new_panels_and_single_tests_in_requests():
+    r = request_job.run("Bitte bei Dr. Eva Brandl eva.brandl@labor-kanal.example die Schilddrüsenwerte von Frau Maria Beispiel, "
+                        "geb. 12.03.1961, anfordern.", PATIENTS, use_llm=False)
+    assert r["panel"]["key"] == "thyroid" and "3016-3" in r["panel"]["loinc"]
+    r = request_job.run("Gamma-GT von Frau Maria Beispiel, geb. 12.03.1961, bei Dr. Eva Brandl eva.brandl@labor-kanal.example",
+                        PATIENTS, use_llm=False)
+    assert r["panel"]["loinc"] == ["2324-2"]

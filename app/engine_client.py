@@ -30,16 +30,23 @@ def _post(path: str, **kw) -> dict:
     return r.json()
 
 
+def _with_patient(res: dict) -> dict:
+    if (res.get("patient") or {}).get("status") == "no_directory":
+        from engine import request_job
+        res = request_job.resolve_patient(res, _AppDirectory())
+    return res
+
+
 def request_text(text: str) -> dict:
     if ENGINE_URL:
-        return _post("/v1/request", json={"text": text})
+        return _with_patient(_post("/v1/request", json={"text": text}))
     from engine import request_job
     return request_job.run(text, _AppDirectory())
 
 
 def request_audio(audio: bytes, filename: str = "voice.ogg") -> dict:
     if ENGINE_URL:
-        return _post("/v1/request/audio", files={"file": (filename, audio)})
+        return _with_patient(_post("/v1/request/audio", files={"file": (filename, audio)}))
     from engine import request_job
     from engine.backends import asr
     r = asr.transcribe(audio, filename)

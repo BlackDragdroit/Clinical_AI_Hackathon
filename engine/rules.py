@@ -10,7 +10,7 @@ import re
 from dataclasses import dataclass, field
 
 from engine._core import KNOWN, norm_tokens, parse_dob
-from engine.lexicon import LAB_WORDS, PANEL_RE, PANELS, REPORT_STRONG, REPORT_WEAK
+from engine.lexicon import ELGA, LAB_WORDS, PANEL_RE, PANELS, REPORT_STRONG, REPORT_WEAK
 
 
 @dataclass
@@ -167,6 +167,13 @@ def panel(text: str) -> Hit | None:
             m = re.search(rf"\b{re.escape(syn)}\b", text, re.I)
             if m and (len(syn) > 3 or m.group(0).isupper()):
                 return Hit(m.group(0), m.start(), m.end(), extra={"key": "single", "loinc": [code], "label_de": m.group(0)})
+    for code, (name, _unit, _panel) in ELGA.items():          # Austrian lab names: "Gamma-GT", "Ferritin", "PTZ"
+        short = re.split(r"\s*[(/,]", name)[0].strip()
+        if len(short) < 3:
+            continue
+        m = re.search(rf"(?<![\w-]){re.escape(short)}(?![\w-])", text, re.I)
+        if m and (len(short) > 3 or m.group(0).isupper()):
+            return Hit(m.group(0), m.start(), m.end(), extra={"key": "single", "loinc": [code], "label_de": name})
     return None
 
 

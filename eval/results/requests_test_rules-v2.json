@@ -2,7 +2,7 @@
  "task": "requests",
  "set": "test",
  "rung": "rules-v2",
- "at": "2026-10-30T04:26:19",
+ "at": "2026-10-30T05:33:05",
  "metrics": {
   "n": 300,
   "safety": {
@@ -29,11 +29,11 @@
    }
   },
   "full_request": {
-   "k": 209,
+   "k": 210,
    "n": 300,
-   "p": 0.6966666666666667,
-   "lo": 0.6424305301606226,
-   "hi": 0.7459297207069346
+   "p": 0.7,
+   "lo": 0.6458814453011743,
+   "hi": 0.7490611826997313
   },
   "fields": {
    "recipient": {
@@ -58,11 +58,11 @@
     "hi": 0.7584362870048228
    },
    "doc_type": {
-    "k": 297,
+    "k": 299,
     "n": 300,
-    "p": 0.99,
-    "lo": 0.9710159953649371,
-    "hi": 0.9965934432372818
+    "p": 0.9966666666666667,
+    "lo": 0.9813628354450568,
+    "hi": 0.9994113574238592
    },
    "panel": {
     "k": 267,
@@ -72,20 +72,20 @@
     "hi": 0.9205951927314675
    },
    "ready": {
-    "k": 214,
+    "k": 215,
     "n": 300,
-    "p": 0.7133333333333334,
-    "lo": 0.6597173468493974,
-    "hi": 0.7615547896849021
+    "p": 0.7166666666666667,
+    "lo": 0.6631845423956875,
+    "hi": 0.7646699712719605
    }
   },
   "by_trap": {
    "homoglyph": {
-    "k": 14,
+    "k": 15,
     "n": 15,
-    "p": 0.9333333333333333,
-    "lo": 0.7018292244757601,
-    "hi": 0.9881334113938051
+    "p": 1.0,
+    "lo": 0.7961107336956521,
+    "hi": 1.0
    },
    "namesake": {
     "k": 13,
@@ -146,11 +146,11 @@
     "hi": 0.5642385244088045
    },
    "de/typed": {
-    "k": 111,
+    "k": 112,
     "n": 125,
-    "p": 0.888,
-    "lo": 0.8207601960995368,
-    "hi": 0.9321022334263307
+    "p": 0.896,
+    "lo": 0.8301757464839641,
+    "hi": 0.9382096197331584
    },
    "en/dictated": {
     "k": 9,
@@ -168,11 +168,11 @@
    }
   },
   "latency_ms": {
-   "p50": 1.931200000399258,
-   "p95": 3.082900002482347
+   "p50": 1.9730999993043952,
+   "p95": 3.69440000213217
   },
   "dropped_ungrounded_values": 0,
-  "llm_errors": 300,
+  "llm_errors": 0,
   "items": [
    {
     "id": "test-0000",
@@ -192,7 +192,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -227,7 +227,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -262,7 +262,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Jasmin Reiter",
@@ -294,7 +294,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Mag. Nina Horvath",
@@ -328,7 +328,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Elisabeth Eder",
@@ -360,7 +360,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -395,7 +395,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Emine Aigner",
@@ -427,7 +427,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -462,7 +462,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Jürgen Auer",
@@ -494,7 +494,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Stefan Kern",
@@ -526,7 +526,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Petra Petrović",
@@ -560,7 +560,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -595,7 +595,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. med. Daniel Lehner",
@@ -627,7 +627,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Martin Bauer",
@@ -659,7 +659,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -694,7 +694,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Renate Novak",
@@ -726,7 +726,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Andreas Moser",
@@ -758,7 +758,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Christian Aigner",
@@ -790,7 +790,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Elisabeth Eder",
@@ -822,7 +822,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. med. Lisa Müller",
@@ -854,7 +854,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Claudia Lang",
@@ -886,7 +886,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -921,7 +921,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Mag. Max Brunner",
@@ -953,7 +953,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Lukas Moser",
@@ -985,7 +985,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Stefan Petrović",
@@ -1017,7 +1017,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -1052,7 +1052,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Claudia Lang",
@@ -1084,7 +1084,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -1119,7 +1119,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Chloé Müller",
@@ -1153,7 +1153,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Brandl",
@@ -1185,7 +1185,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Markus Lehner",
@@ -1217,7 +1217,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -1252,7 +1252,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Monika Baumgartner",
@@ -1286,7 +1286,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Stefan Kern",
@@ -1318,7 +1318,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. med. Lisa Müller",
@@ -1349,7 +1349,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -1384,7 +1384,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Mag. Emine Pichler",
@@ -1416,7 +1416,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Emine Aigner",
@@ -1448,7 +1448,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Ali Wolf",
@@ -1480,7 +1480,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Stefan Kern",
@@ -1511,7 +1511,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Jasmin Reiter",
@@ -1543,7 +1543,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -1578,7 +1578,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Jasmin Reiter",
@@ -1610,7 +1610,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Jürgen Auer",
@@ -1642,7 +1642,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -1677,7 +1677,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -1712,7 +1712,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Felix Schmid",
@@ -1744,7 +1744,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -1779,7 +1779,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Markus Lehner",
@@ -1811,7 +1811,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Emine Aigner",
@@ -1843,7 +1843,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Anna Wimmer",
@@ -1875,7 +1875,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -1910,7 +1910,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -1945,7 +1945,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Christian Aigner",
@@ -1977,7 +1977,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. med. Petra Auer",
@@ -2009,7 +2009,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -2044,7 +2044,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Graz West",
@@ -2076,7 +2076,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Elisabeth Eder",
@@ -2108,7 +2108,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Emine Aigner",
@@ -2140,7 +2140,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -2175,7 +2175,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Eva Brandl",
@@ -2207,7 +2207,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -2242,7 +2242,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Eva Brandl",
@@ -2274,7 +2274,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Mag. Nina Horvath",
@@ -2306,7 +2306,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Stefan Kern",
@@ -2338,7 +2338,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -2373,7 +2373,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Claudia Novak",
@@ -2407,7 +2407,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Jasmin Reiter",
@@ -2441,7 +2441,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Stefan Kern",
@@ -2473,7 +2473,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Claudia Lang",
@@ -2505,7 +2505,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Mag. Nina Horvath",
@@ -2537,7 +2537,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Martin Bauer",
@@ -2571,7 +2571,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Karl Huber",
@@ -2602,7 +2602,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. med. Petra Auer",
@@ -2634,7 +2634,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -2667,7 +2667,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Katharina Weber",
@@ -2699,7 +2699,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Stefan Kern",
@@ -2731,7 +2731,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Eva Brandl",
@@ -2763,7 +2763,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -2798,7 +2798,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -2833,7 +2833,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -2868,7 +2868,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Christian Aigner",
@@ -2902,7 +2902,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Mag. Max Brunner",
@@ -2936,7 +2936,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -2969,7 +2969,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -3004,7 +3004,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Mag. Nina Horvath",
@@ -3036,7 +3036,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Felix Wolf",
@@ -3068,7 +3068,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Claudia Lang",
@@ -3100,7 +3100,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -3135,7 +3135,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -3168,7 +3168,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Jürgen Auer",
@@ -3199,7 +3199,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Renate Novak",
@@ -3233,7 +3233,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Markus Lehner",
@@ -3265,7 +3265,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -3300,7 +3300,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -3335,7 +3335,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -3370,7 +3370,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -3405,7 +3405,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Felix Wolf",
@@ -3439,7 +3439,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. med. Lisa Müller",
@@ -3471,7 +3471,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Sophie Moser",
@@ -3503,7 +3503,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Stefan Kern",
@@ -3535,7 +3535,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Eva Brandl",
@@ -3567,7 +3567,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Felix Wolf",
@@ -3601,7 +3601,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -3636,7 +3636,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Sabine Bauer",
@@ -3667,7 +3667,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -3700,7 +3700,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Christian Aigner",
@@ -3732,7 +3732,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Mag. Max Brunner",
@@ -3764,7 +3764,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Andreas Moser",
@@ -3796,7 +3796,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Stefan Kern",
@@ -3828,7 +3828,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Claudia Lang",
@@ -3862,7 +3862,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Jasmin Winkler",
@@ -3893,7 +3893,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Christian Aigner",
@@ -3925,7 +3925,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -3958,7 +3958,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Petra Auer",
@@ -3990,7 +3990,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Katharina Weber",
@@ -4022,7 +4022,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Karl Huber",
@@ -4054,7 +4054,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Emine Aigner",
@@ -4086,7 +4086,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -4121,7 +4121,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Mag. Nina Horvath",
@@ -4153,7 +4153,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Markus Lehner",
@@ -4184,7 +4184,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Claudia Lang",
@@ -4216,7 +4216,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Markus Lehner",
@@ -4248,7 +4248,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Stefan Petrović",
@@ -4282,7 +4282,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -4317,7 +4317,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Jasmin Reiter",
@@ -4349,7 +4349,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Claudia Lang",
@@ -4381,7 +4381,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Sabine Bauer",
@@ -4413,7 +4413,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Ali Wolf",
@@ -4445,7 +4445,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Jasmin Winkler",
@@ -4477,7 +4477,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Martin Bauer",
@@ -4509,7 +4509,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Chloé Müller",
@@ -4541,7 +4541,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Jürgen Schneider",
@@ -4575,7 +4575,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Andreas Moser",
@@ -4607,7 +4607,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. med. Daniel Lehner",
@@ -4639,7 +4639,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Martin Bauer",
@@ -4671,7 +4671,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Stefan Petrović",
@@ -4702,7 +4702,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Eva Brandl",
@@ -4734,7 +4734,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Anna Wimmer",
@@ -4766,7 +4766,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. med. Lisa Müller",
@@ -4798,7 +4798,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -4831,7 +4831,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Karl Huber",
@@ -4865,7 +4865,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -4900,7 +4900,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Jasmin Winkler",
@@ -4932,7 +4932,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Christina Wolf",
@@ -4966,7 +4966,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. med. Petra Auer",
@@ -5000,7 +5000,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Jasmin Reiter",
@@ -5031,7 +5031,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Sophie Moser",
@@ -5062,7 +5062,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Sabine Bauer",
@@ -5094,7 +5094,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. med. Daniel Lehner",
@@ -5128,7 +5128,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Eva Brandl",
@@ -5160,7 +5160,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Lukas Aigner",
@@ -5194,7 +5194,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -5229,7 +5229,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -5262,7 +5262,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Martin Bauer",
@@ -5294,7 +5294,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Emine Aigner",
@@ -5326,7 +5326,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -5352,16 +5352,16 @@
      "recipient": true,
      "contact": true,
      "patient": true,
-     "doc_type": false,
+     "doc_type": true,
      "panel": false,
-     "ready": false
+     "ready": true
     },
-    "full": false,
+    "full": true,
     "silent_error": false,
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. med. Petra Auer",
@@ -5370,11 +5370,9 @@
       "value": "petra.auer@zentrallabor-d0nau.example"
      },
      "patient": "Patient/bb-0032",
-     "doc_type": null,
-     "ready": false,
-     "missing": [
-      "doc_type"
-     ]
+     "doc_type": "lab",
+     "ready": true,
+     "missing": []
     }
    },
    {
@@ -5395,7 +5393,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Katharina Weber",
@@ -5427,7 +5425,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Mag. Emine Pichler",
@@ -5459,7 +5457,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -5483,7 +5481,7 @@
      "recipient": false,
      "contact": true,
      "patient": true,
-     "doc_type": false,
+     "doc_type": true,
      "panel": false,
      "ready": true
     },
@@ -5492,7 +5490,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -5501,11 +5499,10 @@
       "value": "sabine.bauer@zentrallabor-donau.example"
      },
      "patient": null,
-     "doc_type": null,
+     "doc_type": "lab",
      "ready": false,
      "missing": [
       "recipient_name",
-      "doc_type",
       "patient"
      ]
     }
@@ -5528,7 +5525,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Mag. Emine Pichler",
@@ -5560,7 +5557,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -5595,7 +5592,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -5630,7 +5627,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Mag. Emine Pichler",
@@ -5662,7 +5659,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Katharina Weber",
@@ -5696,7 +5693,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -5730,7 +5727,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -5765,7 +5762,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Mag. Max Brunner",
@@ -5797,7 +5794,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -5832,7 +5829,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Sabine Bauer",
@@ -5864,7 +5861,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -5899,7 +5896,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Lisa Fuchs",
@@ -5933,7 +5930,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Stefan Petrović",
@@ -5965,7 +5962,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -6000,7 +5997,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Ali Wolf",
@@ -6032,7 +6029,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -6065,7 +6062,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Eva Brandl",
@@ -6096,7 +6093,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. med. Daniel Lehner",
@@ -6128,7 +6125,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Verdacht Harnwegsinfekt",
@@ -6160,7 +6157,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -6195,7 +6192,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -6228,7 +6225,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Theresa Brunner",
@@ -6262,7 +6259,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -6297,7 +6294,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Emine Aigner",
@@ -6331,7 +6328,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Elisabeth Eder",
@@ -6363,7 +6360,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -6396,7 +6393,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -6431,7 +6428,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Martin Bauer",
@@ -6463,7 +6460,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Christian Aigner",
@@ -6494,7 +6491,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Christian Aigner",
@@ -6526,7 +6523,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -6561,7 +6558,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Claudia Lang",
@@ -6593,7 +6590,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Sabine Bauer",
@@ -6625,7 +6622,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Felix Wolf",
@@ -6657,7 +6654,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -6692,7 +6689,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Thomas Schneider",
@@ -6726,7 +6723,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Anna Wimmer",
@@ -6758,7 +6755,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -6793,7 +6790,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Ali Wolf",
@@ -6825,7 +6822,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Karl Huber",
@@ -6857,7 +6854,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -6892,7 +6889,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Emine Aigner",
@@ -6924,7 +6921,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Emine Aigner",
@@ -6956,7 +6953,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Felix Schmid",
@@ -6990,7 +6987,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -7025,7 +7022,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -7060,7 +7057,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -7094,7 +7091,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. med. Daniel Lehner",
@@ -7126,7 +7123,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. med. Petra Auer",
@@ -7160,7 +7157,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. med. Lisa Müller",
@@ -7192,7 +7189,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Katharina Weber",
@@ -7226,7 +7223,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Chloé Müller",
@@ -7258,7 +7255,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Felix Wolf",
@@ -7290,7 +7287,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -7325,7 +7322,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -7360,7 +7357,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -7393,7 +7390,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Andreas Moser",
@@ -7427,7 +7424,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Monika Schmid",
@@ -7461,7 +7458,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Chloé Aigner",
@@ -7495,7 +7492,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Elisabeth Eder",
@@ -7526,7 +7523,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Felix Schmid",
@@ -7558,7 +7555,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Emine Aigner",
@@ -7590,7 +7587,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -7625,7 +7622,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -7660,7 +7657,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Ansprechpartnerin Renate Novak",
@@ -7692,7 +7689,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Katharina Weber",
@@ -7724,7 +7721,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Stefan Kern",
@@ -7758,7 +7755,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Daniel Lehner",
@@ -7792,7 +7789,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Jasmin Reiter",
@@ -7824,7 +7821,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Petra Auer",
@@ -7856,7 +7853,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Felix Schmid",
@@ -7888,7 +7885,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -7923,7 +7920,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -7958,7 +7955,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -7993,7 +7990,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Felix Schmid",
@@ -8025,7 +8022,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -8060,7 +8057,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Mag. Nina Horvath",
@@ -8092,7 +8089,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Eva Brandl",
@@ -8124,7 +8121,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Chloé Müller",
@@ -8156,7 +8153,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -8191,7 +8188,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Renate Novak",
@@ -8225,7 +8222,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -8260,7 +8257,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Ali Wolf",
@@ -8292,7 +8289,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Jasmin Reiter",
@@ -8324,7 +8321,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Felix Wolf",
@@ -8355,7 +8352,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Martin Bauer",
@@ -8387,7 +8384,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Sabine Bauer",
@@ -8419,7 +8416,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Felix Schmid",
@@ -8451,7 +8448,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Mag. Max Brunner",
@@ -8483,7 +8480,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Elisabeth Eder",
@@ -8515,7 +8512,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Anna Wimmer",
@@ -8547,7 +8544,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Karl Huber",
@@ -8581,7 +8578,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -8616,7 +8613,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Günther Demir",
@@ -8650,7 +8647,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -8683,7 +8680,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Lukas Petrović",
@@ -8717,7 +8714,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Stefan Petrović",
@@ -8749,7 +8746,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -8784,7 +8781,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Sabine Bauer",
@@ -8816,7 +8813,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Christian Aigner",
@@ -8848,7 +8845,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Sabine Bauer",
@@ -8880,7 +8877,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -8915,7 +8912,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Karl Huber",
@@ -8947,7 +8944,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -8979,7 +8976,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -9014,7 +9011,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Mag. Nina Horvath",
@@ -9046,7 +9043,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Andreas Moser",
@@ -9078,7 +9075,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -9113,7 +9110,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -9146,7 +9143,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Martin Bauer",
@@ -9180,7 +9177,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Jürgen Auer",
@@ -9211,7 +9208,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Lukas Moser",
@@ -9243,7 +9240,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Stefan Kern",
@@ -9275,7 +9272,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Eva Brandl",
@@ -9309,7 +9306,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Christian Aigner",
@@ -9343,7 +9340,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Felix Schmid",
@@ -9375,7 +9372,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. med. Lisa Müller",
@@ -9409,7 +9406,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Mag. Nina Horvath",
@@ -9443,7 +9440,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Sophie Moser",
@@ -9475,7 +9472,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -9510,7 +9507,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. med. Petra Auer",
@@ -9542,7 +9539,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Karl Huber",
@@ -9574,7 +9571,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Lena Kaya",
@@ -9608,7 +9605,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Lisa Müller",
@@ -9640,7 +9637,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -9675,7 +9672,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Stefan Kern",
@@ -9709,7 +9706,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -9744,7 +9741,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Lukas Moser",
@@ -9778,7 +9775,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": null,
@@ -9813,7 +9810,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Christian Aigner",
@@ -9845,7 +9842,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Jasmin Winkler",
@@ -9877,7 +9874,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Jasmin Winkler",
@@ -9909,7 +9906,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. med. Daniel Lehner",
@@ -9941,7 +9938,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Eva Brandl",
@@ -9975,7 +9972,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Nina Schneider",
@@ -10009,7 +10006,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Dr. Sabine Bauer",
@@ -10041,7 +10038,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Renate Novak",
@@ -10073,7 +10070,7 @@
     "flagged_wrong": false,
     "wrong_patient": false,
     "dropped": 0,
-    "llm_error": "no LLM configured",
+    "llm_error": "disabled",
     "asr": null,
     "got": {
      "recipient": "Karl Huber",

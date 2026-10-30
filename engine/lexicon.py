@@ -1,13 +1,45 @@
 """Closed vocabularies (German + English): document types, test panels, units and plausible ranges.
 
-Every LOINC code here comes from core/loinc.py's verified seed table (check digits are tested). Panels say which
+LOINC codes come from core/loinc.py's verified seed table and from ELGA_Laborparameter (Austrian terminology server,
+v1.11.0+20260910, LOINC 2.83; compact extract in engine/data/elga_lab_loinc_de.csv, content unchanged, see
+eval/REAL_DATA.md). Check digits of both are tested. Panels say which
 tests a request expects, so the answer can be checked for completeness. Ranges are *physically plausible* bounds
 (to catch a misread digit or a wrong unit), not reference ranges, and the engine never changes a value with them.
 """
 from __future__ import annotations
 
+import csv
 import re
 from dataclasses import dataclass
+from pathlib import Path
+
+# ELGA: code -> (German display, UCUM unit, panel). Austrian labs report with these codes.
+_ELGA_CSV = Path(__file__).resolve().parent / "data" / "elga_lab_loinc_de.csv"
+ELGA: dict[str, tuple[str, str, str]] = {}
+if _ELGA_CSV.exists():
+    with _ELGA_CSV.open(encoding="utf-8") as fh:
+        for row in csv.DictReader(fh):
+            if row.get("inactive", "false") != "true":
+                ELGA[row["code"]] = (row["display_de"], row["unit"], row["panel"])
+
+# the same measurement under different codes (US-style seed vs. ELGA, mass vs. molar unit, % Quick vs. seconds vs. INR)
+EQUIV_GROUPS = [
+    {"6690-2", "26464-8"},                                   # Leukozyten
+    {"789-8", "26453-1"},                                    # Erythrozyten
+    {"4544-3", "20570-8"},                                   # Hämatokrit
+    {"6301-6", "5902-2", "5894-1", "52761-4", "52753-1"},    # Prothrombinzeit: INR, s, % Quick, Owren, Normotest
+    {"2160-0", "14682-9"},                                   # Kreatinin mg/dl | µmol/l
+    {"3094-0", "3091-6"},                                    # Harnstoff(-N)
+    {"4548-4", "59261-8"},                                   # HbA1c % | mmol/mol
+    {"2089-1", "13457-7"},                                   # LDL gemessen | berechnet
+    {"17861-6", "2000-8"}, {"19123-9", "2601-3"}, {"2777-1", "14879-1"},   # Ca, Mg, Phosphat
+    {"48065-7", "30240-6"}, {"67151-1", "6598-7"}, {"62292-8", "1989-3"},  # D-Dimer, Troponin T, Vitamin D
+]
+_EQUIV = {c: g for g in EQUIV_GROUPS for c in g}
+
+
+def same_test(a: str | None, b: str | None) -> bool:
+    return bool(a and b) and (a == b or b in _EQUIV.get(a, ()))
 
 
 @dataclass(frozen=True)
@@ -33,6 +65,15 @@ PANELS = (
           r"entzündungs(?:wert|parameter|marker)\w*|inflammat\w+ markers?"),
     Panel("lipids", "Blutfette", "lipids", ("2093-3",), r"blutfett\w*|lipid\w*|cholesterin\w*|cholesterol"),
     Panel("glucose", "Blutzucker", "blood glucose", ("2345-7",), r"blutzucker\w*|glukose|glucose"),
+    Panel("hba1c", "HbA1c", "HbA1c", ("4548-4",), r"hba1c|langzeitzucker|glykiertes h[äa]moglobin"),
+    Panel("thyroid", "Schilddrüsenwerte", "thyroid function", ("3016-3", "3024-7", "3051-0"),
+          r"schilddr[üu]s\w*|tsh|thyroid(?: function| panel)?"),
+    Panel("iron", "Eisenstatus", "iron status", ("2276-4", "2498-4", "3034-6", "2502-3"),
+          r"eisenstatus|eisenwerte|ferritin|iron (?:status|studies|panel)"),
+    Panel("cardiac", "Herzmarker", "cardiac markers", ("67151-1", "33762-6"),
+          r"herzenzym\w*|herzmarker\w*|troponin|nt-?pro-?bnp|cardiac (?:markers|enzymes)"),
+    Panel("pancreas", "Pankreaswerte", "pancreas", ("3040-3", "1798-8"), r"pankreas\w*|lipase|amylase"),
+    Panel("ddimer", "D-Dimer", "D-dimer", ("48065-7",), r"d-?dimer\w*"),
 )
 PANEL_RE = re.compile(r"\b(?:" + "|".join(f"(?P<{p.key}>{p.pattern})" for p in PANELS) + r")\b", re.I)
 
@@ -75,6 +116,13 @@ PLAUSIBLE: dict[str, list[tuple[frozenset[str], float, float]]] = {
     "2093-3": [(units("mg/dL", "mg/dl"), 20, 1500), (units("mmol/L", "mmol/l"), 0.5, 40)],
     "3094-0": [(units("mg/dL", "mg/dl"), 1, 300), (units("mmol/L", "mmol/l"), 0.5, 100)],
 }
+
+
+# ELGA codes for the same measurement share its plausible ranges; Quick in % has its own
+PLAUSIBLE.update({"26464-8": PLAUSIBLE["6690-2"], "26453-1": PLAUSIBLE["789-8"], "20570-8": PLAUSIBLE["4544-3"],
+                  "14682-9": [(units("umol/L", "umol/l"), 5, 2500)], "5894-1": [(units("%"), 3, 200)],
+                  "4548-4": [(units("%"), 2, 25)], "59261-8": [(units("mmol/mol"), 10, 250)],
+                  "3016-3": [(units("mU/L", "mIU/L", "uIU/mL", "u[iU]/mL", "uU/ml", "mU/l"), 0, 500)]})
 
 
 def plausible(code: str | None, value: float | None, unit: str) -> str | None:

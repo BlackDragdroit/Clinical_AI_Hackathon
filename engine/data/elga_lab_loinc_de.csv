@@ -1,0 +1,128 @@
+code,display_de,unit,source,display_de_long,unit_print,system,panel,elga_section,inactive
+5894-1,PTZ (Prothrombinz.),%,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),PTZ (Prothrombinzeit),%,http://loinc.org,coagulation,Gerinnung/Hämostaseologie > Hämostaseologie Globaltests,false
+5902-2,PTZ (Prothrombinz.),s,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),PTZ (Prothrombinzeit),sek,http://loinc.org,coagulation,Gerinnung/Hämostaseologie > Hämostaseologie Globaltests,false
+6301-6,INR,1,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),International normalized ratio (INR),,http://loinc.org,coagulation,Gerinnung/Hämostaseologie > Hämostaseologie Globaltests,false
+14979-9,aPTT,s,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,sek,http://loinc.org,coagulation,Gerinnung/Hämostaseologie > Hämostaseologie Globaltests,false
+3255-7,Fibrinogen,g/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,g/L,http://loinc.org,coagulation,Gerinnung/Hämostaseologie > Hämostaseologie Globaltests,false
+3243-3,Thrombinzeit,s,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,sek,http://loinc.org,coagulation,Gerinnung/Hämostaseologie > Hämostaseologie Globaltests,false
+48065-7,D-Dimer (FEU),mg/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mg/L,http://loinc.org,coagulation,Gerinnung/Hämostaseologie > Hämostaseologie Globaltests,false
+30240-6,D-Dimer,mg/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mg/L,http://loinc.org,coagulation,Gerinnung/Hämostaseologie > Hämostaseologie Globaltests,false
+27811-9,AT III Aktivität,%,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Antithrombin III Aktivität,%,http://loinc.org,coagulation,Gerinnung/Hämostaseologie > Hämostaseologie Globaltests,false
+52761-4,PTZ n. Owren,%,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),PTZ nach Owren,%,http://loinc.org,coagulation,Gerinnung/Hämostaseologie > Hämostaseologie Globaltests,false
+52753-1,Normotest,%,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,%,http://loinc.org,coagulation,Gerinnung/Hämostaseologie > Hämostaseologie Globaltests,false
+26464-8,Leukozyten,10*9/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,10^9/L,http://loinc.org,cbc,Hämatologie > Blutbild,false
+26453-1,Erythrozyten,10*12/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,10^12/L,http://loinc.org,cbc,Hämatologie > Blutbild,false
+718-7,Hämoglobin,g/dL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,g/dL,http://loinc.org,cbc,Hämatologie > Blutbild,false
+20570-8,Hämatokrit,%,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,%,http://loinc.org,cbc,Hämatologie > Blutbild,false
+30428-7,MCV,fL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),MCV (mittleres Zellvolumen),fL,http://loinc.org,cbc,Hämatologie > Blutbild,false
+28539-5,MCH,pg,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),MCH (mittleres zelluläres Hämoglobin),pg,http://loinc.org,cbc,Hämatologie > Blutbild,false
+28540-3,MCHC,g/dL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),MCHC (mittlere zelluläre Hämoglobinkonzentration),g/dL,http://loinc.org,cbc,Hämatologie > Blutbild,false
+30385-9,RDW-CV,%,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),RDW (Erythrozytenverteilungsbreite) -CV,%,http://loinc.org,cbc,Hämatologie > Blutbild,false
+777-3,Thrombozyten /B,10*9/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Thrombozyten /Blut,10^9/L,http://loinc.org,cbc,Hämatologie > Blutbild,false
+32623-1,MPV (Mittleres Thrombozytenvolumen),fL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,fL,http://loinc.org,cbc,Hämatologie > Blutbild,false
+26499-4,Neutroph. Gran. abs.,10*9/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Neutrophile Granulozyten abs.,10^9/L,http://loinc.org,cbc,Hämatologie > Blutbild,false
+26511-6,Neutroph. Gran. rel.,%,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Neutrophile Granulozyten rel.,%,http://loinc.org,cbc,Hämatologie > Blutbild,false
+26474-7,Lymphozyten abs.,10*9/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,10^9/L,http://loinc.org,cbc,Hämatologie > Blutbild,false
+26478-8,Lymphozyten rel.,%,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,%,http://loinc.org,cbc,Hämatologie > Blutbild,false
+26484-6,Monozyten abs.,10*9/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,10^9/L,http://loinc.org,cbc,Hämatologie > Blutbild,false
+26485-3,Monozyten rel.,%,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,%,http://loinc.org,cbc,Hämatologie > Blutbild,false
+26449-9,Eosinophile Gr. abs.,10*9/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Eosinophile Granulozyten abs.,10^9/L,http://loinc.org,cbc,Hämatologie > Blutbild,false
+26450-7,Eosinophile Gr. rel.,%,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Eosinophile Granulozyten rel.,%,http://loinc.org,cbc,Hämatologie > Blutbild,false
+26444-0,Basophile Gr.abs.,10*9/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Basophile Granulozyten abs.,10^9/L,http://loinc.org,cbc,Hämatologie > Blutbild,false
+30180-4,Basophile Gr.rel.,%,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Basophile Granulozyten rel.,%,http://loinc.org,cbc,Hämatologie > Blutbild,false
+51584-1,"Gran., unreife abs.",10*9/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),"Granulozyten, unreife abs.",10^9/L,http://loinc.org,cbc,Hämatologie > Blutbild,false
+38518-7,"Gran., unreife rel.",%,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),"Granulozyten, unreife rel.",%,http://loinc.org,cbc,Hämatologie > Blutbild,false
+14196-0,Retikulozyten abs.,10*9/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,10^9/L,http://loinc.org,cbc,Hämatologie > Blutbild,false
+4679-7,Retikulozyten rel.,%,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,%,http://loinc.org,cbc,Hämatologie > Blutbild,false
+30341-2,Blutsenkung,mm/h,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mm/h,http://loinc.org,cbc,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+2160-0,Kreatinin,mg/dL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mg/dL,http://loinc.org,kidney,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+14682-9,Kreatinin,umol/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,µmol/L,http://loinc.org,kidney,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+3091-6,Harnstoff,mg/dL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mg/dL,http://loinc.org,kidney,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+3094-0,BUN,mg/dL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mg/dL,http://loinc.org,kidney,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+62238-1,GFR (CKD-EPI),mL/min/{1.73'm2},ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Glomeruläre Filtrationsrate /1.7m2 KO (CKD-EPI),mL/min/1.7m2,http://loinc.org,kidney,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+33914-3,GFR (MDRD),mL/min/{1.73'm2},ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Glomeruläre Filtrationsrate /1.7m2 KO (MDRD),mL/min/1.7m2,http://loinc.org,kidney,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+98980-6,GFR Krea.-Cys. (CKD-EPI 2021),mL/min/{1.73'm2},ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),GFR (Krea.- u. Cyst.-C-bas.)/1.7m2 KO (CKDEPI 21),mL/min/1.7m2,http://loinc.org,kidney,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+3084-1,Harnsäure,mg/dL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mg/dL,http://loinc.org,kidney,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+33863-2,Cystatin C,mg/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mg/L,http://loinc.org,kidney,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+2951-2,Natrium,mmol/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mmol/L,http://loinc.org,electrolytes,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+2823-3,Kalium,mmol/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mmol/L,http://loinc.org,electrolytes,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+2075-0,Chlorid,mmol/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mmol/L,http://loinc.org,electrolytes,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+17861-6,Calcium,mg/dL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mg/dL,http://loinc.org,electrolytes,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+2000-8,Calcium,mmol/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mmol/L,http://loinc.org,electrolytes,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+29265-6,Calcium albuminkorr.,mmol/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Calcium albuminkorrigiert,mmol/L,http://loinc.org,electrolytes,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+19123-9,Magnesium,mg/dL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mg/dL,http://loinc.org,electrolytes,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+2601-3,Magnesium,mmol/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mmol/L,http://loinc.org,electrolytes,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+2777-1,Phosphat M.konz.,mg/dL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Phosphat Massenkonzentration,mg/dL,http://loinc.org,electrolytes,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+14879-1,Phosphat,mmol/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mmol/L,http://loinc.org,electrolytes,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+2692-2,Osmolalität,mosm/kg,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mosm/kg,http://loinc.org,electrolytes,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+1742-6,ALAT (GPT),[iU]/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,U/L,http://loinc.org,liver,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+1920-8,ASAT (GOT),[iU]/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,U/L,http://loinc.org,liver,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+2324-2,Gamma-GT,[iU]/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,U/L,http://loinc.org,liver,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+6768-6,Alk.Phosphatase (AP),[iU]/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Alkalische Phosphatase (AP),U/L,http://loinc.org,liver,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+1975-2,Bilirubin,mg/dL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mg/dL,http://loinc.org,liver,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+1968-7,"Bilirubin, direktes",mg/dL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mg/dL,http://loinc.org,liver,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+2532-0,LDH,[iU]/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,U/L,http://loinc.org,liver,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+2098-2,Cholinesterase,[iU]/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,U/L,http://loinc.org,liver,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+1751-7,Albumin,g/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,g/L,http://loinc.org,liver,Klinische Chemie/Proteindiagnostik > Proteindiagnostik,false
+2885-2,Totalprotein,g/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,g/L,http://loinc.org,liver,Klinische Chemie/Proteindiagnostik > Proteindiagnostik,false
+16362-6,Ammoniak,umol/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,µmol/L,http://loinc.org,liver,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+3040-3,Lipase,[iU]/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,U/L,http://loinc.org,pancreas_muscle,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+1798-8,Alpha-Amylase,[iU]/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,U/L,http://loinc.org,pancreas_muscle,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+2157-6,CK,[iU]/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,U/L,http://loinc.org,pancreas_muscle,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+32673-6,CK-MB,[iU]/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,U/L,http://loinc.org,pancreas_muscle,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+2639-3,Myoglobin,ug/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,µg/L,http://loinc.org,pancreas_muscle,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+1988-5,CRP,mg/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),C-reaktives Protein (CRP),mg/L,http://loinc.org,inflammation,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+30522-7,CRP hs,mg/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),C-reaktives Protein (CRP) high sensitivity,mg/L,http://loinc.org,inflammation,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+33959-8,Procalcitonin,ng/mL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,ng/mL,http://loinc.org,inflammation,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+26881-3,Interleukin-6,pg/mL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,pg/mL,http://loinc.org,inflammation,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+2345-7,Glucose,mg/dL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mg/dL,http://loinc.org,glucose,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+1558-6,Glucose nüchtern (oGTT),mg/dL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mg/dL,http://loinc.org,glucose,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+4548-4,Hämoglobin A1c,%,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,%,http://loinc.org,glucose,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+59261-8,Hämoglobin A1c IFCC,mmol/mol,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mmol/mol,http://loinc.org,glucose,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+20448-7,Insulin,u[iU]/mL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,µU/mL,http://loinc.org,glucose,Hormone/Vitamine/Tumormarker > Hormone,false
+1986-9,C-Peptid,ng/mL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,ng/mL,http://loinc.org,glucose,Hormone/Vitamine/Tumormarker > Hormone,false
+2093-3,Cholesterin,mg/dL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mg/dL,http://loinc.org,lipids,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+2571-8,Triglyceride,mg/dL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mg/dL,http://loinc.org,lipids,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+2085-9,HDL-Cholesterin,mg/dL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mg/dL,http://loinc.org,lipids,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+13457-7,LDL-Chol. berechnet,mg/dL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),LDL-Cholesterin berechnet,mg/dL,http://loinc.org,lipids,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+2089-1,LDL-Cholesterin,mg/dL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mg/dL,http://loinc.org,lipids,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+43396-1,Non HDL-Chol.,mg/dL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Non HDL-Cholstesterin,mg/dL,http://loinc.org,lipids,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+10835-7,Lipoprotein (a),g/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,g/L,http://loinc.org,lipids,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+43583-4,Lipoprotein (a),nmol/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,nmol/L,http://loinc.org,lipids,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+3016-3,TSH,u[iU]/mL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Thyreoidea-stimulierendes Hormon (TSH),µU/mL,http://loinc.org,thyroid,Hormone/Vitamine/Tumormarker > Hormone,false
+3024-7,Freies T4,ng/dL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,ng/dL,http://loinc.org,thyroid,Hormone/Vitamine/Tumormarker > Hormone,false
+3051-0,Freies T3,pg/mL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,pg/mL,http://loinc.org,thyroid,Hormone/Vitamine/Tumormarker > Hormone,false
+67151-1,Troponin T-hs,ng/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Troponin T high sensitive,ng/L,http://loinc.org,cardiac,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+6598-7,Troponin T,ng/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,ng/L,http://loinc.org,cardiac,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+33762-6,NT-pro-BNP,ng/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),NT-pro-BNP (B-type natriuretic peptide),ng/L,http://loinc.org,cardiac,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+30934-4,BNP,ng/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),BNP (B-type natriuretic peptide),ng/L,http://loinc.org,cardiac,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+2276-4,Ferritin,ug/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,µg/L,http://loinc.org,iron,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+2498-4,Eisen,ug/dL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,µg/dL,http://loinc.org,iron,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+3034-6,Transferrin,g/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,g/L,http://loinc.org,iron,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+2502-3,Transferrinsättigung,%,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,%,http://loinc.org,iron,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+4542-7,Haptoglobin,g/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,g/L,http://loinc.org,iron,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+2132-9,Vitamin B12,pg/mL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,pg/mL,http://loinc.org,vitamins,Hormone/Vitamine/Tumormarker > Vitamine,false
+2284-8,Folsäure,ng/mL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,ng/mL,http://loinc.org,vitamins,Hormone/Vitamine/Tumormarker > Vitamine,false
+62292-8,"Vitamin D2+D3, 25-Hydroxy-",ng/mL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,ng/mL,http://loinc.org,vitamins,Hormone/Vitamine/Tumormarker > Vitamine,false
+1989-3,"Vitamin D3, 25-Hydr.",ng/mL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),"Vitamin D3, 25-Hydroxy-",ng/mL,http://loinc.org,vitamins,Hormone/Vitamine/Tumormarker > Vitamine,false
+2857-1,PSA(Prostata-spezifisches Antigen),ug/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,µg/L,http://loinc.org,tumor_markers,Hormone/Vitamine/Tumormarker > Tumormarker,false
+2039-6,CEA (Carcinoembryonales Antigen),ug/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),CEA,µg/L,http://loinc.org,tumor_markers,Hormone/Vitamine/Tumormarker > Tumormarker,false
+2744-1,pH art.,1,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),pH arteriell,,http://loinc.org,blood_gas,Blutgasanalytik > Blutgasanalyse arteriell,false
+2019-8,pCO2 art.,mm[Hg],ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),pCO2 arteriell,mm Hg,http://loinc.org,blood_gas,Blutgasanalytik > Blutgasanalyse arteriell,false
+2703-7,pO2 art.,mm[Hg],ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),pO2 arteriell,mm Hg,http://loinc.org,blood_gas,Blutgasanalytik > Blutgasanalyse arteriell,false
+1960-4,Bikarbonat art.,mmol/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Bikarbonat arteriell,mmol/L,http://loinc.org,blood_gas,Blutgasanalytik > Blutgasanalyse arteriell,false
+2524-7,Laktat,mmol/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,mmol/L,http://loinc.org,blood_gas,Klinische Chemie/Proteindiagnostik > Klinische Chemie,false
+5803-2,pH /U Teststr.,1,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),pH /Urin Teststreifen,,http://loinc.org,urine,Urindiagnostik > Urinstreifen,false
+5811-5,Spez.Gew./U Teststr.,1,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Spezifisches Gewicht /Urin Teststreifen,,http://loinc.org,urine,Urindiagnostik > Urinstreifen,false
+20408-1,Leuko /U Teststr.,/uL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Leukozyten /Urin Teststreifen,/µL,http://loinc.org,urine,Urindiagnostik > Urinstreifen,false
+5802-4,Nitrit /U ql.Tests.,"{neg,pos}",ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Nitrit /Urin qual. Teststreifen,,http://loinc.org,urine,Urindiagnostik > Urinstreifen,false
+20409-9,Ery. /U Teststr.,/uL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Erythrozyten /Urin Teststreifen,/µL,http://loinc.org,urine,Urindiagnostik > Urinstreifen,false
+5804-0,Tot.Prot./U Teststr.,mg/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Totalprotein /Urin Teststreifen,mg/L,http://loinc.org,urine,Urindiagnostik > Urinstreifen,false
+5792-7,Glucose/U Teststr.,mg/dL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Glucose /Urin Teststreifen,mg/dL,http://loinc.org,urine,Urindiagnostik > Urinstreifen,false
+5797-6,Keton /U Teststr.,mg/dL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Keton /Urin Teststreifen,mg/dL,http://loinc.org,urine,Urindiagnostik > Urinstreifen,false
+2161-8,Kreatinin /U,mg/dL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Kreatinin /Urin,mg/dL,http://loinc.org,urine,Urindiagnostik > Urinchemie,false
+1754-1,Albumin /U,mg/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Albumin /Urin,mg/L,http://loinc.org,urine,Urindiagnostik > Urinchemie,false
+9318-7,Alb./Kreat.-Ratio /U,mg/g{Krea},ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),Albumin/Kreatinin-Ratio /Urin,mg/g Krea,http://loinc.org,urine,Urindiagnostik > Urinchemie,false
+2143-6,Cortisol,ug/dL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,µg/dL,http://loinc.org,other,Hormone/Vitamine/Tumormarker > Hormone,false
+11572-5,Rheumafaktor,[iU]/mL,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,U/mL,http://loinc.org,other,Autoimmundiagnostik > Rheumatoide Arthritis-assoziierte Autoantikörper,false
+10535-3,Digoxin,ug/L,ELGA_Laborparameter 1.11.0+20260910 (termgit.elga.gv.at; LOINC 2.83),,µg/L,http://loinc.org,other,Medikamente > Kardiaka,false

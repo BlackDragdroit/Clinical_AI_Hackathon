@@ -92,3 +92,13 @@ def test_scan_goes_through_readback(hapi, outbox, monkeypatch):
     prov = [e["resource"] for e in hapi.posted[0]["entry"] if e["resource"]["resourceType"] == "Provenance"][0]
     assert "Read-back" in prov["agent"][0]["role"][0]["text"]
     assert any(e["event"] == "readback_confirmed" for e in audit.entries(rid))
+
+
+def test_remote_engine_without_directory_app_finishes_patient_lookup(hapi, monkeypatch):
+    from engine import request_job
+    remote = request_job.run(PLAIN_1, None, use_llm=False)              # what the GPU box returns: no FHIR access
+    assert remote["patient"]["status"] == "no_directory" and not remote["ready"]
+    monkeypatch.setattr(engine_client, "ENGINE_URL", "http://gpu:8100")
+    monkeypatch.setattr(engine_client, "_post", lambda path, **kw: json.loads(json.dumps(remote)))
+    res = engine_client.request_text(PLAIN_1)
+    assert res["ready"] and res["patient"]["ref"] == "Patient/maria-beispiel"

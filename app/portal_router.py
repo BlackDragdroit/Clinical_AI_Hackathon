@@ -120,8 +120,9 @@ def eid_callback(request: Request, raw: str, assertion: str):
                   {"result": "FAILED", "method": "eid-mock", "loa": who.loa, "attempt": attempts})
         audit.log("misdelivery_caught", req["id"], actor,
                   {"type": label, "verified": who.full_name, "expected": req["expected_name"]})
-        notify.doctor(f"⚠️ Fehlzustellung erkannt (Anfrage {req['id']}): verifiziert {who.full_name} ≠ "
-                      f"{req['expected_name']}. Nichts offengelegt, nichts abgelegt.", req["id"])
+        if attempts == 1:
+            notify.doctor(f"⚠️ Identitätsprüfung fehlgeschlagen (1. Versuch von {settings.max_identity_attempts}): "
+                          f"verifiziert {who.full_name} ≠ {req['expected_name']}. Nichts offengelegt.", req["id"])
         if attempts >= settings.max_identity_attempts:
             _block(req, actor)
             return _invalid(request)

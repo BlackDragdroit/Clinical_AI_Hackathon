@@ -1,0 +1,5453 @@
+{
+ "set": "test",
+ "backend": "text",
+ "model": "no ASR (item text = perfect transcript)",
+ "threads": 3,
+ "load_s": null,
+ "complete": true,
+ "limit": null,
+ "wall_s": 0.7373845999973128,
+ "summary": {
+  "n": 120,
+  "wer_mean": 0.0,
+  "wer_corpus": 0.0,
+  "full_request": {
+   "k": 48,
+   "n": 120,
+   "p": 0.4,
+   "lo": 0.3167626523940113,
+   "hi": 0.4894414018171747
+  },
+  "fields": {
+   "recipient": {
+    "k": 29,
+    "n": 120,
+    "p": 0.24166666666666667,
+    "lo": 0.1738573324150334,
+    "hi": 0.32550314096386357
+   },
+   "contact": {
+    "k": 108,
+    "n": 120,
+    "p": 0.9,
+    "lo": 0.8333168001483641,
+    "hi": 0.9418669830068925
+   },
+   "patient": {
+    "k": 45,
+    "n": 120,
+    "p": 0.375,
+    "lo": 0.2935229130478532,
+    "hi": 0.4642321547161293
+   },
+   "doc_type": {
+    "k": 119,
+    "n": 120,
+    "p": 0.9916666666666667,
+    "lo": 0.9543025846256777,
+    "hi": 0.9985274821693252
+   },
+   "ready": {
+    "k": 50,
+    "n": 120,
+    "p": 0.4166666666666667,
+    "lo": 0.3323820653533033,
+    "hi": 0.5061213131560184
+   }
+  },
+  "wrong_patient": {
+   "k": 0,
+   "n": 120,
+   "p": 0.0,
+   "lo": 0.0,
+   "hi": 0.030272972577420072
+  },
+  "silent_error": {
+   "k": 2,
+   "n": 120,
+   "p": 0.016666666666666666,
+   "lo": 0.0020248223376920587,
+   "hi": 0.05890921946702635
+  },
+  "asr_ms_p50": 0.0,
+  "asr_ms_p95": 0.0,
+  "rtf_p50": null,
+  "by_lang": {
+   "de": {
+    "n": 85,
+    "wer_mean": 0.0,
+    "full_request": {
+     "k": 39,
+     "n": 85,
+     "p": 0.4588235294117647,
+     "lo": 0.3569695582911919,
+     "hi": 0.5642385244088045
+    },
+    "contact": {
+     "k": 75,
+     "n": 85,
+     "p": 0.8823529411764706,
+     "lo": 0.7968121063083018,
+     "hi": 0.9348271257631602
+    }
+   },
+   "en": {
+    "n": 35,
+    "wer_mean": 0.0,
+    "full_request": {
+     "k": 9,
+     "n": 35,
+     "p": 0.2571428571428571,
+     "lo": 0.1416286872655014,
+     "hi": 0.4206962427064873
+    },
+    "contact": {
+     "k": 33,
+     "n": 35,
+     "p": 0.9428571428571428,
+     "lo": 0.8139261926062996,
+     "hi": 0.984187170385956
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "id": "test-0000",
+   "lang": "de",
+   "trap": "no_dob",
+   "ref": "also entlassungsbericht von herrn thomas brunner bitte bei felix wolf rehaklinik seeblick null sechs sechs null sechs zwei vier sechs zwei null vier",
+   "hyp": "also entlassungsbericht von herrn thomas brunner bitte bei felix wolf rehaklinik seeblick null sechs sechs null sechs zwei vier sechs zwei null vier",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 23,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Felix Wolf",
+    "contact": "+436606246204",
+    "contact_kind": "sms",
+    "patient_ref": null,
+    "doc_type": "report",
+    "panel": null,
+    "ready": false
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 10.29479999851901,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436606246204",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0001",
+   "lang": "en",
+   "trap": "none",
+   "ref": "please ask emine aigner at klinik am kurpark for claudia pichler's discharge letter she was born may 13 2004 the number is zero six six four three two zero nine eight three zero",
+   "hyp": "please ask emine aigner at klinik am kurpark for claudia pichler's discharge letter she was born may 13 2004 the number is zero six six four three two zero nine eight three zero",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 34,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Emine Aigner",
+    "contact": "+436643209830",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0297",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 3.0017999961273745,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436643209830",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0005",
+   "lang": "de",
+   "trap": "none",
+   "ref": "also blutbild johanna schmidt geboren 19. juni 2003 bitte doktor katharina weber katharina punkt weber at labor minus nord punkt example eisenmangel",
+   "hyp": "also blutbild johanna schmidt geboren 19. juni 2003 bitte doktor katharina weber katharina punkt weber at labor minus nord punkt example eisenmangel",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 22,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Katharina Weber",
+    "contact": "katharina.weber@labor-nord.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0178",
+    "doc_type": "lab",
+    "panel": "cbc",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 0.8088999966275878,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "katharina.weber@labor-nord.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0007",
+   "lang": "en",
+   "trap": "none",
+   "ref": "please request kidney function from doctor sabine bauer at zentrallabor donau sabine dot bauer at zentrallabor dash donau dot example for christina wallner born december 2nd 1992",
+   "hyp": "please request kidney function from doctor sabine bauer at zentrallabor donau sabine dot bauer at zentrallabor dash donau dot example for christina wallner born december 2nd 1992",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 27,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Sabine Bauer",
+    "contact": "sabine.bauer@zentrallabor-donau.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0283",
+    "doc_type": "lab",
+    "panel": "kidney",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 0.8899999957066029,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "sabine.bauer@zentrallabor-donau.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0011",
+   "lang": "de",
+   "trap": "twin",
+   "ref": "bitte doktor sabine bauer sabine punkt bauer at zentrallabor minus donau punkt example nierenwerte von lukas eder geboren 2. juni 1957 äh dialyse besprechung",
+   "hyp": "bitte doktor sabine bauer sabine punkt bauer at zentrallabor minus donau punkt example nierenwerte von lukas eder geboren 2. juni 1957 äh dialyse besprechung",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 24,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Sabine Bauer",
+    "contact": "sabine.bauer@zentrallabor-donau.example",
+    "contact_kind": "email",
+    "patient_ref": null,
+    "doc_type": "lab",
+    "panel": "kidney",
+    "ready": false
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 2.037899997958448,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "sabine.bauer@zentrallabor-donau.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0014",
+   "lang": "de",
+   "trap": "namesake",
+   "ref": "bitte andreas moser rehaklinik seeblick null sechs sieben sechs acht zwei fünf sieben sieben null zwei entlassungsbrief nina demir geboren 20. oktober 1995",
+   "hyp": "bitte andreas moser rehaklinik seeblick null sechs sieben sechs acht zwei fünf sieben sieben null zwei entlassungsbrief nina demir geboren 20. oktober 1995",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 23,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Andreas Moser",
+    "contact": "+436768257702",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0278",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.1606000043684617,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436768257702",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0021",
+   "lang": "en",
+   "trap": "none",
+   "ref": "felix wolf from rehaklinik seeblick please the rehab report for zoran fischer born june 22nd 1957 his number is plus four three six six zero six two four six two zero four",
+   "hyp": "felix wolf from rehaklinik seeblick please the rehab report for zoran fischer born june 22nd 1957 his number is plus four three six six zero six two four six two zero four",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 32,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Felix Wolf",
+    "contact": "+436606246204",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0292",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.6434999997727573,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436606246204",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0023",
+   "lang": "de",
+   "trap": "none",
+   "ref": "Doktor Lukas Moser Labor Kanalstraße lukas punkt moser at labor minus kanalstrasse punkt example bitte Gerinnung von Jürgen Huber geboren 21. September 1986 er hat blaue Flecken",
+   "hyp": "Doktor Lukas Moser Labor Kanalstraße lukas punkt moser at labor minus kanalstrasse punkt example bitte Gerinnung von Jürgen Huber geboren 21. September 1986 er hat blaue Flecken",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 27,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Lukas Moser",
+    "contact": "lukas.moser@labor-kanalstrasse.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0181",
+    "doc_type": "lab",
+    "panel": "coagulation",
+    "ready": true
+   },
+   "ok": {
+    "recipient": true,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 33.67450000223471,
+   "engine_error": null,
+   "got": {
+    "recipient": "Dr. Lukas Moser",
+    "contact": "lukas.moser@labor-kanalstrasse.example",
+    "patient": "Patient/bb-0181",
+    "doc_type": "lab",
+    "ready": true,
+    "missing": []
+   }
+  },
+  {
+   "id": "test-0025",
+   "lang": "de",
+   "trap": "twin",
+   "ref": "äh entlassungsbericht von lena petrović geboren 25. mai 1993 bitte bei karl huber rehaklinik seeblick null sechs neun neun drei neun neun sechs sieben sechs drei",
+   "hyp": "äh entlassungsbericht von lena petrović geboren 25. mai 1993 bitte bei karl huber rehaklinik seeblick null sechs neun neun drei neun neun sechs sieben sechs drei",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 26,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Karl Huber",
+    "contact": "+436993996763",
+    "contact_kind": "sms",
+    "patient_ref": null,
+    "doc_type": "report",
+    "panel": null,
+    "ready": false
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.945199997862801,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436993996763",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0026",
+   "lang": "de",
+   "trap": "none",
+   "ref": "Claudia Lang Rehazentrum Alpenblick null sechs sechs vier vier sieben null eins drei neun acht bitte den Reha Entlassungsbericht von Mehmet Wallner geboren 23. April 1996",
+   "hyp": "Claudia Lang Rehazentrum Alpenblick null sechs sechs vier vier sieben null eins drei neun acht bitte den Reha Entlassungsbericht von Mehmet Wallner geboren 23. April 1996",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 26,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Claudia Lang",
+    "contact": "+436644701398",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0212",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": true,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 8.114900003420189,
+   "engine_error": null,
+   "got": {
+    "recipient": "Claudia Lang",
+    "contact": "+436644701398",
+    "patient": "Patient/bb-0212",
+    "doc_type": "report",
+    "ready": true,
+    "missing": []
+   }
+  },
+  {
+   "id": "test-0027",
+   "lang": "en",
+   "trap": "no_dob",
+   "ref": "um stefan kern at reha waldblick plus four three six six zero zero zero zero zero one zero one please send the rehab discharge report for fatma berger",
+   "hyp": "um stefan kern at reha waldblick plus four three six six zero zero zero zero zero one zero one please send the rehab discharge report for fatma berger",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 28,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Stefan Kern",
+    "contact": "+436600000101",
+    "contact_kind": "sms",
+    "patient_ref": null,
+    "doc_type": "report",
+    "panel": null,
+    "ready": false
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.5244000023812987,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436600000101",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0031",
+   "lang": "en",
+   "trap": "other_date",
+   "ref": "renate novak reha waldblick zero six six zero two three one five one nine two please the rehab report for mustafa binder born december 7th 1962 he left rehab on october 10th",
+   "hyp": "renate novak reha waldblick zero six six zero two three one five one nine two please the rehab report for mustafa binder born december 7th 1962 he left rehab on october 10th",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 32,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Renate Novak",
+    "contact": "+436602315192",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0393",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.851099994382821,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436602315192",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0035",
+   "lang": "de",
+   "trap": "none",
+   "ref": "bitte bei doktor ali wolf ali punkt wolf at labor minus am minus ring punkt example den hba1c von herrn lukas mayr geboren 18. juli 1952 anfordern",
+   "hyp": "bitte bei doktor ali wolf ali punkt wolf at labor minus am minus ring punkt example den hba1c von herrn lukas mayr geboren 18. juli 1952 anfordern",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 27,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Ali Wolf",
+    "contact": "ali.wolf@labor-am-ring.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0211",
+    "doc_type": "lab",
+    "panel": "glucose",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.7771999991964549,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "ali.wolf@labor-am-ring.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0036",
+   "lang": "de",
+   "trap": "namesake",
+   "ref": "Gerinnung von Herrn Mehmet Petrović geboren 30. September 1961 bitte bei Magister Emine Pichler emine punkt pichler at zentrallabor minus donau punkt example er hat eine Hüft OP vor sich",
+   "hyp": "Gerinnung von Herrn Mehmet Petrović geboren 30. September 1961 bitte bei Magister Emine Pichler emine punkt pichler at zentrallabor minus donau punkt example er hat eine Hüft OP vor sich",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 30,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Mag. Emine Pichler",
+    "contact": "emine.pichler@zentrallabor-donau.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0382",
+    "doc_type": "lab",
+    "panel": "coagulation",
+    "ready": true
+   },
+   "ok": {
+    "recipient": true,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 22.440100001404062,
+   "engine_error": null,
+   "got": {
+    "recipient": "Mag. Emine Pichler",
+    "contact": "emine.pichler@zentrallabor-donau.example",
+    "patient": "Patient/bb-0382",
+    "doc_type": "lab",
+    "ready": true,
+    "missing": []
+   }
+  },
+  {
+   "id": "test-0037",
+   "lang": "de",
+   "trap": "none",
+   "ref": "Den Entlassungsbrief von Herrn Karl Jovanović geboren 18. Mai 1957 bitte bei Emine Aigner Klinik am Kurpark anfordern Telefon plus vier drei sechs sechs vier drei zwei null neun acht drei null",
+   "hyp": "Den Entlassungsbrief von Herrn Karl Jovanović geboren 18. Mai 1957 bitte bei Emine Aigner Klinik am Kurpark anfordern Telefon plus vier drei sechs sechs vier drei zwei null neun acht drei null",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 32,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Emine Aigner",
+    "contact": "+436643209830",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0177",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": true,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 8.444500002951827,
+   "engine_error": null,
+   "got": {
+    "recipient": "Emine Aigner",
+    "contact": "+436643209830",
+    "patient": "Patient/bb-0177",
+    "doc_type": "report",
+    "ready": true,
+    "missing": []
+   }
+  },
+  {
+   "id": "test-0041",
+   "lang": "de",
+   "trap": "none",
+   "ref": "also doktor chloé müller vom labor nord chloe punkt mueller at labor minus nord punkt example bitte die nierenwerte kreatinin und egfr von josef wimmer geboren 27. februar 1972 äh vor der kontrastmittel untersuchung",
+   "hyp": "also doktor chloé müller vom labor nord chloe punkt mueller at labor minus nord punkt example bitte die nierenwerte kreatinin und egfr von josef wimmer geboren 27. februar 1972 äh vor der kontrastmittel untersuchung",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 34,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Chloé Müller",
+    "contact": "chloe.mueller@labor-nord.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0163",
+    "doc_type": "lab",
+    "panel": "kidney",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.6536000039195642,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "chloe.mueller@labor-nord.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0044",
+   "lang": "en",
+   "trap": "none",
+   "ref": "please request the hba1c for josef eder born december 3rd 1980 from doctor katharina weber at labor nord her email is katharina dot weber at labor dash nord dot example thanks",
+   "hyp": "please request the hba1c for josef eder born december 3rd 1980 from doctor katharina weber at labor nord her email is katharina dot weber at labor dash nord dot example thanks",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 31,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Katharina Weber",
+    "contact": "katharina.weber@labor-nord.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0265",
+    "doc_type": "lab",
+    "panel": "glucose",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 2.178200003982056,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "katharina.weber@labor-nord.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0045",
+   "lang": "en",
+   "trap": "twin",
+   "ref": "um emine aigner at klinik am kurpark zero six six four three two zero nine eight three zero discharge letter for peter horvath born april 4th 1979 please",
+   "hyp": "um emine aigner at klinik am kurpark zero six six four three two zero nine eight three zero discharge letter for peter horvath born april 4th 1979 please",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 28,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Emine Aigner",
+    "contact": "+436643209830",
+    "contact_kind": "sms",
+    "patient_ref": null,
+    "doc_type": "report",
+    "panel": null,
+    "ready": false
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.3318999990588054,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436643209830",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0047",
+   "lang": "en",
+   "trap": "none",
+   "ref": "please ask karl huber rehaklinik seeblick for the discharge report of anna gruber born august 28 1965 number zero six nine nine three nine nine six seven six three",
+   "hyp": "please ask karl huber rehaklinik seeblick for the discharge report of anna gruber born august 28 1965 number zero six nine nine three nine nine six seven six three",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 29,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Karl Huber",
+    "contact": "+436993996763",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0280",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.4293000058387406,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436993996763",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0051",
+   "lang": "en",
+   "trap": "namesake",
+   "ref": "crp for jakob lang born may 8th 2019 from doctor lukas moser lukas dot moser at labor dash kanalstrasse dot example fever for three days",
+   "hyp": "crp for jakob lang born may 8th 2019 from doctor lukas moser lukas dot moser at labor dash kanalstrasse dot example fever for three days",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 25,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Lukas Moser",
+    "contact": "lukas.moser@labor-kanalstrasse.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0309",
+    "doc_type": "lab",
+    "panel": "inflammation",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.3556000048993155,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "lukas.moser@labor-kanalstrasse.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0052",
+   "lang": "de",
+   "trap": "none",
+   "ref": "äh karl huber rehaklinik seeblick bitte entlassungsbericht theresa baumgartner geboren 18. märz 1974 nummer null sechs neun neun drei neun neun sechs sieben sechs drei",
+   "hyp": "äh karl huber rehaklinik seeblick bitte entlassungsbericht theresa baumgartner geboren 18. märz 1974 nummer null sechs neun neun drei neun neun sechs sieben sechs drei",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 25,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Karl Huber",
+    "contact": "+436993996763",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0191",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.9692999994731508,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436993996763",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0055",
+   "lang": "en",
+   "trap": "none",
+   "ref": "request the discharge letter for emine wagner born august 16 1990 from andreas moser rehaklinik seeblick his mobile is zero six seven six eight two five seven seven zero two",
+   "hyp": "request the discharge letter for emine wagner born august 16 1990 from andreas moser rehaklinik seeblick his mobile is zero six seven six eight two five seven seven zero two",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 30,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Andreas Moser",
+    "contact": "+436768257702",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0270",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 2.261599998746533,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436768257702",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0056",
+   "lang": "de",
+   "trap": "none",
+   "ref": "Bitte Doktor Felix Schmid vom Medizinischen Labor Graz West anschreiben felix punkt schmid at medizinisches minus labor minus graz minus west punkt example wir brauchen die Nierenwerte von Herrn Peter Schwarz geboren 7. Mai 1969 Kalium war entgleist",
+   "hyp": "Bitte Doktor Felix Schmid vom Medizinischen Labor Graz West anschreiben felix punkt schmid at medizinisches minus labor minus graz minus west punkt example wir brauchen die Nierenwerte von Herrn Peter Schwarz geboren 7. Mai 1969 Kalium war entgleist",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 38,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Felix Schmid",
+    "contact": "felix.schmid@medizinisches-labor-graz-west.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0174",
+    "doc_type": "lab",
+    "panel": "kidney",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": false,
+   "silent_error": true,
+   "wrong_patient": false,
+   "engine_ms": 13.519100000848994,
+   "engine_error": null,
+   "got": {
+    "recipient": "Graz West",
+    "contact": "felix.schmid@medizinisches-labor-graz-west.example",
+    "patient": "Patient/bb-0174",
+    "doc_type": "lab",
+    "ready": true,
+    "missing": []
+   }
+  },
+  {
+   "id": "test-0059",
+   "lang": "de",
+   "trap": "other_date",
+   "ref": "bitte doktor katharina weber katharina punkt weber at labor minus nord punkt example die gerinnung von ayşe ebner geboren 28. märz 1943 die op ist am 17. november",
+   "hyp": "bitte doktor katharina weber katharina punkt weber at labor minus nord punkt example die gerinnung von ayşe ebner geboren 28. märz 1943 die op ist am 17. november",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 28,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Katharina Weber",
+    "contact": "katharina.weber@labor-nord.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0380",
+    "doc_type": "lab",
+    "panel": "coagulation",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 0.8939000035752542,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "katharina.weber@labor-nord.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0061",
+   "lang": "de",
+   "trap": "other_date",
+   "ref": "äh andreas moser rehaklinik seeblick null sechs sieben sechs acht zwei fünf sieben sieben null zwei bitte den entlassungsbericht von ayşe lang geboren 10. februar 1949 sie war bis 20. oktober dort",
+   "hyp": "äh andreas moser rehaklinik seeblick null sechs sieben sechs acht zwei fünf sieben sieben null zwei bitte den entlassungsbericht von ayşe lang geboren 10. februar 1949 sie war bis 20. oktober dort",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 32,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Andreas Moser",
+    "contact": "+436768257702",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0383",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 2.29350000154227,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436768257702",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0065",
+   "lang": "de",
+   "trap": "twin",
+   "ref": "bitte doktor felix schmid felix punkt schmid at medizinisches minus labor minus graz minus west punkt example gerinnung von max koller geboren 25. august 2005 vor der weisheitszahn op",
+   "hyp": "bitte doktor felix schmid felix punkt schmid at medizinisches minus labor minus graz minus west punkt example gerinnung von max koller geboren 25. august 2005 vor der weisheitszahn op",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 29,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Felix Schmid",
+    "contact": "felix.schmid@medizinisches-labor-graz-west.example",
+    "contact_kind": "email",
+    "patient_ref": null,
+    "doc_type": "lab",
+    "panel": "coagulation",
+    "ready": false
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.0360000014770776,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "felix.schmid@medizinisches-labor-graz-west.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0074",
+   "lang": "en",
+   "trap": "none",
+   "ref": "clotting tests for katharina auer date of birth september 1st 2000 from doctor jürgen auer labor doctor wimmer j u e r g e n dot auer at labor dash d r dash wimmer dot example before her surgery",
+   "hyp": "clotting tests for katharina auer date of birth september 1st 2000 from doctor jürgen auer labor doctor wimmer j u e r g e n dot auer at labor dash d r dash wimmer dot example before her surgery",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 39,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Jürgen Auer",
+    "contact": "juergen.auer@labor-dr-wimmer.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0277",
+    "doc_type": "lab",
+    "panel": "coagulation",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": false,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.3307999979588203,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": null,
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "contact",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0077",
+   "lang": "de",
+   "trap": "none",
+   "ref": "Leberwerte von Herrn Lukas Haas geboren 25. März 1980 bitte bei Doktor Eva Brandl Labor Kanalstraße anfordern eva punkt brandl at labor minus kanal punkt example Verdacht auf Fettleber",
+   "hyp": "Leberwerte von Herrn Lukas Haas geboren 25. März 1980 bitte bei Doktor Eva Brandl Labor Kanalstraße anfordern eva punkt brandl at labor minus kanal punkt example Verdacht auf Fettleber",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 29,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Eva Brandl",
+    "contact": "eva.brandl@labor-kanal.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0193",
+    "doc_type": "lab",
+    "panel": "liver",
+    "ready": true
+   },
+   "ok": {
+    "recipient": true,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 8.092199997918215,
+   "engine_error": null,
+   "got": {
+    "recipient": "Dr. Eva Brandl",
+    "contact": "eva.brandl@labor-kanal.example",
+    "patient": "Patient/bb-0193",
+    "doc_type": "lab",
+    "ready": true,
+    "missing": []
+   }
+  },
+  {
+   "id": "test-0078",
+   "lang": "de",
+   "trap": "none",
+   "ref": "bitte doktor stefan petrović anschreiben stefan punkt petrovic at labor minus nord punkt example entzündungswerte crp von wolfgang wolf geboren 2. juni 1995 äh verdacht auf appendizitis",
+   "hyp": "bitte doktor stefan petrović anschreiben stefan punkt petrovic at labor minus nord punkt example entzündungswerte crp von wolfgang wolf geboren 2. juni 1995 äh verdacht auf appendizitis",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 27,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Stefan Petrović",
+    "contact": "stefan.petrovic@labor-nord.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0167",
+    "doc_type": "lab",
+    "panel": "inflammation",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.1799000058090314,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "stefan.petrovic@labor-nord.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0079",
+   "lang": "en",
+   "trap": "twin",
+   "ref": "kidney function for lukas mayer born june 25th 1978 from doctor elisabeth eder elisabeth dot eder at labor dash am dash ring dot example",
+   "hyp": "kidney function for lukas mayer born june 25th 1978 from doctor elisabeth eder elisabeth dot eder at labor dash am dash ring dot example",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 24,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Elisabeth Eder",
+    "contact": "elisabeth.eder@labor-am-ring.example",
+    "contact_kind": "email",
+    "patient_ref": null,
+    "doc_type": "lab",
+    "panel": "kidney",
+    "ready": false
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 0.7189999960246496,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "elisabeth.eder@labor-am-ring.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0080",
+   "lang": "de",
+   "trap": "none",
+   "ref": "cholesterin und ldl von herrn stefan fuchs geboren 27. april 1977 bitte doktor ali wolf ali punkt wolf at labor minus am minus ring punkt example äh er hatte einen herzinfarkt",
+   "hyp": "cholesterin und ldl von herrn stefan fuchs geboren 27. april 1977 bitte doktor ali wolf ali punkt wolf at labor minus am minus ring punkt example äh er hatte einen herzinfarkt",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 31,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Ali Wolf",
+    "contact": "ali.wolf@labor-am-ring.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0155",
+    "doc_type": "lab",
+    "panel": "lipids",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.0795999987749383,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "ali.wolf@labor-am-ring.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0083",
+   "lang": "de",
+   "trap": "namesake",
+   "ref": "bitte doktor markus lehner markus punkt lehner at labor minus d r minus wimmer punkt example hba1c von jürgen kaya geboren 5. oktober 1973",
+   "hyp": "bitte doktor markus lehner markus punkt lehner at labor minus d r minus wimmer punkt example hba1c von jürgen kaya geboren 5. oktober 1973",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 24,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Markus Lehner",
+    "contact": "markus.lehner@labor-dr-wimmer.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0010",
+    "doc_type": "lab",
+    "panel": "glucose",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": false,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 5.388999998103827,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": null,
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "contact",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0084",
+   "lang": "en",
+   "trap": "none",
+   "ref": "liver panel for johanna lang born august 10th 2002 from doctor ali wolf at labor am ring ali dot wolf at labor dash am dash ring dot example abnormal ultrasound",
+   "hyp": "liver panel for johanna lang born august 10th 2002 from doctor ali wolf at labor am ring ali dot wolf at labor dash am dash ring dot example abnormal ultrasound",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 30,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Ali Wolf",
+    "contact": "ali.wolf@labor-am-ring.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0298",
+    "doc_type": "lab",
+    "panel": "liver",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 0.8348999981535599,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "ali.wolf@labor-am-ring.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0085",
+   "lang": "de",
+   "trap": "none",
+   "ref": "Nierenwerte von Gertrude Huber geboren 13. August 2000 bitte bei Magister Nina Horvath Labor am Ring nina punkt horvath at labor minus am minus ring punkt example sie hat Ödeme",
+   "hyp": "Nierenwerte von Gertrude Huber geboren 13. August 2000 bitte bei Magister Nina Horvath Labor am Ring nina punkt horvath at labor minus am minus ring punkt example sie hat Ödeme",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 30,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Mag. Nina Horvath",
+    "contact": "nina.horvath@labor-am-ring.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0206",
+    "doc_type": "lab",
+    "panel": "kidney",
+    "ready": true
+   },
+   "ok": {
+    "recipient": true,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 4.770899999130052,
+   "engine_error": null,
+   "got": {
+    "recipient": "Mag. Nina Horvath",
+    "contact": "nina.horvath@labor-am-ring.example",
+    "patient": "Patient/bb-0206",
+    "doc_type": "lab",
+    "ready": true,
+    "missing": []
+   }
+  },
+  {
+   "id": "test-0088",
+   "lang": "en",
+   "trap": "none",
+   "ref": "we need the discharge report for paul schuster date of birth march 26 2000 please contact christian aigner at klinik am kurpark zero six nine nine nine five three nine six three seven",
+   "hyp": "we need the discharge report for paul schuster date of birth march 26 2000 please contact christian aigner at klinik am kurpark zero six nine nine nine five three nine six three seven",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 33,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Christian Aigner",
+    "contact": "+436999539637",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0290",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 2.4039000054472126,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436999539637",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0089",
+   "lang": "de",
+   "trap": "no_contact",
+   "ref": "bitte martin bauer von der rehaklinik seeblick um den entlassungsbericht von mehmet huber geboren 30. jänner 1953 bitten",
+   "hyp": "bitte martin bauer von der rehaklinik seeblick um den entlassungsbericht von mehmet huber geboren 30. jänner 1953 bitten",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 18,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Martin Bauer",
+    "contact": "+436768947133",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0360",
+    "doc_type": "report",
+    "panel": null,
+    "ready": false
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.0617000007187016,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": null,
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "contact",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0093",
+   "lang": "de",
+   "trap": "none",
+   "ref": "äh entlassungsbrief von ayşe auer geboren 2. mai 2005 bitte bei andreas moser rehaklinik seeblick anfordern nummer null sechs sieben sechs acht zwei fünf sieben sieben null zwei",
+   "hyp": "äh entlassungsbrief von ayşe auer geboren 2. mai 2005 bitte bei andreas moser rehaklinik seeblick anfordern nummer null sechs sieben sechs acht zwei fünf sieben sieben null zwei",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 28,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Andreas Moser",
+    "contact": "+436768257702",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0216",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 5.2350999976624735,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436768257702",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0094",
+   "lang": "de",
+   "trap": "none",
+   "ref": "bitte doktor elisabeth eder elisabeth punkt eder at labor minus am minus ring punkt example leberwerte von paul ebner geboren 21. august 1981 wegen hepatitis abklärung",
+   "hyp": "bitte doktor elisabeth eder elisabeth punkt eder at labor minus am minus ring punkt example leberwerte von paul ebner geboren 21. august 1981 wegen hepatitis abklärung",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 26,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Elisabeth Eder",
+    "contact": "elisabeth.eder@labor-am-ring.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0176",
+    "doc_type": "lab",
+    "panel": "liver",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.293900000746362,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "elisabeth.eder@labor-am-ring.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0095",
+   "lang": "de",
+   "trap": "none",
+   "ref": "gerinnung von emine ebner geboren 13. mai 1975 bei doktor anna wimmer labor nord anna punkt wimmer at labor minus nord punkt example bitte anfordern sie hat eine thrombose gehabt",
+   "hyp": "gerinnung von emine ebner geboren 13. mai 1975 bei doktor anna wimmer labor nord anna punkt wimmer at labor minus nord punkt example bitte anfordern sie hat eine thrombose gehabt",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 30,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Anna Wimmer",
+    "contact": "anna.wimmer@labor-nord.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0172",
+    "doc_type": "lab",
+    "panel": "coagulation",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 0.9236000041710213,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "anna.wimmer@labor-nord.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0096",
+   "lang": "de",
+   "trap": "no_dob",
+   "ref": "äh bitte renate novak reha waldblick den rehabericht von andrea koller anfordern nummer null sechs sechs null zwei drei eins fünf eins neun zwei",
+   "hyp": "äh bitte renate novak reha waldblick den rehabericht von andrea koller anfordern nummer null sechs sechs null zwei drei eins fünf eins neun zwei",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 24,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Renate Novak",
+    "contact": "+436602315192",
+    "contact_kind": "sms",
+    "patient_ref": null,
+    "doc_type": "report",
+    "panel": null,
+    "ready": false
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.181300001917407,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436602315192",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0103",
+   "lang": "de",
+   "trap": "twin",
+   "ref": "also jasmin winkler klinik am kurpark null sechs sieben sechs fünf neun eins null acht null acht entlassungsbrief von julia steiner geboren 23. juli 1971 bitte",
+   "hyp": "also jasmin winkler klinik am kurpark null sechs sieben sechs fünf neun eins null acht null acht entlassungsbrief von julia steiner geboren 23. juli 1971 bitte",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 26,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Jasmin Winkler",
+    "contact": "+436765910808",
+    "contact_kind": "sms",
+    "patient_ref": null,
+    "doc_type": "report",
+    "panel": null,
+    "ready": false
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.3261999993119389,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436765910808",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0105",
+   "lang": "de",
+   "trap": "none",
+   "ref": "bitte doktor jürgen auer labor doktor wimmer anschreiben j u e r g e n punkt auer at labor minus d r minus wimmer punkt example nierenwerte von johann schmidt geboren 22. oktober 1975",
+   "hyp": "bitte doktor jürgen auer labor doktor wimmer anschreiben j u e r g e n punkt auer at labor minus d r minus wimmer punkt example nierenwerte von johann schmidt geboren 22. oktober 1975",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 34,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Jürgen Auer",
+    "contact": "juergen.auer@labor-dr-wimmer.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0190",
+    "doc_type": "lab",
+    "panel": "kidney",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": false,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.8618999965838157,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": null,
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "contact",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0106",
+   "lang": "de",
+   "trap": "none",
+   "ref": "Bitte Christian Aigner Klinik am Kurpark plus vier drei sechs neun neun neun fünf drei neun sechs drei sieben den Entlassungsbrief von Herrn Karl Lehner geboren 10. Juli 1970 schicken lassen",
+   "hyp": "Bitte Christian Aigner Klinik am Kurpark plus vier drei sechs neun neun neun fünf drei neun sechs drei sieben den Entlassungsbrief von Herrn Karl Lehner geboren 10. Juli 1970 schicken lassen",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 31,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Christian Aigner",
+    "contact": "+436999539637",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0200",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": true,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 22.28379999723984,
+   "engine_error": null,
+   "got": {
+    "recipient": "Christian Aigner",
+    "contact": "+436999539637",
+    "patient": "Patient/bb-0200",
+    "doc_type": "report",
+    "ready": true,
+    "missing": []
+   }
+  },
+  {
+   "id": "test-0109",
+   "lang": "de",
+   "trap": "none",
+   "ref": "Stefan Kern Reha Waldblick null sechs sechs null null null null null eins null eins bitte Reha Bericht von Lisa Brunner geboren 6. September 1964 sie hat einen Kontrolltermin bei uns",
+   "hyp": "Stefan Kern Reha Waldblick null sechs sechs null null null null null eins null eins bitte Reha Bericht von Lisa Brunner geboren 6. September 1964 sie hat einen Kontrolltermin bei uns",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 31,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Stefan Kern",
+    "contact": "+436600000101",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0197",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": true,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 7.87809999746969,
+   "engine_error": null,
+   "got": {
+    "recipient": "Stefan Kern",
+    "contact": "+436600000101",
+    "patient": "Patient/bb-0197",
+    "doc_type": "report",
+    "ready": true,
+    "missing": []
+   }
+  },
+  {
+   "id": "test-0113",
+   "lang": "en",
+   "trap": "no_contact",
+   "ref": "um request the discharge letter for katharina müller born june 24 1995 from andreas moser rehaklinik seeblick",
+   "hyp": "um request the discharge letter for katharina müller born june 24 1995 from andreas moser rehaklinik seeblick",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 17,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Andreas Moser",
+    "contact": "+436768257702",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0369",
+    "doc_type": "report",
+    "panel": null,
+    "ready": false
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.432999997632578,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": null,
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "contact",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0114",
+   "lang": "de",
+   "trap": "none",
+   "ref": "bitte bei Doktor Petra Auer vom Zentrallabor Donau die INR von Frau Renate Haas geboren 24. September 1950 anfordern Adresse petra punkt auer at zentrallabor minus donau punkt example sie hat Vorhofflimmern und nimmt Marcoumar",
+   "hyp": "bitte bei Doktor Petra Auer vom Zentrallabor Donau die INR von Frau Renate Haas geboren 24. September 1950 anfordern Adresse petra punkt auer at zentrallabor minus donau punkt example sie hat Vorhofflimmern und nimmt Marcoumar",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 35,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. med. Petra Auer",
+    "contact": "petra.auer@zentrallabor-donau.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0158",
+    "doc_type": "lab",
+    "panel": "coagulation",
+    "ready": true
+   },
+   "ok": {
+    "recipient": true,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 5.513700001756661,
+   "engine_error": null,
+   "got": {
+    "recipient": "Dr. Petra Auer",
+    "contact": "petra.auer@zentrallabor-donau.example",
+    "patient": "Patient/bb-0158",
+    "doc_type": "lab",
+    "ready": true,
+    "missing": []
+   }
+  },
+  {
+   "id": "test-0118",
+   "lang": "de",
+   "trap": "none",
+   "ref": "doktor lisa müller labor kanalstraße lisa punkt m u e l l e r at labor minus kanalstrasse punkt example bitte cholesterin und triglyzeride von elisabeth fischer geboren 22. dezember 1964",
+   "hyp": "doktor lisa müller labor kanalstraße lisa punkt m u e l l e r at labor minus kanalstrasse punkt example bitte cholesterin und triglyzeride von elisabeth fischer geboren 22. dezember 1964",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 31,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. med. Lisa Müller",
+    "contact": "lisa.mueller@labor-kanalstrasse.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0215",
+    "doc_type": "lab",
+    "panel": "lipids",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": false,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.1647999999695458,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "r@labor-kanalstrasse.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0120",
+   "lang": "de",
+   "trap": "no_contact",
+   "ref": "Doktor Markus Lehner Labor Doktor Wimmer bitte Kreatinin von Felix Novak geboren 1. August 1998 äh Rhabdomyolyse Verdacht",
+   "hyp": "Doktor Markus Lehner Labor Doktor Wimmer bitte Kreatinin von Felix Novak geboren 1. August 1998 äh Rhabdomyolyse Verdacht",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 18,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Markus Lehner",
+    "contact": "markus.lehner@labor-dr-wimmer.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0361",
+    "doc_type": "lab",
+    "panel": "kidney",
+    "ready": false
+   },
+   "ok": {
+    "recipient": true,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 8.237199996074196,
+   "engine_error": null,
+   "got": {
+    "recipient": "Dr. Markus Lehner",
+    "contact": null,
+    "patient": "Patient/bb-0361",
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "contact"
+    ]
+   }
+  },
+  {
+   "id": "test-0124",
+   "lang": "en",
+   "trap": "none",
+   "ref": "crp for elisabeth schneider born april 2nd 1981 please ask doctor eva brandl eva dot brandl at labor dash kanal dot example possible pneumonia",
+   "hyp": "crp for elisabeth schneider born april 2nd 1981 please ask doctor eva brandl eva dot brandl at labor dash kanal dot example possible pneumonia",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 24,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Eva Brandl",
+    "contact": "eva.brandl@labor-kanal.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0281",
+    "doc_type": "lab",
+    "panel": "inflammation",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.5468999990844168,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "eva.brandl@labor-kanal.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0125",
+   "lang": "de",
+   "trap": "twin",
+   "ref": "Doktor Jasmin Reiter Labor Doktor Wimmer jasmin punkt reiter at labor minus d r minus wimmer punkt example bitte die Blutfette von Stefan Schwarz geboren 25. September 2003",
+   "hyp": "Doktor Jasmin Reiter Labor Doktor Wimmer jasmin punkt reiter at labor minus d r minus wimmer punkt example bitte die Blutfette von Stefan Schwarz geboren 25. September 2003",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 28,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Jasmin Reiter",
+    "contact": "jasmin.reiter@labor-dr-wimmer.example",
+    "contact_kind": "email",
+    "patient_ref": null,
+    "doc_type": "lab",
+    "panel": "lipids",
+    "ready": false
+   },
+   "ok": {
+    "recipient": true,
+    "contact": false,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 18.35430000210181,
+   "engine_error": null,
+   "got": {
+    "recipient": "Dr. Jasmin Reiter",
+    "contact": null,
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "contact",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0126",
+   "lang": "de",
+   "trap": "none",
+   "ref": "Also wir brauchen den Reha Entlassungsbericht von Frau Fatma Egger geboren 20. Oktober 1977 bitte bei Claudia Lang Rehazentrum Alpenblick anfordern Telefon null sechs sechs vier vier sieben null eins drei neun acht",
+   "hyp": "Also wir brauchen den Reha Entlassungsbericht von Frau Fatma Egger geboren 20. Oktober 1977 bitte bei Claudia Lang Rehazentrum Alpenblick anfordern Telefon null sechs sechs vier vier sieben null eins drei neun acht",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 33,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Claudia Lang",
+    "contact": "+436644701398",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0154",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": true,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 6.921499996678904,
+   "engine_error": null,
+   "got": {
+    "recipient": "Claudia Lang",
+    "contact": "+436644701398",
+    "patient": "Patient/bb-0154",
+    "doc_type": "report",
+    "ready": true,
+    "missing": []
+   }
+  },
+  {
+   "id": "test-0140",
+   "lang": "en",
+   "trap": "no_contact",
+   "ref": "liver function tests for ali wagner born november 2nd 1983 from magister max brunner at labor am ring please",
+   "hyp": "liver function tests for ali wagner born november 2nd 1983 from magister max brunner at labor am ring please",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 19,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Mag. Max Brunner",
+    "contact": "max.brunner@labor-am-ring.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0368",
+    "doc_type": "lab",
+    "panel": "liver",
+    "ready": false
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 0.7295999967027456,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": null,
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "contact",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0142",
+   "lang": "de",
+   "trap": "none",
+   "ref": "bitte doktor sabine bauer sabine punkt bauer at zentrallabor minus donau punkt example crp und procalcitonin von josef pichler geboren 26. februar 1988 äh sepsis verdacht",
+   "hyp": "bitte doktor sabine bauer sabine punkt bauer at zentrallabor minus donau punkt example crp und procalcitonin von josef pichler geboren 26. februar 1988 äh sepsis verdacht",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 26,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Sabine Bauer",
+    "contact": "sabine.bauer@zentrallabor-donau.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0196",
+    "doc_type": "lab",
+    "panel": "inflammation",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.8132999975932762,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "sabine.bauer@zentrallabor-donau.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0146",
+   "lang": "de",
+   "trap": "none",
+   "ref": "Bitte bei Doktor Jasmin Reiter Labor Doktor Wimmer das CRP von Maria Leitner geboren 15. Februar 2013 anfordern Mailadresse jasmin punkt reiter at labor minus d r minus wimmer punkt example es geht um eine Abklärung Fieber",
+   "hyp": "Bitte bei Doktor Jasmin Reiter Labor Doktor Wimmer das CRP von Maria Leitner geboren 15. Februar 2013 anfordern Mailadresse jasmin punkt reiter at labor minus d r minus wimmer punkt example es geht um eine Abklärung Fieber",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 37,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Jasmin Reiter",
+    "contact": "jasmin.reiter@labor-dr-wimmer.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0141",
+    "doc_type": "lab",
+    "panel": "inflammation",
+    "ready": true
+   },
+   "ok": {
+    "recipient": true,
+    "contact": false,
+    "patient": true,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 6.019300002662931,
+   "engine_error": null,
+   "got": {
+    "recipient": "Dr. Jasmin Reiter",
+    "contact": null,
+    "patient": "Patient/bb-0141",
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "contact"
+    ]
+   }
+  },
+  {
+   "id": "test-0152",
+   "lang": "en",
+   "trap": "none",
+   "ref": "um request glucose and hba1c for max maier born 24th of june 1965 from magister nina horvath nina dot horvath at labor dash am dash ring dot example",
+   "hyp": "um request glucose and hba1c for max maier born 24th of june 1965 from magister nina horvath nina dot horvath at labor dash am dash ring dot example",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 28,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Mag. Nina Horvath",
+    "contact": "nina.horvath@labor-am-ring.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0294",
+    "doc_type": "lab",
+    "panel": "glucose",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 0.6714999981340952,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "nina.horvath@labor-am-ring.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0153",
+   "lang": "de",
+   "trap": "no_dob",
+   "ref": "also doktor jürgen auer j u e r g e n punkt auer at labor minus d r minus wimmer punkt example bitte die nierenwerte von daniel eder äh der ist so um die siebzig",
+   "hyp": "also doktor jürgen auer j u e r g e n punkt auer at labor minus d r minus wimmer punkt example bitte die nierenwerte von daniel eder äh der ist so um die siebzig",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 35,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Jürgen Auer",
+    "contact": "juergen.auer@labor-dr-wimmer.example",
+    "contact_kind": "email",
+    "patient_ref": null,
+    "doc_type": "lab",
+    "panel": "kidney",
+    "ready": false
+   },
+   "ok": {
+    "recipient": false,
+    "contact": false,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.4367000039783306,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": null,
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "contact",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0156",
+   "lang": "de",
+   "trap": "none",
+   "ref": "äh entlassungsbericht von felix pichler geboren 15. august 1965 bitte bei felix wolf rehaklinik seeblick null sechs sechs null sechs zwei vier sechs zwei null vier",
+   "hyp": "äh entlassungsbericht von felix pichler geboren 15. august 1965 bitte bei felix wolf rehaklinik seeblick null sechs sechs null sechs zwei vier sechs zwei null vier",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 26,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Felix Wolf",
+    "contact": "+436606246204",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0175",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 29.366299997491296,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436606246204",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0160",
+   "lang": "en",
+   "trap": "no_contact",
+   "ref": "please ask renate novak from reha waldblick for the discharge report of georg jovanović born november 1st 1981",
+   "hyp": "please ask renate novak from reha waldblick for the discharge report of georg jovanović born november 1st 1981",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 18,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Renate Novak",
+    "contact": "+436602315192",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0366",
+    "doc_type": "report",
+    "panel": null,
+    "ready": false
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.4698000013595447,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": null,
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "contact",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0161",
+   "lang": "de",
+   "trap": "no_dob",
+   "ref": "bitte bei doktor sabine bauer sabine punkt bauer at zentrallabor minus donau punkt example den hba1c von sabine baumgartner anfordern äh kontrolle",
+   "hyp": "bitte bei doktor sabine bauer sabine punkt bauer at zentrallabor minus donau punkt example den hba1c von sabine baumgartner anfordern äh kontrolle",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 22,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Sabine Bauer",
+    "contact": "sabine.bauer@zentrallabor-donau.example",
+    "contact_kind": "email",
+    "patient_ref": null,
+    "doc_type": "lab",
+    "panel": "glucose",
+    "ready": false
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": true,
+    "doc_type": false,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.9410000022617169,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "sabine.bauer@zentrallabor-donau.example",
+    "patient": null,
+    "doc_type": null,
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "doc_type",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0163",
+   "lang": "de",
+   "trap": "namesake",
+   "ref": "äh felix wolf rehaklinik seeblick null sechs sechs null sechs zwei vier sechs zwei null vier bitte den entlassungsbericht von mehmet beispiel geboren 22. september 1981",
+   "hyp": "äh felix wolf rehaklinik seeblick null sechs sechs null sechs zwei vier sechs zwei null vier bitte den entlassungsbericht von mehmet beispiel geboren 22. september 1981",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 26,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Felix Wolf",
+    "contact": "+436606246204",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0033",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.5074999973876402,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436606246204",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0164",
+   "lang": "de",
+   "trap": "none",
+   "ref": "bitte an stefan kern von der reha waldblick äh den reha entlassungsbericht von josef winkler geboren 25. jänner 1975 anfordern seine handynummer null sechs sechs null null null null null eins null eins danke",
+   "hyp": "bitte an stefan kern von der reha waldblick äh den reha entlassungsbericht von josef winkler geboren 25. jänner 1975 anfordern seine handynummer null sechs sechs null null null null null eins null eins danke",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 34,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Stefan Kern",
+    "contact": "+436600000101",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0138",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 2.172599997720681,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436600000101",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0165",
+   "lang": "de",
+   "trap": "none",
+   "ref": "Blutzucker von Paul Mayer geboren 25. Mai 2001 bitte bei Magister Emine Pichler Zentrallabor Donau emine punkt pichler at zentrallabor minus donau punkt example er hat seit kurzem Typ 1 Diabetes",
+   "hyp": "Blutzucker von Paul Mayer geboren 25. Mai 2001 bitte bei Magister Emine Pichler Zentrallabor Donau emine punkt pichler at zentrallabor minus donau punkt example er hat seit kurzem Typ 1 Diabetes",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 31,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Mag. Emine Pichler",
+    "contact": "emine.pichler@zentrallabor-donau.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0186",
+    "doc_type": "lab",
+    "panel": "glucose",
+    "ready": true
+   },
+   "ok": {
+    "recipient": true,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 5.592800000158604,
+   "engine_error": null,
+   "got": {
+    "recipient": "Mag. Emine Pichler",
+    "contact": "emine.pichler@zentrallabor-donau.example",
+    "patient": "Patient/bb-0186",
+    "doc_type": "lab",
+    "ready": true,
+    "missing": []
+   }
+  },
+  {
+   "id": "test-0168",
+   "lang": "en",
+   "trap": "none",
+   "ref": "cholesterol panel for fatma schwarz born 29 august 1975 from magister emine pichler at zentrallabor donau email emine dot pichler at zentrallabor dash donau dot example um she's on a statin",
+   "hyp": "cholesterol panel for fatma schwarz born 29 august 1975 from magister emine pichler at zentrallabor donau email emine dot pichler at zentrallabor dash donau dot example um she's on a statin",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 32,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Mag. Emine Pichler",
+    "contact": "emine.pichler@zentrallabor-donau.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0269",
+    "doc_type": "lab",
+    "panel": "lipids",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.0249000042676926,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "emine.pichler@zentrallabor-donau.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0169",
+   "lang": "de",
+   "trap": "none",
+   "ref": "Gerinnung von Margarethe Winkler geboren 10. Dezember 1974 bitte bei Magister Max Brunner anfordern max punkt brunner at labor minus am minus ring punkt example Abklärung vor Leberbiopsie",
+   "hyp": "Gerinnung von Margarethe Winkler geboren 10. Dezember 1974 bitte bei Magister Max Brunner anfordern max punkt brunner at labor minus am minus ring punkt example Abklärung vor Leberbiopsie",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 28,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Mag. Max Brunner",
+    "contact": "max.brunner@labor-am-ring.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0201",
+    "doc_type": "lab",
+    "panel": "coagulation",
+    "ready": true
+   },
+   "ok": {
+    "recipient": true,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 14.361899993673433,
+   "engine_error": null,
+   "got": {
+    "recipient": "Mag. Max Brunner",
+    "contact": "max.brunner@labor-am-ring.example",
+    "patient": "Patient/bb-0201",
+    "doc_type": "lab",
+    "ready": true,
+    "missing": []
+   }
+  },
+  {
+   "id": "test-0170",
+   "lang": "de",
+   "trap": "none",
+   "ref": "bitte martin bauer rehaklinik seeblick um den reha bericht von anna lang geboren 24. november 1997 bitten nummer plus vier drei sechs sieben sechs acht neun vier sieben eins drei drei",
+   "hyp": "bitte martin bauer rehaklinik seeblick um den reha bericht von anna lang geboren 24. november 1997 bitten nummer plus vier drei sechs sieben sechs acht neun vier sieben eins drei drei",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 31,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Martin Bauer",
+    "contact": "+436768947133",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0162",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.782799998181872,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436768947133",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0172",
+   "lang": "de",
+   "trap": "namesake",
+   "ref": "also doktor sophie moser sophie punkt moser at medizinisches minus labor minus graz minus west punkt example leberwerte von maria wallner geboren 11. mai 2002 bitte",
+   "hyp": "also doktor sophie moser sophie punkt moser at medizinisches minus labor minus graz minus west punkt example leberwerte von maria wallner geboren 11. mai 2002 bitte",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 26,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Sophie Moser",
+    "contact": "sophie.moser@medizinisches-labor-graz-west.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0347",
+    "doc_type": "lab",
+    "panel": "liver",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 0.7445999945048243,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "sophie.moser@medizinisches-labor-graz-west.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0175",
+   "lang": "en",
+   "trap": "twin",
+   "ref": "please ask felix wolf at rehaklinik seeblick for the discharge report on sophie novak born march 6th 1966 his number is zero six six zero six two four six two zero four",
+   "hyp": "please ask felix wolf at rehaklinik seeblick for the discharge report on sophie novak born march 6th 1966 his number is zero six six zero six two four six two zero four",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 32,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Felix Wolf",
+    "contact": "+436606246204",
+    "contact_kind": "sms",
+    "patient_ref": null,
+    "doc_type": "report",
+    "panel": null,
+    "ready": false
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.3915000017732382,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436606246204",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0177",
+   "lang": "en",
+   "trap": "none",
+   "ref": "please get a full blood count for emine kaya born april 5th 1992 from doctor jasmin reiter jasmin dot reiter at labor dash d r dash wimmer dot example she's had heavy periods",
+   "hyp": "please get a full blood count for emine kaya born april 5th 1992 from doctor jasmin reiter jasmin dot reiter at labor dash d r dash wimmer dot example she's had heavy periods",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 34,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Jasmin Reiter",
+    "contact": "jasmin.reiter@labor-dr-wimmer.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0286",
+    "doc_type": "lab",
+    "panel": "cbc",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": false,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.1580999998841435,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": null,
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "contact",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0181",
+   "lang": "de",
+   "trap": "none",
+   "ref": "äh doktor daniel lehner labor am ring daniel punkt lehner at labor minus am minus ring punkt example bitte hba1c von zoë mayer geboren 9. märz 1957 diabeteskontrolle",
+   "hyp": "äh doktor daniel lehner labor am ring daniel punkt lehner at labor minus am minus ring punkt example bitte hba1c von zoë mayer geboren 9. märz 1957 diabeteskontrolle",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 28,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. med. Daniel Lehner",
+    "contact": "daniel.lehner@labor-am-ring.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0170",
+    "doc_type": "lab",
+    "panel": "glucose",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.549100001284387,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "daniel.lehner@labor-am-ring.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0182",
+   "lang": "de",
+   "trap": "no_contact",
+   "ref": "äh blutzucker und hba1c von renate aigner geboren 1. jänner 1974 bitte bei doktor ali wolf labor am ring anfordern",
+   "hyp": "äh blutzucker und hba1c von renate aigner geboren 1. jänner 1974 bitte bei doktor ali wolf labor am ring anfordern",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 20,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Ali Wolf",
+    "contact": "ali.wolf@labor-am-ring.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0355",
+    "doc_type": "lab",
+    "panel": "glucose",
+    "ready": false
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 0.6609999982174486,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": null,
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "contact",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0184",
+   "lang": "de",
+   "trap": "none",
+   "ref": "äh bitte emine aigner klinik am kurpark um den entlassungsbrief von ali ćosić geboren 22. oktober 1968 nummer null sechs sechs vier drei zwei null neun acht drei null",
+   "hyp": "äh bitte emine aigner klinik am kurpark um den entlassungsbrief von ali ćosić geboren 22. oktober 1968 nummer null sechs sechs vier drei zwei null neun acht drei null",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 29,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Emine Aigner",
+    "contact": "+436643209830",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0209",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.4847999991616234,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436643209830",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0187",
+   "lang": "de",
+   "trap": "no_contact",
+   "ref": "bitte bei claudia lang vom rehazentrum alpenblick den reha entlassungsbericht von hannah wallner geboren 2. oktober 2006 anfordern",
+   "hyp": "bitte bei claudia lang vom rehazentrum alpenblick den reha entlassungsbericht von hannah wallner geboren 2. oktober 2006 anfordern",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 18,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Claudia Lang",
+    "contact": "+436644701398",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0350",
+    "doc_type": "report",
+    "panel": null,
+    "ready": false
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.1921999976038933,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": null,
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "contact",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0188",
+   "lang": "de",
+   "trap": "none",
+   "ref": "äh also bitte andreas moser rehaklinik seeblick null sechs sieben sechs acht zwei fünf sieben sieben null zwei den entlassungsbrief von günther wagner geboren 27. august 1994",
+   "hyp": "äh also bitte andreas moser rehaklinik seeblick null sechs sieben sechs acht zwei fünf sieben sieben null zwei den entlassungsbrief von günther wagner geboren 27. august 1994",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 27,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Andreas Moser",
+    "contact": "+436768257702",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0160",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.3001999977859668,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436768257702",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0189",
+   "lang": "de",
+   "trap": "none",
+   "ref": "Martin Bauer Rehaklinik Seeblick Nummer null sechs sieben sechs acht neun vier sieben eins drei drei bitte um Reha Entlassungsbericht von Günther Pichler geboren 8. Jänner 1984 er braucht Physio bei uns",
+   "hyp": "Martin Bauer Rehaklinik Seeblick Nummer null sechs sieben sechs acht neun vier sieben eins drei drei bitte um Reha Entlassungsbericht von Günther Pichler geboren 8. Jänner 1984 er braucht Physio bei uns",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 32,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Martin Bauer",
+    "contact": "+436768947133",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0189",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": true,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 6.298799999058247,
+   "engine_error": null,
+   "got": {
+    "recipient": "Martin Bauer",
+    "contact": "+436768947133",
+    "patient": "Patient/bb-0189",
+    "doc_type": "report",
+    "ready": true,
+    "missing": []
+   }
+  },
+  {
+   "id": "test-0190",
+   "lang": "de",
+   "trap": "no_contact",
+   "ref": "Also den Entlassungsbrief von Theresa Horvath geboren 6. März 2001 bitte bei Christian Aigner Klinik am Kurpark anfordern die Nummer such ich noch raus",
+   "hyp": "Also den Entlassungsbrief von Theresa Horvath geboren 6. März 2001 bitte bei Christian Aigner Klinik am Kurpark anfordern die Nummer such ich noch raus",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 24,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Christian Aigner",
+    "contact": "+436999539637",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0356",
+    "doc_type": "report",
+    "panel": null,
+    "ready": false
+   },
+   "ok": {
+    "recipient": true,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 9.69489999988582,
+   "engine_error": null,
+   "got": {
+    "recipient": "Christian Aigner",
+    "contact": null,
+    "patient": "Patient/bb-0356",
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "contact"
+    ]
+   }
+  },
+  {
+   "id": "test-0192",
+   "lang": "de",
+   "trap": "none",
+   "ref": "also christian aigner klinik am kurpark bitte entlassungsbrief michael petrović geboren 27. mai 1973 handy null sechs neun neun neun fünf drei neun sechs drei sieben",
+   "hyp": "also christian aigner klinik am kurpark bitte entlassungsbrief michael petrović geboren 27. mai 1973 handy null sechs neun neun neun fünf drei neun sechs drei sieben",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 26,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Christian Aigner",
+    "contact": "+436999539637",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0173",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 2.326300003915094,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436999539637",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0196",
+   "lang": "en",
+   "trap": "other_date",
+   "ref": "please get the inr for daniel demir born august 4th 1968 from doctor lukas moser lukas dot moser at labor dash kanalstrasse dot example his surgery is on november 20th",
+   "hyp": "please get the inr for daniel demir born august 4th 1968 from doctor lukas moser lukas dot moser at labor dash kanalstrasse dot example his surgery is on november 20th",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 30,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Lukas Moser",
+    "contact": "lukas.moser@labor-kanalstrasse.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0392",
+    "doc_type": "lab",
+    "panel": "coagulation",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 3.049999999348074,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "lukas.moser@labor-kanalstrasse.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0197",
+   "lang": "de",
+   "trap": "twin",
+   "ref": "Renate Novak Reha Waldblick bitte um den Reha Bericht von Thomas Schneider geboren 18. August 1987 Nummer null sechs sechs null zwei drei eins fünf eins neun zwei",
+   "hyp": "Renate Novak Reha Waldblick bitte um den Reha Bericht von Thomas Schneider geboren 18. August 1987 Nummer null sechs sechs null zwei drei eins fünf eins neun zwei",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 28,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Renate Novak",
+    "contact": "+436602315192",
+    "contact_kind": "sms",
+    "patient_ref": null,
+    "doc_type": "report",
+    "panel": null,
+    "ready": false
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.8188999965786934,
+   "engine_error": null,
+   "got": {
+    "recipient": "Thomas Schneider",
+    "contact": "+436602315192",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0199",
+   "lang": "en",
+   "trap": "no_dob",
+   "ref": "please request glucose for florian ebner from doctor chloé müller chloe dot mueller at labor dash nord dot example he's diabetic and was hypo last night",
+   "hyp": "please request glucose for florian ebner from doctor chloé müller chloe dot mueller at labor dash nord dot example he's diabetic and was hypo last night",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 27,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Chloé Müller",
+    "contact": "chloe.mueller@labor-nord.example",
+    "contact_kind": "email",
+    "patient_ref": null,
+    "doc_type": "lab",
+    "panel": "glucose",
+    "ready": false
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 0.79600000026403,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "chloe.mueller@labor-nord.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0202",
+   "lang": "en",
+   "trap": "none",
+   "ref": "please ask magister max brunner max dot brunner at labor dash am dash ring dot example for the INR of christina pichler born september 1st 1958",
+   "hyp": "please ask magister max brunner max dot brunner at labor dash am dash ring dot example for the INR of christina pichler born september 1st 1958",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 26,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Mag. Max Brunner",
+    "contact": "max.brunner@labor-am-ring.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0291",
+    "doc_type": "lab",
+    "panel": "coagulation",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 0.9318000011262484,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "max.brunner@labor-am-ring.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0206",
+   "lang": "de",
+   "trap": "none",
+   "ref": "bitte claudia lang vom rehazentrum alpenblick um den rehabericht von daniel aigner bitten geboren 19. juni 2007 nummer null sechs sechs vier vier sieben null eins drei neun acht",
+   "hyp": "bitte claudia lang vom rehazentrum alpenblick um den rehabericht von daniel aigner bitten geboren 19. juni 2007 nummer null sechs sechs vier vier sieben null eins drei neun acht",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 29,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Claudia Lang",
+    "contact": "+436644701398",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0180",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.7512999984319322,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436644701398",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0207",
+   "lang": "de",
+   "trap": "none",
+   "ref": "äh blutzucker und hba1c von petra gruber geboren am 7. 12. 1966 bitte bei magister nina horvath anfordern nina punkt horvath at labor minus am minus ring punkt example",
+   "hyp": "äh blutzucker und hba1c von petra gruber geboren am 7. 12. 1966 bitte bei magister nina horvath anfordern nina punkt horvath at labor minus am minus ring punkt example",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 29,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Mag. Nina Horvath",
+    "contact": "nina.horvath@labor-am-ring.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0148",
+    "doc_type": "lab",
+    "panel": "glucose",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.5933000031509437,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "nina.horvath@labor-am-ring.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0215",
+   "lang": "de",
+   "trap": "none",
+   "ref": "also nierenwerte für stefan beispiel geboren 13. dezember 2002 bei magister max brunner anfordern max punkt brunner at labor minus am minus ring punkt example wegen nierensteinen",
+   "hyp": "also nierenwerte für stefan beispiel geboren 13. dezember 2002 bei magister max brunner anfordern max punkt brunner at labor minus am minus ring punkt example wegen nierensteinen",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 27,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Mag. Max Brunner",
+    "contact": "max.brunner@labor-am-ring.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0144",
+    "doc_type": "lab",
+    "panel": "kidney",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 0.8933999997680075,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "max.brunner@labor-am-ring.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0216",
+   "lang": "en",
+   "trap": "none",
+   "ref": "okay so martin bauer at rehaklinik seeblick zero six seven six eight nine four seven one three three we need the rehab discharge report for julia maier born february 13 1938",
+   "hyp": "okay so martin bauer at rehaklinik seeblick zero six seven six eight nine four seven one three three we need the rehab discharge report for julia maier born february 13 1938",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 31,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Martin Bauer",
+    "contact": "+436768947133",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0275",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 2.880599997297395,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436768947133",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0217",
+   "lang": "de",
+   "trap": "none",
+   "ref": "bitte doktor markus lehner anschreiben markus punkt lehner at labor minus d r minus wimmer punkt example leberwerte von dragan beispiel geboren 23. juli 1998 äh wegen erhöhter gamma gt",
+   "hyp": "bitte doktor markus lehner anschreiben markus punkt lehner at labor minus d r minus wimmer punkt example leberwerte von dragan beispiel geboren 23. juli 1998 äh wegen erhöhter gamma gt",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 30,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Markus Lehner",
+    "contact": "markus.lehner@labor-dr-wimmer.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0153",
+    "doc_type": "lab",
+    "panel": "liver",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": false,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.4486000000033528,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": null,
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "contact",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0220",
+   "lang": "de",
+   "trap": "none",
+   "ref": "Jasmin Winkler Klinik am Kurpark bitte den Entlassungsbrief von Chloé Aigner geboren 17. April 1951 die Nummer ist null sechs sieben sechs fünf neun eins null acht null acht danke",
+   "hyp": "Jasmin Winkler Klinik am Kurpark bitte den Entlassungsbrief von Chloé Aigner geboren 17. April 1951 die Nummer ist null sechs sieben sechs fünf neun eins null acht null acht danke",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 30,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Jasmin Winkler",
+    "contact": "+436765910808",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0168",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 11.203599999134894,
+   "engine_error": null,
+   "got": {
+    "recipient": "Chloé Aigner",
+    "contact": "+436765910808",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0223",
+   "lang": "de",
+   "trap": "none",
+   "ref": "Frau Emine Aigner Klinik am Kurpark null sechs sechs vier drei zwei null neun acht drei null bitte um den Entlassungsbrief von Julia Wagner geboren 12. November 1961 sie kommt am Montag zur Kontrolle",
+   "hyp": "Frau Emine Aigner Klinik am Kurpark null sechs sechs vier drei zwei null neun acht drei null bitte um den Entlassungsbrief von Julia Wagner geboren 12. November 1961 sie kommt am Montag zur Kontrolle",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 34,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Emine Aigner",
+    "contact": "+436643209830",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0150",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": true,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 9.288500004913658,
+   "engine_error": null,
+   "got": {
+    "recipient": "Emine Aigner",
+    "contact": "+436643209830",
+    "patient": "Patient/bb-0150",
+    "doc_type": "report",
+    "ready": true,
+    "missing": []
+   }
+  },
+  {
+   "id": "test-0224",
+   "lang": "en",
+   "trap": "none",
+   "ref": "so stefan kern reha waldblick zero six six zero zero zero zero zero one zero one rehab discharge report for fatma aigner born march 12 1969 thanks",
+   "hyp": "so stefan kern reha waldblick zero six six zero zero zero zero zero one zero one rehab discharge report for fatma aigner born march 12 1969 thanks",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 27,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Stefan Kern",
+    "contact": "+436600000101",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0284",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.614799999515526,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436600000101",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0225",
+   "lang": "de",
+   "trap": "none",
+   "ref": "also bitte doktor petra auer petra punkt auer at zentrallabor minus donau punkt example blutbild von theresa wagner geboren 24. november 1996 äh sie ist schwanger und hat schwindel",
+   "hyp": "also bitte doktor petra auer petra punkt auer at zentrallabor minus donau punkt example blutbild von theresa wagner geboren 24. november 1996 äh sie ist schwanger und hat schwindel",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 29,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. med. Petra Auer",
+    "contact": "petra.auer@zentrallabor-donau.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0213",
+    "doc_type": "lab",
+    "panel": "cbc",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.0798999937833287,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "petra.auer@zentrallabor-donau.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0229",
+   "lang": "de",
+   "trap": "no_dob",
+   "ref": "Doktor Daniel Lehner Labor am Ring daniel punkt lehner at labor minus am minus ring punkt example bitte CRP von Frau Lisa Lechner sie hat seit drei Tagen Fieber",
+   "hyp": "Doktor Daniel Lehner Labor am Ring daniel punkt lehner at labor minus am minus ring punkt example bitte CRP von Frau Lisa Lechner sie hat seit drei Tagen Fieber",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 29,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. med. Daniel Lehner",
+    "contact": "daniel.lehner@labor-am-ring.example",
+    "contact_kind": "email",
+    "patient_ref": null,
+    "doc_type": "lab",
+    "panel": "inflammation",
+    "ready": false
+   },
+   "ok": {
+    "recipient": true,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 2.1582000044872984,
+   "engine_error": null,
+   "got": {
+    "recipient": "Dr. Daniel Lehner",
+    "contact": "daniel.lehner@labor-am-ring.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0231",
+   "lang": "de",
+   "trap": "other_date",
+   "ref": "Leberwerte von Michael Egger geboren 4. Mai 2001 bitte bei Doktor Petra Auer anfordern petra punkt auer at zentrallabor minus donau punkt example und zwar die Abnahme vom 22. Oktober",
+   "hyp": "Leberwerte von Michael Egger geboren 4. Mai 2001 bitte bei Doktor Petra Auer anfordern petra punkt auer at zentrallabor minus donau punkt example und zwar die Abnahme vom 22. Oktober",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 30,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. med. Petra Auer",
+    "contact": "petra.auer@zentrallabor-donau.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0386",
+    "doc_type": "lab",
+    "panel": "liver",
+    "ready": true
+   },
+   "ok": {
+    "recipient": true,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 6.067499998607673,
+   "engine_error": null,
+   "got": {
+    "recipient": "Dr. Petra Auer",
+    "contact": "petra.auer@zentrallabor-donau.example",
+    "patient": "Patient/bb-0386",
+    "doc_type": "lab",
+    "ready": true,
+    "missing": []
+   }
+  },
+  {
+   "id": "test-0233",
+   "lang": "en",
+   "trap": "no_dob",
+   "ref": "lipid panel for peter schmid please from magister emine pichler emine dot pichler at zentrallabor dash donau dot example",
+   "hyp": "lipid panel for peter schmid please from magister emine pichler emine dot pichler at zentrallabor dash donau dot example",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 19,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Mag. Emine Pichler",
+    "contact": "emine.pichler@zentrallabor-donau.example",
+    "contact_kind": "email",
+    "patient_ref": null,
+    "doc_type": "lab",
+    "panel": "lipids",
+    "ready": false
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 0.6372999996528961,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "emine.pichler@zentrallabor-donau.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0234",
+   "lang": "de",
+   "trap": "none",
+   "ref": "also felix wolf rehaklinik seeblick null sechs sechs null sechs zwei vier sechs zwei null vier entlassungsbericht von ayşe hofer geboren 11. oktober 1979 bitte",
+   "hyp": "also felix wolf rehaklinik seeblick null sechs sechs null sechs zwei vier sechs zwei null vier entlassungsbericht von ayşe hofer geboren 11. oktober 1979 bitte",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 25,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Felix Wolf",
+    "contact": "+436606246204",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0203",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.6421999971498735,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436606246204",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0235",
+   "lang": "en",
+   "trap": "namesake",
+   "ref": "please ask doctor stefan petrović stefan dot petrovic at labor dash nord dot example for a blood count on zoran reiter born august 23rd 2019",
+   "hyp": "please ask doctor stefan petrović stefan dot petrovic at labor dash nord dot example for a blood count on zoran reiter born august 23rd 2019",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 25,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Stefan Petrović",
+    "contact": "stefan.petrovic@labor-nord.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0072",
+    "doc_type": "lab",
+    "panel": "cbc",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.4300000038929284,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "stefan.petrovic@labor-nord.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0237",
+   "lang": "de",
+   "trap": "none",
+   "ref": "also bitte die gerinnung von herrn stefan novak geboren am 30. Oktober 1986 bei doktor eva brandl anfordern ihre adresse ist eva punkt brandl at labor minus kanal punkt example grund ist äh eine geplante punktion",
+   "hyp": "also bitte die gerinnung von herrn stefan novak geboren am 30. Oktober 1986 bei doktor eva brandl anfordern ihre adresse ist eva punkt brandl at labor minus kanal punkt example grund ist äh eine geplante punktion",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 36,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Eva Brandl",
+    "contact": "eva.brandl@labor-kanal.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0137",
+    "doc_type": "lab",
+    "panel": "coagulation",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.4309000034700148,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "eva.brandl@labor-kanal.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0241",
+   "lang": "en",
+   "trap": "none",
+   "ref": "please ask doctor sophie moser for liver function tests on julia baumgartner born the 19th of march 1969 email sophie dot moser at medizinisches dash labor dash graz dash west dot example alcohol history",
+   "hyp": "please ask doctor sophie moser for liver function tests on julia baumgartner born the 19th of march 1969 email sophie dot moser at medizinisches dash labor dash graz dash west dot example alcohol history",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 34,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Sophie Moser",
+    "contact": "sophie.moser@medizinisches-labor-graz-west.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0274",
+    "doc_type": "lab",
+    "panel": "liver",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 0.9963999982574023,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "sophie.moser@medizinisches-labor-graz-west.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0243",
+   "lang": "de",
+   "trap": "none",
+   "ref": "also jasmin winkler von der klinik am kurpark bitte den entlassungsbrief von martin berger geboren am ersten mai neunzehnhundertsechsundachtzig nummer null sechs sieben sechs fünf neun eins null acht null acht",
+   "hyp": "also jasmin winkler von der klinik am kurpark bitte den entlassungsbrief von martin berger geboren am ersten mai neunzehnhundertsechsundachtzig nummer null sechs sieben sechs fünf neun eins null acht null acht",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 31,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Jasmin Winkler",
+    "contact": "+436765910808",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0195",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.713899997412227,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436765910808",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0248",
+   "lang": "de",
+   "trap": "none",
+   "ref": "Ich bräuchte ein Blutbild von Frau Anna Schuster geboren am 24. März 1996 bitte bei Doktor Sabine Bauer vom Zentrallabor Donau anfragen die E-Mail ist sabine punkt bauer at zentrallabor minus donau punkt example sie ist seit einer Woche sehr blass",
+   "hyp": "Ich bräuchte ein Blutbild von Frau Anna Schuster geboren am 24. März 1996 bitte bei Doktor Sabine Bauer vom Zentrallabor Donau anfragen die E-Mail ist sabine punkt bauer at zentrallabor minus donau punkt example sie ist seit einer Woche sehr blass",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 42,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Sabine Bauer",
+    "contact": "sabine.bauer@zentrallabor-donau.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0139",
+    "doc_type": "lab",
+    "panel": "cbc",
+    "ready": true
+   },
+   "ok": {
+    "recipient": true,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 9.998000001360197,
+   "engine_error": null,
+   "got": {
+    "recipient": "Dr. Sabine Bauer",
+    "contact": "sabine.bauer@zentrallabor-donau.example",
+    "patient": "Patient/bb-0139",
+    "doc_type": "lab",
+    "ready": true,
+    "missing": []
+   }
+  },
+  {
+   "id": "test-0253",
+   "lang": "de",
+   "trap": "no_dob",
+   "ref": "Karl Huber Rehaklinik Seeblick null sechs neun neun drei neun neun sechs sieben sechs drei bitte Entlassungsbrief von Frau Renate Petrović",
+   "hyp": "Karl Huber Rehaklinik Seeblick null sechs neun neun drei neun neun sechs sieben sechs drei bitte Entlassungsbrief von Frau Renate Petrović",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 21,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Karl Huber",
+    "contact": "+436993996763",
+    "contact_kind": "sms",
+    "patient_ref": null,
+    "doc_type": "report",
+    "panel": null,
+    "ready": false
+   },
+   "ok": {
+    "recipient": true,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.8476000041118823,
+   "engine_error": null,
+   "got": {
+    "recipient": "Karl Huber",
+    "contact": "+436993996763",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0254",
+   "lang": "en",
+   "trap": "none",
+   "ref": "so I need a blood count for jürgen berger date of birth september 25 1980 please ask doctor lukas moser at labor kanalstraße lukas dot moser at labor dash kanalstrasse dot example",
+   "hyp": "so I need a blood count for jürgen berger date of birth september 25 1980 please ask doctor lukas moser at labor kanalstraße lukas dot moser at labor dash kanalstrasse dot example",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 32,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Lukas Moser",
+    "contact": "lukas.moser@labor-kanalstrasse.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0267",
+    "doc_type": "lab",
+    "panel": "cbc",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.1448000004747882,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "lukas.moser@labor-kanalstrasse.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0255",
+   "lang": "de",
+   "trap": "none",
+   "ref": "Bitte Felix Wolf von der Rehaklinik Seeblick um den Entlassungsbericht von Herrn Günther Demir bitten geboren 7. September 1980 die Nummer ist plus vier drei sechs sechs null sechs zwei vier sechs zwei null vier",
+   "hyp": "Bitte Felix Wolf von der Rehaklinik Seeblick um den Entlassungsbericht von Herrn Günther Demir bitten geboren 7. September 1980 die Nummer ist plus vier drei sechs sechs null sechs zwei vier sechs zwei null vier",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 35,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Felix Wolf",
+    "contact": "+436606246204",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0146",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 3.8098000004538335,
+   "engine_error": null,
+   "got": {
+    "recipient": "Günther Demir",
+    "contact": "+436606246204",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0256",
+   "lang": "de",
+   "trap": "none",
+   "ref": "äh doktor jasmin reiter jasmin punkt reiter at labor minus d r minus wimmer punkt example bitte ein blutbild von markus ebner geboren 30. mai 1995 thrombozyten waren niedrig",
+   "hyp": "äh doktor jasmin reiter jasmin punkt reiter at labor minus d r minus wimmer punkt example bitte ein blutbild von markus ebner geboren 30. mai 1995 thrombozyten waren niedrig",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 29,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Jasmin Reiter",
+    "contact": "jasmin.reiter@labor-dr-wimmer.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0199",
+    "doc_type": "lab",
+    "panel": "cbc",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": false,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.1299999969196506,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": null,
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "contact",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0257",
+   "lang": "de",
+   "trap": "namesake",
+   "ref": "Karl Huber von der Rehaklinik Seeblick bitte den Reha Entlassungsbericht von Lukas Petrović geboren 28. März 2004 Nummer plus vier drei sechs neun neun drei neun neun sechs sieben sechs drei",
+   "hyp": "Karl Huber von der Rehaklinik Seeblick bitte den Reha Entlassungsbericht von Lukas Petrović geboren 28. März 2004 Nummer plus vier drei sechs neun neun drei neun neun sechs sieben sechs drei",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 31,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Karl Huber",
+    "contact": "+436993996763",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0202",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 2.0507999943220057,
+   "engine_error": null,
+   "got": {
+    "recipient": "Lukas Petrović",
+    "contact": "+436993996763",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0259",
+   "lang": "de",
+   "trap": "none",
+   "ref": "äh renate novak reha waldblick null sechs sechs null zwei drei eins fünf eins neun zwei entlassungsbericht für david schmid geboren 8. november 1992 bitte",
+   "hyp": "äh renate novak reha waldblick null sechs sechs null zwei drei eins fünf eins neun zwei entlassungsbericht für david schmid geboren 8. november 1992 bitte",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 25,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Renate Novak",
+    "contact": "+436602315192",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0185",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.6015000001061708,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436602315192",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0263",
+   "lang": "de",
+   "trap": "none",
+   "ref": "also doktor sophie moser sophie punkt moser at medizinisches minus labor minus graz minus west punkt example bitte die blutfette von christina koller geboren 11. april 1952",
+   "hyp": "also doktor sophie moser sophie punkt moser at medizinisches minus labor minus graz minus west punkt example bitte die blutfette von christina koller geboren 11. april 1952",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 27,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Sophie Moser",
+    "contact": "sophie.moser@medizinisches-labor-graz-west.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0188",
+    "doc_type": "lab",
+    "panel": "lipids",
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 0.9662000011303462,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "sophie.moser@medizinisches-labor-graz-west.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0264",
+   "lang": "de",
+   "trap": "none",
+   "ref": "Entlassungsbrief von Frau Chloé Koller geboren 5. Jänner 1949 bitte bei Karl Huber Rehaklinik Seeblick anfordern null sechs neun neun drei neun neun sechs sieben sechs drei",
+   "hyp": "Entlassungsbrief von Frau Chloé Koller geboren 5. Jänner 1949 bitte bei Karl Huber Rehaklinik Seeblick anfordern null sechs neun neun drei neun neun sechs sieben sechs drei",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 27,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Karl Huber",
+    "contact": "+436993996763",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0165",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": true,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 8.56519999797456,
+   "engine_error": null,
+   "got": {
+    "recipient": "Karl Huber",
+    "contact": "+436993996763",
+    "patient": "Patient/bb-0165",
+    "doc_type": "report",
+    "ready": true,
+    "missing": []
+   }
+  },
+  {
+   "id": "test-0266",
+   "lang": "en",
+   "trap": "none",
+   "ref": "uh jasmin winkler klinik am kurpark plus four three six seven six five nine one zero eight zero eight please send the discharge letter for günther hofer born july 2nd 1993",
+   "hyp": "uh jasmin winkler klinik am kurpark plus four three six seven six five nine one zero eight zero eight please send the discharge letter for günther hofer born july 2nd 1993",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 31,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Jasmin Winkler",
+    "contact": "+436765910808",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0282",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.7152000000351109,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436765910808",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0268",
+   "lang": "de",
+   "trap": "none",
+   "ref": "Bitte den Entlassungsbericht von Peter Wagner geboren 14. November 1977 bei Andreas Moser anfordern Rehaklinik Seeblick plus vier drei sechs sieben sechs acht zwei fünf sieben sieben null zwei",
+   "hyp": "Bitte den Entlassungsbericht von Peter Wagner geboren 14. November 1977 bei Andreas Moser anfordern Rehaklinik Seeblick plus vier drei sechs sieben sechs acht zwei fünf sieben sieben null zwei",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 29,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Andreas Moser",
+    "contact": "+436768257702",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0187",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": true,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 7.593599999381695,
+   "engine_error": null,
+   "got": {
+    "recipient": "Andreas Moser",
+    "contact": "+436768257702",
+    "patient": "Patient/bb-0187",
+    "doc_type": "report",
+    "ready": true,
+    "missing": []
+   }
+  },
+  {
+   "id": "test-0269",
+   "lang": "en",
+   "trap": "namesake",
+   "ref": "discharge letter for paul egger born december 8th 2010 from christian aigner klinik am kurpark zero six nine nine nine five three nine six three seven",
+   "hyp": "discharge letter for paul egger born december 8th 2010 from christian aigner klinik am kurpark zero six nine nine nine five three nine six three seven",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 26,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Christian Aigner",
+    "contact": "+436999539637",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0248",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.5639999983250163,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436999539637",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0270",
+   "lang": "de",
+   "trap": "no_contact",
+   "ref": "doktor anna wimmer labor nord bitte die gerinnung von andrea winkler geboren 24. dezember 1965 sie hat eine lungenembolie",
+   "hyp": "doktor anna wimmer labor nord bitte die gerinnung von andrea winkler geboren 24. dezember 1965 sie hat eine lungenembolie",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 19,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Anna Wimmer",
+    "contact": "anna.wimmer@labor-nord.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0359",
+    "doc_type": "lab",
+    "panel": "coagulation",
+    "ready": false
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 0.9759999957168475,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": null,
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "contact",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0272",
+   "lang": "de",
+   "trap": "namesake",
+   "ref": "Doktor Jürgen Auer bitte j u e r g e n punkt auer at labor minus d r minus wimmer punkt example ein Blutbild von Christina Winkler geboren 3. März 1990 sie ist blass und müde",
+   "hyp": "Doktor Jürgen Auer bitte j u e r g e n punkt auer at labor minus d r minus wimmer punkt example ein Blutbild von Christina Winkler geboren 3. März 1990 sie ist blass und müde",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 36,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. Jürgen Auer",
+    "contact": "juergen.auer@labor-dr-wimmer.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0353",
+    "doc_type": "lab",
+    "panel": "cbc",
+    "ready": true
+   },
+   "ok": {
+    "recipient": true,
+    "contact": false,
+    "patient": true,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 8.513000000675675,
+   "engine_error": null,
+   "got": {
+    "recipient": "Dr. Jürgen Auer",
+    "contact": null,
+    "patient": "Patient/bb-0353",
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "contact"
+    ]
+   }
+  },
+  {
+   "id": "test-0279",
+   "lang": "de",
+   "trap": "no_dob",
+   "ref": "Gerinnung von Christian Kovacs bitte bei Magister Nina Horvath anfordern nina punkt horvath at labor minus am minus ring punkt example er bekommt am Dienstag einen Herzkatheter",
+   "hyp": "Gerinnung von Christian Kovacs bitte bei Magister Nina Horvath anfordern nina punkt horvath at labor minus am minus ring punkt example er bekommt am Dienstag einen Herzkatheter",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 27,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Mag. Nina Horvath",
+    "contact": "nina.horvath@labor-am-ring.example",
+    "contact_kind": "email",
+    "patient_ref": null,
+    "doc_type": "lab",
+    "panel": "coagulation",
+    "ready": false
+   },
+   "ok": {
+    "recipient": true,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 0.8928999959607609,
+   "engine_error": null,
+   "got": {
+    "recipient": "Mag. Nina Horvath",
+    "contact": "nina.horvath@labor-am-ring.example",
+    "patient": null,
+    "doc_type": "lab",
+    "ready": false,
+    "missing": [
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0281",
+   "lang": "en",
+   "trap": "none",
+   "ref": "uh can you ask claudia lang from rehazentrum alpenblick for the rehab discharge report of christina beispiel born june 2nd 1948 her number is zero six six four four seven zero one three nine eight",
+   "hyp": "uh can you ask claudia lang from rehazentrum alpenblick for the rehab discharge report of christina beispiel born june 2nd 1948 her number is zero six six four four seven zero one three nine eight",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 35,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Claudia Lang",
+    "contact": "+436644701398",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0266",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.75199999648612,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436644701398",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0284",
+   "lang": "de",
+   "trap": "none",
+   "ref": "Bitte Herrn Kern Reha Waldblick plus vier drei sechs sechs null null null null null eins null eins um den Reha Entlassungsbericht von Frau Lena Kaya bitten geboren 20. Juni 1957",
+   "hyp": "Bitte Herrn Kern Reha Waldblick plus vier drei sechs sechs null null null null null eins null eins um den Reha Entlassungsbericht von Frau Lena Kaya bitten geboren 20. Juni 1957",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 31,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Stefan Kern",
+    "contact": "+436600000101",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0171",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.8140000029234216,
+   "engine_error": null,
+   "got": {
+    "recipient": "Lena Kaya",
+    "contact": "+436600000101",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0285",
+   "lang": "de",
+   "trap": "none",
+   "ref": "Blutbild von Sophie Schuster geboren 23. Mai 1980 bitte bei Doktor Lisa Müller Labor Kanalstraße die Mail lisa punkt m u e l l e r at labor minus kanalstrasse punkt example sie hat Nasenbluten",
+   "hyp": "Blutbild von Sophie Schuster geboren 23. Mai 1980 bitte bei Doktor Lisa Müller Labor Kanalstraße die Mail lisa punkt m u e l l e r at labor minus kanalstrasse punkt example sie hat Nasenbluten",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 35,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Dr. med. Lisa Müller",
+    "contact": "lisa.mueller@labor-kanalstrasse.example",
+    "contact_kind": "email",
+    "patient_ref": "Patient/bb-0161",
+    "doc_type": "lab",
+    "panel": "cbc",
+    "ready": true
+   },
+   "ok": {
+    "recipient": true,
+    "contact": false,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": false,
+   "silent_error": true,
+   "wrong_patient": false,
+   "engine_ms": 19.535599996743258,
+   "engine_error": null,
+   "got": {
+    "recipient": "Dr. Lisa Müller",
+    "contact": "r@labor-kanalstrasse.example",
+    "patient": "Patient/bb-0161",
+    "doc_type": "lab",
+    "ready": true,
+    "missing": []
+   }
+  },
+  {
+   "id": "test-0286",
+   "lang": "de",
+   "trap": "none",
+   "ref": "renate novak reha waldblick bitte den entlassungsbericht von lukas pichler geboren 29. august 2002 anfordern ihre nummer null sechs sechs null zwo drei eins fünf eins neun zwo",
+   "hyp": "renate novak reha waldblick bitte den entlassungsbericht von lukas pichler geboren 29. august 2002 anfordern ihre nummer null sechs sechs null zwo drei eins fünf eins neun zwo",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 28,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Renate Novak",
+    "contact": "+436602315192",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0156",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.5362999984063208,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436602315192",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0288",
+   "lang": "en",
+   "trap": "none",
+   "ref": "please text renate novak at reha waldblick plus four three six six zero two three one five one nine two and ask for the discharge report on markus koller born february 14 1986",
+   "hyp": "please text renate novak at reha waldblick plus four three six six zero two three one five one nine two and ask for the discharge report on markus koller born february 14 1986",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 33,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Renate Novak",
+    "contact": "+436602315192",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0268",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.5266000045812689,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436602315192",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0290",
+   "lang": "de",
+   "trap": "none",
+   "ref": "äh entlassungsbrief für zoran aigner geboren zehnter vierter neunzehnhundertneunundsechzig von christian aigner klinik am kurpark nummer null sechs neun neun neun fünf drei neun sechs drei sieben",
+   "hyp": "äh entlassungsbrief für zoran aigner geboren zehnter vierter neunzehnhundertneunundsechzig von christian aigner klinik am kurpark nummer null sechs neun neun neun fünf drei neun sechs drei sieben",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 27,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Christian Aigner",
+    "contact": "+436999539637",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0140",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": false,
+    "contact": true,
+    "patient": false,
+    "doc_type": true,
+    "ready": false
+   },
+   "full": false,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 1.748299997416325,
+   "engine_error": null,
+   "got": {
+    "recipient": null,
+    "contact": "+436999539637",
+    "patient": null,
+    "doc_type": "report",
+    "ready": false,
+    "missing": [
+     "recipient_name",
+     "patient"
+    ]
+   }
+  },
+  {
+   "id": "test-0293",
+   "lang": "de",
+   "trap": "other_date",
+   "ref": "Jasmin Winkler Klinik am Kurpark null sechs sieben sechs fünf neun eins null acht null acht bitte Entlassungsbrief von Jürgen Ćosić geboren 20. Jänner 1982 Wiedervorstellung bei uns am 3. Dezember",
+   "hyp": "Jasmin Winkler Klinik am Kurpark null sechs sieben sechs fünf neun eins null acht null acht bitte Entlassungsbrief von Jürgen Ćosić geboren 20. Jänner 1982 Wiedervorstellung bei uns am 3. Dezember",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 31,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Jasmin Winkler",
+    "contact": "+436765910808",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0388",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": true,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 5.624200006423052,
+   "engine_error": null,
+   "got": {
+    "recipient": "Jasmin Winkler",
+    "contact": "+436765910808",
+    "patient": "Patient/bb-0388",
+    "doc_type": "report",
+    "ready": true,
+    "missing": []
+   }
+  },
+  {
+   "id": "test-0298",
+   "lang": "de",
+   "trap": "none",
+   "ref": "Bitte bei Renate Novak von der Reha Waldblick den Entlassungsbericht von Frau Ayşe Horvath geboren 7. Oktober 1946 anfordern Nummer plus vier drei sechs sechs null zwei drei eins fünf eins neun zwei",
+   "hyp": "Bitte bei Renate Novak von der Reha Waldblick den Entlassungsbericht von Frau Ayşe Horvath geboren 7. Oktober 1946 anfordern Nummer plus vier drei sechs sechs null zwei drei eins fünf eins neun zwei",
+   "wer": 0.0,
+   "wer_err": 0,
+   "wer_ref": 33,
+   "asr_ms": 0.0,
+   "audio_s": null,
+   "rtf": null,
+   "gold": {
+    "recipient": "Renate Novak",
+    "contact": "+436602315192",
+    "contact_kind": "sms",
+    "patient_ref": "Patient/bb-0214",
+    "doc_type": "report",
+    "panel": null,
+    "ready": true
+   },
+   "ok": {
+    "recipient": true,
+    "contact": true,
+    "patient": true,
+    "doc_type": true,
+    "ready": true
+   },
+   "full": true,
+   "silent_error": false,
+   "wrong_patient": false,
+   "engine_ms": 8.104900000034831,
+   "engine_error": null,
+   "got": {
+    "recipient": "Renate Novak",
+    "contact": "+436602315192",
+    "patient": "Patient/bb-0214",
+    "doc_type": "report",
+    "ready": true,
+    "missing": []
+   }
+  }
+ ]
+}

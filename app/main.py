@@ -12,7 +12,9 @@ from __future__ import annotations
 
 import asyncio
 import contextlib
+import json
 from contextlib import asynccontextmanager
+from datetime import datetime
 from pathlib import Path
 
 from urllib.parse import urlencode
@@ -21,12 +23,13 @@ from fastapi import FastAPI, File, Form, Request, UploadFile
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
-from app import audit, bot, db, i18n, intake_service, misdelivery, notify, tokens
+from app import audit, bot, dashboard, db, engine_client, i18n, intake_service, misdelivery, notify, tokens
 from app.config import settings
 from app.identity import eid_mock, policy
 from app.security import sign, unsign
 
 templates = Jinja2Templates(directory=str(Path(__file__).resolve().parent / "templates"))
+i18n.install(templates)
 SESSION = "bb_session"
 COOKIE_SECURE = settings.base_url.startswith("https://")
 NEUTRAL = f"{settings.clinic_name} hat eine sichere Dokumentenanfrage an Sie gerichtet."
@@ -43,6 +46,7 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(title="BefundBrücke", lifespan=lifespan)
+app.include_router(dashboard.router)
 
 
 def _tr(request: Request, key: str, **kw) -> str:
@@ -53,8 +57,12 @@ def _page(request: Request, name: str, status: int = 200, **ctx) -> HTMLResponse
     lang, other = i18n.resolve_lang(request), i18n.other_lang(i18n.resolve_lang(request))
     # the toggle keeps only the eID page's `state`; never echo a signed assertion (callback) into a link
     keep = {"state": request.query_params["state"]} if "state" in request.query_params else {}
-    base = {"clinic": settings.clinic_name, "lang": lang, "other_lang": other,
-            "t": lambda key, **kw: i18n.t(key, lang, clinic=settings.clinic_name, **kw),
+
+    def t(key: str, page_lang: str | None = None, **kw) -> str:   # portal: t(key); audit pages: t(key, lang)
+        kw.setdefault("clinic", settings.clinic_name)
+        return i18n.t(key, page_lang or lang, **kw)
+
+    base = {"clinic": settings.clinic_name, "lang": lang, "other_lang": other, "t": t,
             "switch_href": f"{request.url.path}?{urlencode({**keep, 'lang': other})}"}
     resp = templates.TemplateResponse(request, name, {**base, **ctx}, status_code=status)
     if "lang" in request.query_params:
@@ -165,20 +173,66 @@ async def answer_submit(request: Request, raw: str, typed_name: str = Form(...),
         return _invalid(request)
     req = db.get("requests", "id", tok["request_id"])
     if upload is not None and upload.filename:
-        content, filename = (await upload.read()).decode("utf-8", errors="replace"), upload.filename
-        # TODO(SWE 2 + MedEng): PDF upload -> text extraction, or store as attachment + review
+        data, filename, ctype = await upload.read(), upload.filename, upload.content_type
     else:
-        content, filename = text, "formular.md"
-    if not content.strip():
+        data, filename, ctype = text.encode("utf-8"), "formular.md", "text/markdown"
+
+    def form_error(msg: str) -> HTMLResponse:
         return _page(request, "answer.html", 400, raw=raw, req=req, doc_label=_tr(request, f"doc.{req['doc_type']}"),
-                     doctor=settings.doctor_name, sender=sess["name"], error=_tr(request, "portal.err_empty"))
+                     doctor=settings.doctor_name, sender=sess["name"], error=msg)
+    if not data.strip():
+        return form_error(_tr(request, "portal.err_empty"))
+    eng = engine_client.document(data, filename, ctype, json.loads(req.get("panel_loinc") or "[]"),
+                                 datetime.fromisoformat(req["created_at"]), req["doc_type"])
+    if not eng["ok"]:
+        return form_error(_tr(request, "portal.err_unreadable"))
+    if eng["needs_readback"]:          # scan/photo: the sender confirms what we read before anything is processed
+        rb_id = db.new_id()
+        db.insert("readbacks", {"id": rb_id, "request_id": req["id"], "created_at": db.now(), "typed_name": typed_name,
+                                "typed_dob": typed_dob, "filename": filename, "markdown": eng["canonical_markdown"],
+                                "items": eng["readback"],
+                                "engine_json": {k: eng[k] for k in ("path", "models", "flags", "check_lines_de", "input")}})
+        audit.log("readback_shown", req["id"], f"eid:{sess['pseud']} {sess['name']}",
+                  {"items": len(eng["readback"]), "models": eng["models"],
+                   "disagree": sum(1 for i in eng["readback"] if i["agree"] is False)})
+        return _page(request, "readback.html", raw=raw, rb_id=rb_id, items=eng["readback"])
+    return _finish(request, raw, req, sess, typed_name, typed_dob, filename, eng["canonical_markdown"], eng, len(data))
+
+
+def _finish(request: Request, raw: str, req: dict, sess: dict, typed_name: str, typed_dob: str, filename: str,
+            markdown: str, eng: dict, n_bytes: int, corrected: int | None = None) -> HTMLResponse:
     tokens.mark_used(raw)
     actor = f"eid:{sess['pseud']} {sess['name']}"
     db.update("requests", "id", req["id"], status="answered")
-    audit.log("answer_sent", req["id"], actor, {"filename": filename, "bytes": len(content.encode())})
-    out = intake_service.process_answer(req, verified_name=sess["name"], identity_method=sess["method"], actor=actor,
-                                        typed_name=typed_name, typed_dob=typed_dob, filename=filename, content=content)
+    audit.log("answer_sent", req["id"], actor, {"filename": filename, "bytes": n_bytes, "read_by": eng.get("path"),
+                                               "sha256": (eng.get("input") or {}).get("sha256")})
+    method = sess["method"]
+    notes = list(eng.get("check_lines_de") or []) + [f"⚠️ {f}" for f in eng.get("flags") or []]
+    if corrected is not None:
+        method += "; Werte vom Absender per Read-back bestätigt"
+        notes.append(f"Scan/Foto gelesen ({(eng.get('models') or {}).get('ocr_vlm') or 'OCR'}), Werte vom Absender bestätigt"
+                     + (f", {corrected} korrigiert" if corrected else ""))
+    out = intake_service.process_answer(req, verified_name=sess["name"], identity_method=method, actor=actor,
+                                        typed_name=typed_name, typed_dob=typed_dob, filename=filename, content=markdown,
+                                        engine_notes=notes)
     return _page(request, "receipt.html", message=out["sender_message_de"], receipt=out["answer_id"])
+
+
+@app.post("/r/{raw}/readback", response_class=HTMLResponse)
+async def readback_confirm(request: Request, raw: str):
+    tok, sess = tokens.resolve(raw), _session(request, raw)
+    form = await request.form()
+    rb = db.get("readbacks", "id", str(form.get("rb_id", "")))
+    if not tok or not sess or not rb or rb["request_id"] != tok["request_id"]:
+        return _invalid(request)
+    req = db.get("requests", "id", tok["request_id"])
+    items = json.loads(rb["items"])
+    confirmed = {i["key"]: str(form.get(f"v:{i['key']}", i["value"] or "")).strip() for i in items}
+    changed = [i["key"] for i in items if confirmed[i["key"]] != (i["value"] or "")]
+    audit.log("readback_confirmed", req["id"], f"eid:{sess['pseud']} {sess['name']}", {"items": len(items), "changed": changed})
+    markdown = engine_client.apply_readback(rb["markdown"], confirmed)
+    return _finish(request, raw, req, sess, rb["typed_name"], rb["typed_dob"], rb["filename"], markdown,
+                   json.loads(rb["engine_json"]), len(markdown.encode()), corrected=len(changed))
 
 
 @app.get("/sms", response_class=HTMLResponse)
@@ -188,12 +242,31 @@ def sms_inbox(request: Request):
 
 @app.get("/audit", response_class=HTMLResponse)
 def audit_page(request: Request, request_id: str | None = None):
-    # TODO(MedEng): filter UI, coverage per request, chain status badge; protect behind clinic login in prod
-    return _page(request, "audit.html", entries=audit.entries(request_id), chain_ok=audit.verify_chain(),
-                 coverage=audit.coverage(request_id))
+    # clinic-internal: in production this sits behind the clinic login (footer says so)
+    lang = i18n.resolve_lang(request)
+    resp = _page(request, "audit.html", v=audit.view(request_id, lang), lang=lang, other_lang=i18n.other_lang)   # audit templates call other_lang(lang)
+    if request.query_params.get("lang"):
+        i18n.remember(resp, lang)
+    return resp
+
+
+@app.get("/audit/apple", response_class=HTMLResponse)
+def audit_page_apple(request: Request, request_id: str | None = None):
+    # same data and query params as /audit, second look (formal audit record) for side-by-side review
+    lang = i18n.resolve_lang(request)
+    resp = _page(request, "audit_apple.html", v=audit.view(request_id, lang, base="/audit/apple"), lang=lang, other_lang=i18n.other_lang)
+    if request.query_params.get("lang"):
+        i18n.remember(resp, lang)
+    return resp
 
 
 @app.get("/audit.json")
 def audit_json(request_id: str | None = None):
-    return JSONResponse({"chain_ok": audit.verify_chain(), "coverage": audit.coverage(request_id),
-                         "entries": audit.entries(request_id)})
+    v = audit.view(request_id)
+    return JSONResponse({"chain_ok": v["chain_ok"], "coverage": v["coverage"], "entries": audit.entries(request_id),
+                         "first_broken": v["first_broken"], "entry_count": v["entry_count"], "last_hash": v["head"],
+                         "request_id": v["request_id"],
+                         "requests": [{k: r[k] for k in ("id", "status", "patient_ref", "expected_name", "contact",
+                                                         "covered", "misdelivery")} for r in v["requests"]],
+                         "misdelivery": {code: [{"request_id": m["request_id"], "seq": m["seq"]} for m in found]
+                                         for code, found in v["misdelivery"].items()}})

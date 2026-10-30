@@ -38,8 +38,13 @@ class FakeHapi:
         self.task_status: dict[str, str] = {}
 
     def read_patient(self, ref):
-        assert ref == "Patient/maria-beispiel"
-        return {"name": "Maria Beispiel", "dob": "1961-03-12"}
+        assert ref in ("Patient/maria-beispiel", "Patient/maria-1985")
+        return {"name": "Maria Beispiel", "dob": "1961-03-12" if ref == "Patient/maria-beispiel" else "1985-07-02"}
+
+    def search_patients(self, family, birthdate):
+        maria = {"ref": "Patient/maria-beispiel", "name": "Maria Beispiel", "dob": "1961-03-12"}
+        namesake = {"ref": "Patient/maria-1985", "name": "Maria Beispiel", "dob": "1985-07-02"}
+        return [p for p in (maria, namesake) if p["dob"] == birthdate or (family or "").lower() == "beispiel"]
 
     def create_task(self, req):
         ref = f"Task/{len(self.task_status) + 1}"
@@ -60,7 +65,7 @@ class FakeHapi:
 @pytest.fixture
 def hapi(monkeypatch):
     fake = FakeHapi()
-    for name in ("read_patient", "create_task", "set_task_status", "validate", "post_transaction"):
+    for name in ("read_patient", "search_patients", "create_task", "set_task_status", "validate", "post_transaction"):
         monkeypatch.setattr(fhir_client, name, getattr(fake, name))
     return fake
 

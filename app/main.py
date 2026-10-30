@@ -21,7 +21,7 @@ from fastapi import FastAPI, File, Form, Request, UploadFile
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
-from app import audit, bot, db, engine_client, intake_service, misdelivery, notify, tokens
+from app import audit, bot, dashboard, db, engine_client, intake_service, misdelivery, notify, tokens
 from app.config import settings
 from app.identity import eid_mock, policy
 from app.security import sign, unsign
@@ -43,6 +43,7 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(title="BefundBrücke", lifespan=lifespan)
+app.include_router(dashboard.router)
 
 
 def _page(request: Request, name: str, status: int = 200, **ctx) -> HTMLResponse:

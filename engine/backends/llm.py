@@ -23,6 +23,7 @@ class LlmResult:
     model: str
     ms: int
     error: str | None = None
+    cached: bool = False
 
 
 def _schema(fields: dict) -> dict:
@@ -68,7 +69,7 @@ def extract(text: str, fields: dict, instructions: str, max_tokens: int = 600,
     cache = _cache_path(body)
     if cache and cache.exists():          # same model + prompt + input -> same answer (eval reruns, demo safety)
         c = json.loads(cache.read_text(encoding="utf-8"))
-        return LlmResult(c["data"], model, c["ms"])
+        return LlmResult(c["data"], model, c["ms"], cached=True)
     t0 = time.perf_counter()
     try:
         r = httpx.post(f"{url.rstrip('/')}/chat/completions", json=body, timeout=settings.timeout_s)

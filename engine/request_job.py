@@ -38,17 +38,20 @@ _LLM_KEY = {"recipient_name": "recipient_name", "recipient_org": "recipient_orga
             "patient_name": "patient_name", "patient_dob": "patient_birth_date", "panel": "requested_tests",
             "reason": "reason"}
 _DOC = {"lab_result": "lab", "discharge_report": "report"}
-_LAY = re.compile(r"^(?:(?:Frau|Herrn|Herr|Fr\.|Hr\.|Mrs\.?|Mr\.?|Ms\.?|Miss)\s+)+")
 LABELS = {"recipient_name": "Empfänger/in", "contact": "Kontakt (E-Mail oder Handynummer)", "doc_type": "Dokumentart",
           "patient": "Patient/in mit Geburtsdatum"}
 
 
-_SPOKEN_TITLE = [(re.compile(r"\b(?:Doktor(?:in)?|Doctor)\b"), "Dr."), (re.compile(r"\bProfessor(?:in)?\b"), "Prof."),
-                 (re.compile(r"\bMagist(?:er|ra)\b"), "Mag.")]
+_SPOKEN_TITLE = [(re.compile(r"\b(?:Doktor(?:in)?|Doctor)\b", re.I), "Dr."), (re.compile(r"\bProfessor(?:in)?\b", re.I), "Prof."),
+                 (re.compile(r"\bMagist(?:er|ra)\b", re.I), "Mag.")]
+_LAY = re.compile(r"^(?:(?:Frau|Herrn|Herr|Fr\.|Hr\.|Mrs\.?|Mr\.?|Ms\.?|Miss)\s+)+", re.I)
+# where a model's name span runs on into the organisation, the address or the birth date
+_NAME_END = re.compile(r",|;|\(|\s(?:at|vom|von der|von|from|bei|im|in der|geb\.?|geboren|born)\s|\s\S*[@\d]|\s(?:labor|lab|reha|klinik|"
+                       r"zentral|zentrum|praxis|spital|kranken|ordination|institut|hospital|clinic|medizin)", re.I)
 
 
 def clean_name(name: str | None) -> str | None:
-    """'Herrn Stefan Kern' -> 'Stefan Kern', 'Doktor Eva Brandl' -> 'Dr. Eva Brandl' (dictated titles written out,
+    """'Herrn Stefan Kern' -> 'Stefan Kern', 'doktor eva brandl' -> 'Dr. eva brandl' (dictated titles written out,
     lay titles dropped), so the name compares cleanly with the eID name later."""
     if not name:
         return name
@@ -57,23 +60,35 @@ def clean_name(name: str | None) -> str | None:
     return _LAY.sub("", name).strip()
 
 
+def _trim_name(g):
+    """Cut a model's name span where it runs on ('Dr. Eva Eder, Labor am Ring' -> 'Dr. Eva Eder'); still a source slice."""
+    m = _NAME_END.search(g.value)
+    if m and m.start() > 0:
+        g.value = g.value[:m.start()].rstrip()
+        g.end = g.start + len(g.value)
+    return g
+
+
 def _field(value: str, start: int, end: int, source: str, level: str = "exact", **extra) -> dict:
     return {"value": value, "start": start, "end": end, "source": source, "level": level, **extra}
 
 
 def _merge(key: str, hit: rules.Hit | None, llm_value, text: str, flags: list[str], dropped: list[str]) -> dict | None:
+    """Rules first, the model fills gaps (same principle as the document job: exact parser first, model as fallback).
+    On a disagreement the rules' value stays and the model's reading is shown as a flag, never silently swapped in."""
     g = locate(llm_value, text) if isinstance(llm_value, str) and llm_value.strip() else None
     if isinstance(llm_value, str) and llm_value.strip() and g is None:
         dropped.append(key)                       # the model said something that is not in the text
+    if g and key in ("recipient_name", "patient_name"):
+        g = _trim_name(g)
     if hit and g:
-        if hit.start < g.end and g.start < hit.end:   # same place in the text
-            v = hit if len(hit.value) >= len(g.value) else None
-            return _field(v.value, v.start, v.end, "rules+llm") if v else _field(g.value, g.start, g.end, "rules+llm", g.level)
+        if hit.start < g.end and g.start < hit.end:   # same place in the text: keep the rules' tighter span
+            return _field(hit.value, hit.start, hit.end, "rules+llm")
         if key == "contact":
             flags.append("Kontakt uneindeutig: Regel und Modell finden verschiedene Adressen – bitte angeben")
             return None
-        flags.append(f"{LABELS.get(key, key)}: Regel „{hit.value}“ und Modell „{g.value}“ uneinig – Modell übernommen")
-        return _field(g.value, g.start, g.end, "llm", g.level, alt=hit.value)
+        flags.append(f"{LABELS.get(key, key)}: Modell las „{g.value}“ – bitte prüfen")
+        return _field(hit.value, hit.start, hit.end, "rules", alt=g.value)
     if hit:
         return _field(hit.value, hit.start, hit.end, "rules")
     if g:
@@ -170,7 +185,7 @@ def run(text: str, directory: Directory | None = None, use_llm: bool = True, use
         "missing": missing,
         "ready": not missing,
         "ask_de": ask,
-        "models": {"llm": res.model or None, "llm_error": res.error},
+        "models": {"llm": res.model or None, "llm_error": res.error, "llm_cached": res.cached},
         "timings_ms": {"rules": int((t_rules - t0) * 1000), "llm": res.ms, "merge": int((t_merge - t_rules) * 1000) - res.ms,
                        "patient": int((t_patient - t_merge) * 1000), "total": int((time.perf_counter() - t0) * 1000)},
     }

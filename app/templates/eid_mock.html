@@ -1,27 +1,33 @@
 {% extends "base.html" %}
 {% block title %}{{ t('portal.eid_title') }}{% endblock %}
 {% block style %}
-  .sim { background: #fff3cd; border: 2px solid #e0a800; color: #5c4400; padding: .6rem .8rem; border-radius: 10px; font-weight: 600; font-size: .9rem; margin-bottom: .75rem; }
-  .idp-head { background: #c8102e; color: #fff; padding: .9rem 1.25rem; border-radius: 14px 14px 0 0; display: flex; align-items: center; gap: .6rem; }
-  .idp-head b { font-size: 1.25rem; letter-spacing: .01em; }
-  .idp-head small { opacity: .85; }
-  .idp-body { background: #fff; padding: 1.25rem; border-radius: 0 0 14px 14px; box-shadow: 0 1px 3px #0002; }
-  .svc { background: var(--bg); border-radius: 10px; padding: .6rem .8rem; margin: .5rem 0 1rem; }
+  .sim { display: flex; gap: 10px; align-items: flex-start; background: var(--warn-soft); color: var(--warn); padding: 10px 12px;
+         border-radius: var(--r-m); font-weight: 600; font-size: 14.5px; margin-bottom: 12px; }
+  .sim svg { flex: none; width: 18px; height: 18px; margin-top: 2px; }
+  .idp-head { background: #c8102e; color: #fff; padding: 14px 20px; border-radius: var(--r-l) var(--r-l) 0 0; display: flex; align-items: baseline; gap: 8px; }
+  .idp-head b { font-size: 19px; letter-spacing: .005em; }
+  .idp-head small { opacity: .9; font-size: 15px; }
+  .idp-body { background: var(--paper); padding: 20px; border: 1px solid var(--line); border-top: 0; border-radius: 0 0 var(--r-l) var(--r-l); box-shadow: var(--shadow); }
+  .svc { background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--r-m); padding: 10px 12px; margin: 8px 0 14px; }
   .svc b { display: block; }
-  .shares { list-style: none; padding: 0; margin: .3rem 0 1rem; font-size: .95rem; }
-  .shares li { padding: .3rem 0; border-bottom: 1px solid #eee; }
-  .shares li::before { content: "✓ "; color: #2e7d32; }
-  .person { display: flex; align-items: center; gap: .8rem; min-height: 60px; padding: .6rem .8rem; border: 2px solid var(--line);
-            border-radius: 12px; margin: .5rem 0; cursor: pointer; font-weight: 500; }
-  .person:has(input:checked) { border-color: #c8102e; background: #fdf1f3; }
+  details summary { cursor: pointer; color: var(--ink-2); }
+  .shares { list-style: none; padding: 0; margin: 6px 0 14px; font-size: 15px; }
+  .shares li { position: relative; padding: 6px 0 6px 24px; border-bottom: 1px solid var(--line); }
+  .shares li::before { content: ""; position: absolute; left: 5px; top: 10px; width: 5px; height: 10px; border: solid var(--ok);
+                       border-width: 0 2px 2px 0; transform: rotate(45deg); }
+  .person { display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 10px 12px; border: 1.5px solid var(--line-2);
+            border-radius: var(--r-m); margin: 8px 0; cursor: pointer; font-weight: 500;
+            transition: border-color var(--t-fast), background var(--t-fast); }
+  .person:hover { border-color: var(--ink-3); }
+  .person:has(input:checked) { border-color: #c8102e; background: #fdf3f4; }
   .person input { width: 22px; height: 22px; min-height: 0; accent-color: #c8102e; }
-  .person small { display: block; color: var(--muted); font-weight: 400; }
+  .person small { display: block; color: var(--ink-3); font-weight: 400; font-size: 14px; }
   .btn.idp { background: #c8102e; }
   .btn.idp:hover { background: #a00d25; }
 {% endblock %}
 {% block steps %}{% set step = 1 %}{% include "_steps.html" %}{% endblock %}
 {% block body %}
-<div class="sim" role="note">⚠ {{ t('portal.eid_sim') }}</div>
+<div class="sim" role="note"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8 15 14H1z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 6v3.6M8 11.6v.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span>{{ t('portal.eid_sim') }}</span></div>
 <div class="idp-head"><b>ID Austria</b><small>· {{ t('portal.eid_h') }}</small></div>
 <div class="idp-body">
   <p style="margin-top:0">{{ t('portal.eid_sub') }}</p>

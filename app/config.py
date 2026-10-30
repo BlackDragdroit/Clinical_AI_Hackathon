@@ -47,6 +47,7 @@ class Settings:
     llm_api_key: str = _env("LLM_API_KEY", "")                            # empty = no Authorization header
     llm_timeout: float = float(_env("LLM_TIMEOUT", "120"))
 
+    audit_token: str = _env("AUDIT_TOKEN", "")                            # empty = no auth required
     email_channel: str = _env("EMAIL_CHANNEL", "mailpit")                 # mailpit | ftapi
     link_ttl_hours: int = int(_env("LINK_TTL_HOURS", "72"))
     max_identity_attempts: int = int(_env("MAX_IDENTITY_ATTEMPTS", "5"))

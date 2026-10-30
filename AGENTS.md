@@ -78,7 +78,7 @@ Each agent picks its own items (column "Owner"). COORDINATOR updates this table 
 
 | # | Item | Owner | Branch | Status |
 |---|---|---|---|---|
-| P1 | O1 — lab request answered with discharge report auto-filed (should be `review`) | IMPROVE | `improve/doc-type-mismatch` | open |
+| P1 | O1 — lab request answered with discharge report auto-filed (should be `review`) | IMPROVE | `improve/doc-type-mismatch` | ✅ |
 | P2 | O3 — junk/unparseable answer goes to review without a summary shown to Dr. Hofer | IMPROVE | `improve/review-summary` | open |
 | P3 | O6 — 5 failed identity pings flood Matrix (deduplicate to 1 + counter) | IMPROVE | `improve/identity-ping-dedup` | open |
 | P4 | README answer 4 (misdelivery numbers, Biostat TODO) | DOCS | `docs/answer-4` | ✅ |

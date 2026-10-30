@@ -40,6 +40,19 @@ UCUM_MAP = {   # exact key first: "G/l" is Giga per litre (Austrian cell counts)
 }
 
 
+def _slug(text: str) -> str:
+    """Produce a URL-safe slug from a human name or org name for use as a FHIR identifier value."""
+    import re as _re
+    s = text.lower()
+    for src, dst in (("ä", "ae"), ("ö", "oe"), ("ü", "ue"), ("ß", "ss")):
+        s = s.replace(src, dst)
+    # strip titles
+    s = _re.sub(r"\b(dr|mag|prof|ddr)\.", "", s, flags=_re.IGNORECASE)
+    # replace spaces and hyphens with a single hyphen
+    s = _re.sub(r"[\s\-]+", "-", s)
+    return s.strip("-")
+
+
 def urn() -> str:
     return f"urn:uuid:{uuid.uuid4()}"
 
@@ -88,11 +101,19 @@ def human_name(full: str) -> dict:
 
 def practitioner(full_name: str) -> dict:
     name = full_name.split(",")[0].strip()
-    return {"resourceType": "Practitioner", "name": [human_name(name)]}
+    return {
+        "resourceType": "Practitioner",
+        "identifier": [{"system": "urn:befundbruecke:sender", "value": _slug(name)}],
+        "name": [human_name(name)],
+    }
 
 
 def organization(name: str) -> dict:
-    return {"resourceType": "Organization", "name": name}
+    return {
+        "resourceType": "Organization",
+        "identifier": [{"system": "urn:befundbruecke:org", "value": _slug(name)}],
+        "name": name,
+    }
 
 
 def device() -> dict:
@@ -118,8 +139,15 @@ class Built:
 
     def add(self, resource: dict) -> str:
         full = urn()
-        self.entries.append({"fullUrl": full, "resource": resource,
-                             "request": {"method": "POST", "url": resource["resourceType"]}})
+        rt = resource["resourceType"]
+        request: dict = {"method": "POST", "url": rt}
+        if rt == "Practitioner":
+            slug = resource["identifier"][0]["value"]
+            request["ifNoneExist"] = f"identifier=urn:befundbruecke:sender|{slug}"
+        elif rt == "Organization":
+            slug = resource["identifier"][0]["value"]
+            request["ifNoneExist"] = f"identifier=urn:befundbruecke:org|{slug}"
+        self.entries.append({"fullUrl": full, "resource": resource, "request": request})
         return full
 
     def bundle(self) -> dict:

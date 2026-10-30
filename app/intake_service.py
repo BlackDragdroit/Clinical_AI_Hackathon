@@ -21,15 +21,17 @@ def process_answer(req: dict, *, verified_name: str, identity_method: str, actor
     `content` is the engine's canonical Markdown; `engine_notes` (completeness, recency, plausibility) are appended
     to Dr. Hofer's message on file/review, never on a reject (they describe the other patient's document).
     `doc_type_mismatch` comes from engine checks: {"requested": "lab", "received": "report"} (or None)."""
+    _doc = parse_markdown(content)
     res = run_intake(content, Person.from_full(req["patient_name"], req["patient_dob"]),
-                     Person.from_full(typed_name, typed_dob), verified_name, parse_markdown(content).org, identity_method,
+                     Person.from_full(typed_name, typed_dob), verified_name, _doc.org, identity_method,
                      req["patient_ref"], filename)
+    _row_count = len(_doc.rows)
     decision = res.decision
     # Downgrade file -> review when the sender sent the wrong document type (e.g. discharge report instead of lab).
     if decision == "file" and doc_type_mismatch:
         decision = "review"
-    # TODO(MedEng) → see AGENTS.md P1 (doc-type downgrade already done above); possession-only path (auto_file_allowed)
-    # requires a policy change in app/identity/policy.py — owned by FHIR/IMPROVE agents.
+    # Done: see PROGRESS.md — "IMPROVE P1 — doc-type mismatch → review" (improve/doc-type-mismatch, 199 tests pass)
+    # Open: see AGENTS.md P2 — IMPROVE agent (possession-only / auto_file_allowed path requires policy change in app/identity/policy.py)
     answer_id = db.new_id()
     db.insert("answers", {
         "id": answer_id, "request_id": req["id"], "received_at": db.now(), "verified_name": verified_name,
@@ -53,7 +55,9 @@ def process_answer(req: dict, *, verified_name: str, identity_method: str, actor
         db.update("requests", "id", req["id"], status="review")
         audit.log("review_requested", req["id"], SYSTEM, {"answer": answer_id, "match": _scores(res.match),
                                                           "doc_type_mismatch": doc_type_mismatch})
-        notify.doctor(f"{res.doctor_message_de}{notes}{mismatch_note} (Anfrage {req['id']}: !ablegen {req['id']} / !verwerfen {req['id']})", req["id"])
+        _row_note = (f"\n📋 {_row_count} Zeilen geparst – möglicherweise kein gültiges Dokument"
+                     if _row_count == 0 else f"\n📋 {_row_count} Zeilen geparst")
+        notify.doctor(f"{res.doctor_message_de}{notes}{mismatch_note}{_row_note} (Anfrage {req['id']}: !ablegen {req['id']} / !verwerfen {req['id']})", req["id"])
     else:  # reject: quarantine, never file; no data about the other patient in audit or Matrix
         db.update("requests", "id", req["id"], status="rejected")
         if req["task_ref"]:

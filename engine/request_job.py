@@ -35,9 +35,10 @@ INSTRUCTIONS = (
     "document_type: lab_result for lab or blood values, discharge_report for discharge or rehab reports, else other. "
     "requested_tests = the tests or panel asked for (e.g. 'Gerinnung', 'blood count'). reason = why it is needed."
 )
-# The model writes ~5 tokens/s on a laptop CPU, so by default it is asked only for what it measurably adds
-# (held-out 300: recipient +69, patient +58; contact is the cross-check). Document type, tests, reason and
-# organisation come from the rules. ENGINE_LLM_FIELDS=all asks for every field (e.g. on the GPU).
+# ENGINE_LLM_FIELDS=core asks the model only for what it measurably adds (held-out 300: recipient +69, patient +58;
+# contact is the cross-check); document type, tests, reason and organisation then come from the rules alone.
+# On the laptop CPU that is 22 % faster, but on the same 100 held-out requests it scored 84 vs 86 fully correct and
+# 3 vs 2 silent errors (the model more often took the patient or the e-mail for the recipient), so it is opt-in.
 CORE = ("recipient_name", "contact", "patient_name", "patient_birth_date")
 CORE_INSTRUCTIONS = INSTRUCTIONS.split(" document_type:")[0]
 _LLM_KEY = {"recipient_name": "recipient_name", "recipient_org": "recipient_organisation", "contact": "contact",

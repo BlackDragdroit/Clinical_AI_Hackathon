@@ -123,13 +123,14 @@ def test_contact_disagreement_blocks(fake_llm):
     assert r["fields"]["contact"] is None and "contact" in r["missing"]
 
 
-def test_model_is_asked_for_core_fields_unless_all(monkeypatch):
+def test_model_is_asked_for_all_fields_unless_core(monkeypatch):
     asked = []
     monkeypatch.setattr(llm, "extract", lambda text, fields, instr, **kw: asked.append(set(fields)) or llm.LlmResult(None, "m", 1))
-    request_job.run(SPOKEN_1, PATIENTS)
-    monkeypatch.setattr(request_job, "settings", dataclasses.replace(request_job.settings, llm_fields="all"))
-    request_job.run(SPOKEN_1, PATIENTS)
-    assert asked == [set(request_job.CORE), set(request_job.FIELDS)]
+    for setting in ("all", "core"):
+        monkeypatch.setattr(request_job, "settings", dataclasses.replace(request_job.settings, llm_fields=setting))
+        request_job.run(SPOKEN_1, PATIENTS)
+    assert asked == [set(request_job.FIELDS), set(request_job.CORE)]
+    assert type(request_job.settings)().llm_fields == "all"     # the default
 
 
 def test_api_key_is_sent_only_when_set(monkeypatch):

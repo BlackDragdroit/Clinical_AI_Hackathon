@@ -35,3 +35,9 @@ Append after each milestone: what works, what's next, known issues.
 - Works: `engine/` request job (rules + optional model, grounding, patient lookup) and document job (Markdown, PDF text layer, OCR + read-back, checks); plain-German and voice requests in commands/bot; portal accepts PDF and photos with a read-back page. `make test`: 54 passed, 4 xfailed.
 - Next: GPU box (vLLM: NuExtract3, Qwen3-ASR, PaddleOCR-VL), test data (Synthea patients, rendered documents, held-out requests), eval harness with CIs.
 - Known issues: models not yet run for real (no GPU yet); OCR prompts and NuExtract template format unverified.
+
+## Engine slice 2 (Fri 00:00–05:00, AI)
+- Works: test data (Synthea v4.0.0: 442 patients with planted namesakes/near-twins; 600 dev requests; 300 held-out requests written without the engine code; 120 documents rendered as Markdown/PDF/scan/photo), eval harness with exact CIs (eval/RESULTS.md), voice eval on CPU (eval/VOICE.md), real reference data (eval/REAL_DATA.md), GPU runbook (deploy/gpu/RUNBOOK.md).
+- Numbers (held-out 300): rules 69.7 % fully correct; rules + Qwen3-1.7B on CPU (v2) 81.7 %; wrong patient picked 0/300 in every rung; silent errors 5/300. Documents: Markdown and PDF 120/120, 0 wrong values filed, 16/16 wrong-patient documents rejected.
+- Next: NuExtract3 and Ministral 3 rungs (CPU, running), app-side patient lookup when the engine runs remotely, ELGA names into the lexicon, GPU rungs once the A5000 is up.
+- Known issues: dictated lowercase requests are the weak spot of the rules; CPU speech-to-text loses most e-mails/phones (fails safe, one wrong number); OCR not measured without GPU.

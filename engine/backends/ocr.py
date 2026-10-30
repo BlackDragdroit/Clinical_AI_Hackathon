@@ -19,8 +19,12 @@ import httpx
 
 from engine.config import settings
 
-PROMPT = os.environ.get("ENGINE_OCR_PROMPT", "Convert this document page to Markdown. Keep every table as a Markdown "
-                        "table. Copy all characters exactly, including digits, units and umlauts. Do not correct anything.")
+PROMPT = os.environ.get("ENGINE_OCR_PROMPT", "Convert this document page to Markdown. Start with the document's title line "
+                        "as a '# ' heading. Keep every table as a Markdown table. Copy all characters exactly, including "
+                        "digits, units and umlauts. Do not correct anything.")
+# lines the parser reads as fields, never as the title
+_FIELD = re.compile(r"^(patient|patientin|requested|angefordert|sample|probe|abnahme|entnahme|reported|befundet|validated|"
+                    r"validiert|datum|date|geb)\b", re.I)
 
 
 @dataclass
@@ -44,6 +48,20 @@ def _html_tables_to_md(s: str) -> str:
     return re.sub(r"<table.*?</table>", conv, s, flags=re.S | re.I)
 
 
+def _unwrap(s: str) -> str:
+    """A general model answers 'Sure, here is ...' around a ``` block; the document is the block."""
+    m = re.search(r"```[a-z]*\n(.*?)```", s, re.S)
+    s = m.group(1).strip() if m else s
+    # the lab's name comes from the title heading ("# Labor Kanalstraße: lab report"); a model may drop the '#'
+    lines = s.split("\n")
+    first = next((i for i, line in enumerate(lines) if line.strip()), None)
+    if first is not None:
+        line = lines[first].strip()
+        if not line.startswith(("#", "|")) and not _FIELD.match(line):
+            lines[first] = "# " + line
+    return "\n".join(lines)
+
+
 def vlm(png: bytes) -> OcrResult:
     if not settings.ocr_url:
         return OcrResult(None, "", 0, "no OCR model configured")
@@ -53,9 +71,11 @@ def vlm(png: bytes) -> OcrResult:
                 {"type": "image_url", "image_url": {"url": "data:image/png;base64," + base64.b64encode(png).decode()}},
                 {"type": "text", "text": PROMPT}]}]}
     try:
-        r = httpx.post(f"{settings.ocr_url.rstrip('/')}/chat/completions", json=body, timeout=max(settings.timeout_s, 60))
+        headers = {"Authorization": f"Bearer {settings.ocr_api_key}"} if settings.ocr_api_key else {}
+        r = httpx.post(f"{settings.ocr_url.rstrip('/')}/chat/completions", json=body, headers=headers,
+                       timeout=max(settings.timeout_s, 60))
         r.raise_for_status()
-        text = _html_tables_to_md(r.json()["choices"][0]["message"]["content"])
+        text = _html_tables_to_md(_unwrap(r.json()["choices"][0]["message"]["content"]))
         return OcrResult(text, settings.ocr_model, int((time.perf_counter() - t0) * 1000))
     except Exception as e:
         return OcrResult(None, settings.ocr_model, int((time.perf_counter() - t0) * 1000), f"{type(e).__name__}: {e}"[:200])

@@ -21,7 +21,7 @@ case "${1:-}" in
   m3) cmd=$R1; who=eva; doc=$MAX; tn="Max Beispiel"; td=01.01.1960 ;;
   *) sed -n 2,9p "$0"; exit 2 ;;
 esac
-# the card is followed by its ✅ reaction (not a message), so read a few events and take the newest card
+# the card is followed by its "Senden" reaction (not a message), so read a few events and take the newest card
 id=$(N=6 $MX "$cmd" | grep -oE 'Anfrage [a-z0-9]{8}' | tail -1 | cut -d' ' -f2)
 [ -n "$id" ] || { echo "no draft card from the bot (is the stack up? see: docker compose logs app)"; exit 1; }
 N=1 $MX "!senden $id" >/dev/null

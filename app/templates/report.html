@@ -1,0 +1,104 @@
+{%- import "_design.html" as design -%}
+{%- set L = {
+  "de": {"born": "geb.", "request": "Anfrage", "test": "Untersuchung", "value": "Wert", "unit": "Einheit", "ref": "Referenzbereich",
+         "high": "hoch", "low": "niedrig", "origin": "Herkunft und Prüfung", "sender": "Absender", "identity": "Identität",
+         "read": "Gelesen aus", "confirmed": "Werte vom Absender bestätigt", "file": "Datei", "received": "Eingang",
+         "notes": "Hinweise", "fhir": "In der Patientenakte (FHIR)", "lab": "Labor"},
+  "en": {"born": "born", "request": "Request", "test": "Test", "value": "Value", "unit": "Unit", "ref": "Reference range",
+         "high": "high", "low": "low", "origin": "Origin and checks", "sender": "Sender", "identity": "Identity",
+         "read": "Read from", "confirmed": "values confirmed by the sender", "file": "File", "received": "Received",
+         "notes": "Notes", "fhir": "In the patient record (FHIR)", "lab": "Lab"}}[lang] -%}
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light">
+<title>{{ doc }} · {{ patient }}</title>
+{% include "_design.html" %}
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--ground); color: var(--ink); font: 15px/1.5 var(--font); }
+  .shell { display: flex; align-items: center; gap: 10px; max-width: 56rem; margin: 0 auto; padding: 14px 20px; }
+  .shell b { font-size: 15px; } .shell span { color: var(--ink-3); }
+  main { max-width: 56rem; margin: 0 auto 40px; padding: 0 20px; }
+  .sheet { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-l); box-shadow: var(--shadow);
+           padding: 26px 28px; animation: rise 420ms var(--ease) both; }
+  h1 { margin: 0; font-size: 24px; line-height: 1.25; letter-spacing: -.015em; }
+  .sub { margin: 4px 0 0; color: var(--ink-3); font-size: 14px; }
+  .sub code { font: 12.5px var(--mono); }
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: 12px 24px; margin: 22px 0 6px;
+           padding: 14px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .facts div { min-width: 0; }
+  .facts dt { color: var(--ink-3); font-size: 12.5px; }
+  .facts dd { margin: 2px 0 0; font-weight: 600; overflow-wrap: anywhere; }
+  table { width: 100%; border-collapse: collapse; margin: 18px 0 4px; font-variant-numeric: tabular-nums; }
+  th { text-align: left; font-size: 12.5px; font-weight: 600; color: var(--ink-3); padding: 0 10px 8px; border-bottom: 1px solid var(--line-2); }
+  td { padding: 11px 10px; border-bottom: 1px solid var(--line); vertical-align: baseline; }
+  td.v { font-weight: 650; font-size: 16px; white-space: nowrap; }
+  td.v .flag { margin-left: 8px; font-size: 12px; font-weight: 600; color: var(--bad); }
+  tr.out td.v { color: var(--bad); }
+  td.loinc { font: 12.5px var(--mono); color: var(--ink-3); }
+  th.r, td.r { text-align: right; }
+  .text h2, .origin h2 { margin: 26px 0 8px; font-size: 15px; }
+  .text p { margin: 0; white-space: pre-wrap; max-width: 70ch; }
+  .origin dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 18px; margin: 0; font-size: 14px; }
+  .origin dt { color: var(--ink-3); } .origin dd { margin: 0; }
+  .ok { color: var(--ok); font-weight: 600; }
+  .notes { margin: 0; padding-left: 18px; }
+  .fhir { margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--ink-3); }
+  .fhir a { font-family: var(--mono); margin-right: 14px; display: inline-block; }
+  @keyframes rise { from { opacity: 0; transform: translateY(6px); } }
+  @media (max-width: 640px) {
+    .sheet { padding: 18px 16px; } th.ref, td.ref, th.loinc, td.loinc { display: none; }
+  }
+  @media print { body { background: #fff; } .sheet { border: 0; box-shadow: none; padding: 0; } .shell { padding-left: 0; } }
+</style>
+</head>
+<body>
+<header class="shell">{{ design.mark(22) }}<b>IRIS</b><span>{{ clinic }}</span></header>
+<main><article class="sheet">
+  <h1>{{ doc }} · {{ patient }}</h1>
+  <p class="sub">{{ L.born }} {{ dob }} · <code>{{ patient_ref }}</code> · {{ L.request }} <code>{{ request_id }}</code></p>
+
+  <dl class="facts">
+    {% if org %}<div><dt>{{ L.lab if kind == "lab" else L.sender }}</dt><dd>{{ org }}</dd></div>{% endif %}
+    {% for key, value in fields.items() %}<div><dt>{{ key }}</dt><dd>{{ value }}</dd></div>{% endfor %}
+    <div><dt>{{ L.received }}</dt><dd>{{ received }}</dd></div>
+  </dl>
+
+  {% if rows %}
+  <table>
+    <thead><tr><th>{{ L.test }}</th><th class="r">{{ L.value }}</th><th>{{ L.unit }}</th><th class="ref">{{ L.ref }}</th><th class="loinc">LOINC</th></tr></thead>
+    <tbody>
+    {% for r in rows %}
+      <tr{% if r.flag %} class="out"{% endif %}>
+        <td>{{ r.test }}</td>
+        <td class="v r">{{ r.value }}{% if r.flag %}<span class="flag">{{ L[r.flag] }}</span>{% endif %}</td>
+        <td>{{ r.unit }}</td><td class="ref">{{ r.ref }}</td><td class="loinc">{{ r.loinc }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
+  {% for heading, text in sections.items() %}
+  <section class="text"><h2>{{ heading }}</h2><p>{{ text }}</p></section>
+  {% endfor %}
+
+  <section class="origin">
+    <h2>{{ L.origin }}</h2>
+    <dl>
+      <dt>{{ L.sender }}</dt><dd>{{ sender }}</dd>
+      <dt>{{ L.identity }}</dt><dd>{{ method }}</dd>
+      {% if read_by %}<dt>{{ L.read }}</dt><dd>{{ read_by }}{% if read_back %} · <span class="ok">{{ L.confirmed }}</span>{% endif %}</dd>{% endif %}
+      <dt>{{ L.file }}</dt><dd>{{ filename }}</dd>
+      {% if notes %}<dt>{{ L.notes }}</dt><dd><ul class="notes">{% for n in notes %}<li>{{ n }}</li>{% endfor %}</ul></dd>{% endif %}
+    </dl>
+  </section>
+
+  <p class="fhir">{{ L.fhir }}:<br>{% for ref, href in refs %}<a href="{{ href }}">{{ ref }}</a>{% endfor %}</p>
+</article></main>
+</body>
+</html>

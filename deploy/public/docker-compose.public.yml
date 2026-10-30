@@ -1,0 +1,14 @@
+# Remote test from one PC: docker compose -f docker-compose.yml -f deploy/public/docker-compose.public.yml up -d public mailpit app
+# then `ngrok http 8088`; set BASE_URL and HAPI_PUBLIC_URL in .env to the ngrok address (deploy/public/README.md).
+services:
+  public:
+    image: nginx:1.27-alpine
+    volumes:
+      - ./deploy/public/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./deploy/public/element-public.json:/etc/nginx/element-public.json:ro
+      - ./deploy/public/ngrok-fix.js:/etc/nginx/ngrok-fix.js:ro
+    ports: ["8088:80"]
+    depends_on: [element, synapse, app, mailpit, hapi]
+  mailpit:
+    environment:
+      MP_WEBROOT: /mailpit/

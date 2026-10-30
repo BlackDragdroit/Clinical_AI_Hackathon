@@ -34,7 +34,8 @@ CREATE TABLE IF NOT EXISTS requests (
     task_ref TEXT,                       -- Task/123 on HAPI
     lint_warnings TEXT NOT NULL DEFAULT '[]',
     panel_loinc TEXT NOT NULL DEFAULT '[]',  -- tests the request expects (engine), for the completeness check
-    source TEXT NOT NULL DEFAULT 'command'   -- command | text | voice
+    source TEXT NOT NULL DEFAULT 'command',  -- command | text | voice
+    lang TEXT NOT NULL DEFAULT 'de'          -- de | en: the language of the doctor's request; the bot answers in it
 );
 CREATE TABLE IF NOT EXISTS tokens (
     token_hash TEXT PRIMARY KEY,         -- sha256 of the raw link token; the raw token is never stored
@@ -102,7 +103,7 @@ CREATE TABLE IF NOT EXISTS matrix_cards (
 );
 CREATE TABLE IF NOT EXISTS matrix_actions (
     event_id TEXT NOT NULL,              -- a bot message that offers buttons (app/reactions.py)
-    key TEXT NOT NULL,                   -- ✅ | ❌
+    key TEXT NOT NULL,                   -- Senden | Ablegen | Verwerfen (older rows: ✅ | ❌)
     command TEXT NOT NULL,               -- e.g. !ablegen ab12cd34
     used_at TEXT,                        -- set on the first authorised tap; the message's buttons are then spent
     PRIMARY KEY (event_id, key)
@@ -135,7 +136,8 @@ def conn() -> Iterator[sqlite3.Connection]:
         con.close()
 
 
-MIGRATIONS = {"requests": {"panel_loinc": "TEXT NOT NULL DEFAULT '[]'", "source": "TEXT NOT NULL DEFAULT 'command'"}}
+MIGRATIONS = {"requests": {"panel_loinc": "TEXT NOT NULL DEFAULT '[]'", "source": "TEXT NOT NULL DEFAULT 'command'",
+                            "lang": "TEXT NOT NULL DEFAULT 'de'"}}
 
 
 def init_db() -> None:

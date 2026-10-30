@@ -86,8 +86,15 @@ def _error(e: Exception) -> str:
     return f"Befehl nicht ausgeführt: {type(e).__name__}\n{e}"
 
 
+# what is still missing, for a request written or spoken in English (the engine's own question is German)
+MISSING_EN = {"recipient_name": "the recipient", "contact": "the contact (email or mobile number)", "doc_type": "the document type",
+              "patient": "the patient with date of birth"}
+
+
 def from_engine(res: dict, sender: str, source: str) -> str:
-    """Engine result (plain text or voice) -> draft card, or a question back. Never sends anything."""
+    """Engine result (plain text or voice) -> draft card, or a question back, in the language the doctor used.
+    Never sends anything."""
+    en = (res.get("input") or {}).get("language") == "en"
     asr = res.get("asr") or {}
     meta = {"input": source, "engine": res.get("version"), "llm": (res.get("models") or {}).get("llm"),
             "asr": asr.get("model"), "audio_sha256": asr.get("audio_sha256"), "ready": bool(res.get("ready")),
@@ -95,20 +102,32 @@ def from_engine(res: dict, sender: str, source: str) -> str:
     heard = (res.get("input") or {}).get("normalized") or asr.get("text") or ""
     flags = [f"⚠️ {f}" for f in res.get("flags", [])]
     if source == "voice" and res.get("contact"):     # speech-to-text gets addresses/numbers wrong (eval/VOICE.md)
-        flags.append("⚠️ Kontakt aus Sprachnachricht erkannt: bitte Adresse/Nummer vor dem Senden Zeichen für Zeichen prüfen")
+        flags.append("⚠️ Contact taken from a voice message: check the address or number character by character before sending"
+                     if en else "⚠️ Kontakt aus Sprachnachricht erkannt: bitte Adresse/Nummer vor dem Senden Zeichen für Zeichen prüfen")
     patient = res.get("patient") or {}
     if not res.get("ready"):
         audit.log("request_parsed", None, sender, meta)
-        lines = ["Anfrage noch nicht vollständig", f"Verstanden: „{heard}“", res.get("ask_de") or "Bitte genauer angeben."]
+        if {"recipient_name", "contact", "patient"} <= set(res.get("missing", [])):
+            from app import status_message   # a question ("Wo ist der Befund?"), not a request: show where things are
+            return status_message.recent(en)
+        if en:
+            ask = [MISSING_EN.get(k, k) for k in res.get("missing", [])]
+            lines = ["Request not complete yet", f"Understood: “{heard}”",
+                     f"Please add {', '.join(ask)}." if ask else "Please be more specific."]
+        else:
+            lines = ["Anfrage noch nicht vollständig", f"Verstanden: „{heard}“", res.get("ask_de") or "Bitte genauer angeben."]
         if patient.get("status") == "ambiguous":
-            lines += [f"• {c['ref']}: {c['name']}, geb. {_dob(c['dob'])}" for c in patient.get("candidates", [])[:3]]
+            lines += [f"• {c['ref']}: {c['name']}, {'born' if en else 'geb.'} {_dob(c['dob'])}"
+                      for c in patient.get("candidates", [])[:3]]
         return "\n".join(lines + flags)
     req = requests_service.draft(doc_kind=res["doc_type"], expected_name=res["recipient"], contact=res["contact"]["value"],
                                  patient_ref=patient["ref"], reason=res.get("reason") or "",
-                                 panel_loinc=(res.get("panel") or {}).get("loinc", []), source=source)
+                                 panel_loinc=(res.get("panel") or {}).get("loinc", []), source=source,
+                                 lang="en" if en else "de")
     audit.log("request_parsed", req["id"], sender, meta)
     card = draft_card(req).split("\n")
-    return "\n".join(card[:-1] + flags + [f"Verstanden aus: „{heard}“", card[-1]])
+    understood = f"Understood from: “{heard}”" if en else f"Verstanden aus: „{heard}“"
+    return "\n".join(card[:-1] + flags + [understood, card[-1]])
 
 
 def handle(text: str, sender: str) -> str:

@@ -1,18 +1,37 @@
 """Matrix bot (matrix-nio): relays Dr. Hofer's commands to commands.handle, keeps one card per request up to
-date with a one-line ping only where she has to look (app/status_message.py), turns ✅/❌ reactions into
-commands (app/reactions.py) and drains the outbox. Owner: SWE 1.
+date with a one-line ping only where she has to look (app/status_message.py), turns reactions ("Senden",
+"Ablegen", "Verwerfen") into commands (app/reactions.py) and drains the outbox. Owner: SWE 1.
 
 With MATRIX_ENABLED=0 only the console printer runs, so everything else works without Synapse.
 """
 from __future__ import annotations
 
 import asyncio
+import io
 import logging
 
-from app import commands, db, engine_client, matrix_format, notify, reactions, status_message
+from app import chat_icons, commands, db, engine_client, matrix_format, notify, reactions, status_message
 from app.config import settings
 
 log = logging.getLogger("befundbruecke.bot")
+
+
+async def upload_chat_images(client) -> None:
+    """Draw the chat icons and bridge images once and upload them; from then on the bot's HTML shows them instead of
+    emoji and dots (app/matrix_format.py). If an upload fails, messages keep their plain text."""
+    async def up(data: bytes, name: str) -> str | None:
+        resp, _ = await client.upload(io.BytesIO(data), content_type="image/png", filename=name, filesize=len(data))
+        return getattr(resp, "content_uri", None)
+    try:
+        icons = {n: await up(chat_icons.icon(n), f"{n}.png") for n in chat_icons.ICON_NAMES}
+        bridges = {(k, t): await up(chat_icons.bridge(k, t), f"bridge-{k}-{t}.png")
+                   for k in range(6) for t in chat_icons.TONES}
+    except Exception:
+        log.exception("chat images not uploaded")
+        return
+    if all(icons.values()) and all(bridges.values()):
+        matrix_format.BRIDGES.update(bridges)
+        matrix_format.ICONS.update(icons)
 
 
 async def console_printer() -> None:
@@ -30,6 +49,8 @@ async def run_bot() -> None:
     resp = await client.login(settings.matrix_bot_password)
     log.info("matrix login: %s", resp)
     await client.join(settings.matrix_room_id)
+    if settings.chat_images:
+        await upload_chat_images(client)
     first = await client.sync(timeout=3000, full_state=True)   # skip history: only react to new messages
     since = first.next_batch
     started = db.now()
@@ -45,7 +66,7 @@ async def run_bot() -> None:
         if not event_id:
             return None
         keys = reactions.offer(event_id, buttons) if buttons is not None else reactions.register(event_id, text)
-        for key in keys:                                   # ✅ / ❌ under the message, tapped like a button
+        for key in keys:                                   # word pills under the message, tapped like a button
             await client.room_send(settings.matrix_room_id, "m.reaction",
                                    {"m.relates_to": {"rel_type": "m.annotation", "event_id": event_id, "key": key}})
         return event_id
@@ -53,7 +74,7 @@ async def run_bot() -> None:
     async def answer(command: str, reply: str) -> None:
         if rid := status_message.drafted(reply):        # the draft becomes the request's card
             text = await asyncio.to_thread(status_message.card_text, rid, reply)
-            if event_id := await say(text, {"✅": f"!senden {rid}"}):
+            if event_id := await say(text, {reactions.SENDEN: f"!senden {rid}"}):
                 status_message.saved(rid, event_id, text)
         elif status_message.is_ack(command, reply):      # acks are not posted: the card shows the change
             reactions.spend(command)                      # typed or tapped: its buttons are used up either way
@@ -106,7 +127,7 @@ async def run_bot() -> None:
                 if sent_id:
                     status_message.saved(request_id, event_id or sent_id, text)
             for request_id, text, buttons, seq in await asyncio.to_thread(status_message.pings):
-                if await say(text, buttons, status_message.card_event(request_id)):
+                if await say(text, buttons):            # a short line of its own, no quoted card above it
                     status_message.pinged(request_id, seq)
             await asyncio.sleep(1)
 

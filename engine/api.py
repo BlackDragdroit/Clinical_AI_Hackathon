@@ -23,7 +23,7 @@ from engine.backends import asr
 from engine.config import settings
 from engine.patients import HapiDirectory
 
-app = FastAPI(title="BefundBrücke engine", version=request_job.VERSION)
+app = FastAPI(title="IRIS engine", version=request_job.VERSION)
 _directory = HapiDirectory(settings.hapi_url) if settings.hapi_url else None
 
 

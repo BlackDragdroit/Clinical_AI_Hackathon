@@ -39,7 +39,7 @@ def test_draft_card_has_what_to_check_and_one_action(hapi, outbox):
     lines = status_message.card_text(rid).split("\n")
     assert lines == ["Laborbefund · Maria Beispiel, geb. 12.03.1961",
                      "an Dr. Eva Brandl · eva.brandl@labor-kanal.example",
-                     f"✅ tippen zum Senden · Anfrage {rid}"]
+                     f"„Senden“ tippen · Anfrage {rid}"]
 
 
 def test_draft_card_keeps_the_replys_warnings_and_is_not_rerendered(hapi, outbox):
@@ -67,7 +67,8 @@ def test_card_is_edited_through_to_filed(hapi, outbox):
     assert event_id == "$card" and lines[0] == "Laborbefund · Maria Beispiel" and lines[1] == "an Dr. Eva Brandl · E-Mail"
     assert re.match(r"●●●●●  Abgelegt · \d\d:\d\d$", lines[2])
     assert lines[3] == "INR (prothrombin time): 1.0 · aPTT: 31 s · Platelets: 245 10^9/L · Fibrinogen: 3.1 g/L"
-    assert re.match(rf"\[Befund öffnen\]\({re.escape(settings.hapi_public_url)}/DiagnosticReport/\d+\)$", lines[4])
+    # the readable report page (app/report.py), signed for this request; the FHIR resources are linked from there
+    assert re.match(rf"\[Befund öffnen\]\({re.escape(settings.base_url)}/befund/{rid}\?k=[\w.-]+\)$", lines[4])
 
 
 def test_report_card_shows_only_the_link(hapi, outbox):
@@ -79,7 +80,7 @@ def test_report_card_shows_only_the_link(hapi, outbox):
         _answer(client, link_path(re.search(r"https?://\S+", sms["body"]).group(0)), "stefan", "rehab-report-maria-beispiel.md")
     lines = status_message.card_text(rid).split("\n")
     assert re.match(r"●●●●●  Abgelegt", lines[2]) and len(lines) == 4
-    assert lines[3].startswith("[Befund öffnen](") and "DocumentReference/" in lines[3]
+    assert lines[3].startswith(f"[Befund öffnen]({settings.base_url}/befund/")
 
 
 def test_request_sent_outside_matrix_gets_a_card_only_after_bot_start(hapi, outbox):
@@ -115,7 +116,8 @@ def test_filed_pings_once(hapi, outbox):
     assert _pings() == []                                             # sending and opening need no ping
     _flow(outbox)
     [(req, text, buttons, seq)] = status_message.pings()
-    assert (req, text, buttons) == (rid, "✅ Laborbefund · Maria Beispiel ist da.", {})
+    assert (req, buttons) == (rid, {}) and text.startswith("✅ Laborbefund · Maria Beispiel ist da: INR (prothrombin time): 1.0")
+    assert "[Befund öffnen](" in text                                 # the values and where to open them
     status_message.pinged(rid, seq)
     assert _pings() == []
 
@@ -146,7 +148,7 @@ def test_review_pings_with_buttons_and_no_done_ping_after_own_decision(hapi, out
     _flow(outbox, typed=("Maria Beispiel", "13.03.1961"))
     [(_, text, buttons, seq)] = status_message.pings()
     assert text == "🔍 Laborbefund · Maria Beispiel: Zuordnung unsicher. Ablegen oder verwerfen?"
-    assert buttons == {"✅": f"!ablegen {rid}", "❌": f"!verwerfen {rid}"}
+    assert buttons == {"Ablegen": f"!ablegen {rid}", "Verwerfen": f"!verwerfen {rid}"}
     status_message.pinged(rid, seq)
     commands.handle(f"!ablegen {rid}", DOCTOR)
     assert _pings() == []                                             # she tapped it: no "ist da"
@@ -170,5 +172,39 @@ def test_ping_is_a_reply_to_its_card_and_shows_the_decision(hapi, outbox):
     assert status_message.decided(f"!senden {rid}") == []
     [(event_id, text)] = status_message.decided(f"!ablegen {rid}")
     assert event_id == "$ping"
-    assert re.fullmatch(r"🔍 Laborbefund · Maria Beispiel: Zuordnung unsicher → ✅ abgelegt · \d\d:\d\d", text)
+    assert re.fullmatch(r"🔍 Laborbefund · Maria Beispiel: Zuordnung unsicher → abgelegt · \d\d:\d\d", text)
     assert "→ verworfen ·" in status_message.decided(f"!verwerfen {rid}")[0][1]
+
+
+def test_english_request_gets_an_english_card_and_pings(hapi, outbox):
+    """A request written in English: card, status and pings in English; the button word stays the same."""
+    from app import requests_service
+    req = requests_service.draft(doc_kind="labor", expected_name="Dr. Eva Brandl", contact="eva.brandl@labor-kanal.example",
+                                 patient_ref="Patient/maria-beispiel", reason="", source="text", lang="en")
+    draft = status_message.card_text(req["id"])
+    assert draft.startswith("Lab result · Maria Beispiel, born 12.03.1961") and "\nto Dr. Eva Brandl · " in draft
+    assert draft.endswith(f"Tap „{reactions.SENDEN}“ · Request {req['id']}")
+    status_message.saved(req["id"], "$card", draft)
+    commands.handle(f"!senden {req['id']}", DOCTOR)
+    sent = status_message.card_text(req["id"])
+    assert "Sent – waiting for the link to be opened" in sent and "\nto Dr. Eva Brandl · email" in sent
+    _flow(outbox)
+    pings = [p[1] for p in status_message.pings() if p[0] == req["id"]]
+    assert len(pings) == 1 and pings[0].startswith("✅ Lab result · Maria Beispiel has arrived: INR") and "[Open result](" in pings[0]
+    html = matrix_format.to_html(status_message.card_text(req["id"]))
+    assert '<font color="#17693f">Filed · ' in html and "Open result" in html
+
+
+def test_a_question_is_answered_with_the_latest_results(hapi, outbox):
+    """'Wo ist der Befund?' has no recipient, contact or patient: no 'incomplete request', but where things are."""
+    rid = _carded()
+    commands.handle(f"!senden {rid}", DOCTOR)
+    _flow(outbox)
+    question = {"ready": False, "missing": ["recipient_name", "contact", "patient"],
+                "input": {"normalized": "Wo ist der Befund?", "language": "de"}}
+    reply = commands.from_engine(question, DOCTOR, "text")
+    assert reply.startswith("Keine neue Anfrage erkannt. Zuletzt:")
+    assert "Laborbefund · Maria Beispiel – Abgelegt" in reply and "INR (prothrombin time): 1.0" in reply and "[Befund öffnen](" in reply
+    question["input"]["language"] = "en"
+    assert commands.from_engine(question, DOCTOR, "text").startswith("No new request recognised. Latest:\nLab result · Maria Beispiel – Filed")
+

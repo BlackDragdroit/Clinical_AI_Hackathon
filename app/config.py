@@ -39,6 +39,7 @@ class Settings:
     matrix_bot_user: str = _env("MATRIX_BOT_USER", "@befundbruecke:klinikum.example")
     matrix_bot_password: str = _env("MATRIX_BOT_PASSWORD", "")
     matrix_room_id: str = _env("MATRIX_ROOM_ID", "")
+    chat_images: bool = _env("CHAT_IMAGES", "0") == "1"   # drawn icons/bridges inline; needs unauthenticated media
 
     llm_provider: str = _env("LLM_PROVIDER", "openai_compatible")         # vLLM/Ollama behind an OpenAI-style API
     llm_base_url: str = _env("LLM_BASE_URL", "http://localhost:8001/v1")  # SSH tunnel to the GPU instance

@@ -52,9 +52,63 @@ def _headline(line: str) -> str:
     return f"<strong>{_inline(line)}</strong>"
 
 
+# What Element shows is minimal and has no emoji: lines shrink to what Dr. Hofer needs, a leading emoji and the ●○
+# dots give way to the status colour. With CHAT_IMAGES=1 the bot uploads app/chat_icons.py's drawn icons and bridge
+# images and fills these maps; that needs a homeserver serving inline media without a login (Synapse's
+# enable_authenticated_media: false), because an <img> in message HTML cannot send one. The plain body is unchanged.
+ICONS: dict[str, str] = {}                  # icon name -> mxc URI
+BRIDGES: dict[tuple[int, str], str] = {}    # (stations done, tone) -> mxc URI
+_EMOJI = {"✅": "check", "⛔": "x", "⚠️": "warn", "🔍": "search", "🔒": "lock"}
+_DOTS = re.compile(r"^([●○]{5})\s+(.*?)(?: – .*?)?((?: · \d\d:\d\d)?)$")
+_GREY = "#5d6b76"
+_COLOR = {"check": "#17693f", "x": "#b0241c", "warn": "#9a6200", "search": "#1f5f8b", "lock": "#b0241c",
+          "ok": "#17693f", "bad": "#b0241c", "accent": "#1f5f8b"}   # icon names and tones share "warn"
+
+
+def _tone(phase: str) -> str:
+    if phase.startswith(("Nicht abgelegt", "Falsche Person", "Gesperrt", "Verworfen",
+                         "Not filed", "Wrong person", "Blocked", "Discarded")):
+        return "bad"
+    if phase.startswith(("Abgelegt", "Filed")):
+        return "ok"
+    return "warn" if "prüf" in phase or "review" in phase else "accent"
+
+
+def _compact(line: str) -> str:
+    """Only what Dr. Hofer needs: a status line up to its first clause, an alert up to its first sentence."""
+    if m := _DOTS.match(line):
+        return f"{m.group(1)} {m.group(2)}{m.group(3)}"
+    if line.startswith(tuple(_EMOJI)) and ". " in line:
+        cut = line.index(". ") + 1
+        links = [m.group(0).rstrip(".,;") for m in _URL.finditer(line[cut:])]   # links always stay
+        return " ".join([line[:cut]] + links)
+    return line
+
+
+def _img(uri: str, alt: str) -> str:
+    return f'<img src="{uri}" alt="{html.escape(alt)}" title="{html.escape(alt)}" height="18" data-mx-emoticon>'
+
+
+def _rich(line_html: str, plain: str) -> str:
+    for emoji, name in _EMOJI.items():
+        for lead in ("", "<strong>"):
+            if line_html.startswith(lead + emoji):
+                rest = line_html[len(lead + emoji):].lstrip()
+                line_html = (lead + _img(ICONS[name], name) + " " + rest if name in ICONS
+                             else f'<font color="{_COLOR[name]}">{lead}{rest}</font>')
+    if m := _DOTS.match(plain):
+        key = (m.group(1).count("●"), _tone(m.group(2)))
+        line_html = (line_html.replace(m.group(1), _img(BRIDGES[key], f"{key[0]}/5"), 1) if key in BRIDGES
+                     else f'<font color="{_COLOR[key[1]]}">{line_html.replace(m.group(1), "", 1).lstrip()}</font>')
+    if plain.startswith(("Verstanden aus", "Understood from")):
+        line_html = f'<font color="{_GREY}">{line_html}</font>'
+    return line_html
+
+
 def to_html(text: str) -> str:
-    lines = text.strip().split("\n")
-    return "<br>".join([_headline(lines[0])] + [_inline(l) for l in lines[1:]])
+    lines = [_compact(l) for l in text.strip().split("\n")]
+    out = [_headline(lines[0])] + [_inline(l) for l in lines[1:]]
+    return "<br>".join(_rich(h, p) for h, p in zip(out, lines))
 
 
 def content(text: str, reply_to: str | None = None) -> dict:

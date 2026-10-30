@@ -26,6 +26,9 @@ up: env          ## whole stack: synapse+users+room, hapi seeded, mailpit, eleme
 	@echo "Element  http://localhost:8080  (lena.hofer / see .env)"
 	@echo "Mailpit  http://localhost:8025   SMS http://localhost:8000/sms   Audit http://localhost:8000/audit"
 
+public:          ## share the running stack through one public address: make public URL=https://<tunnel> (URL=--off to undo)
+	./scripts/public_up.sh $(URL)
+
 down:            ## stop the stack (keeps volumes)
 	docker compose down
 
@@ -66,4 +69,4 @@ engine-data:     ## build the engine test sets (patients, requests, documents) u
 engine-eval:     ## run the engine on the test sets -> eval/RESULTS.md (CIs, model ladder)
 	$(RUN) python -m eval.run_eval
 
-.PHONY: help env install test dev up down reset logs seed validate metrics jury-eval engine gpu-up gpu-smoke engine-data engine-eval
+.PHONY: help env install test dev up public down reset logs seed validate metrics jury-eval engine gpu-up gpu-smoke engine-data engine-eval

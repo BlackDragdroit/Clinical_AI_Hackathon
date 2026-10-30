@@ -1,4 +1,4 @@
-# Stack for BefundBrücke. Owner: SWE 1. Start with `make up` (runs setup scripts in the right order).
+# Stack for IRIS. Owner: SWE 1. Start with `make up` (runs setup scripts in the right order).
 services:
   synapse:
     image: matrixdotorg/synapse:v1.120.0
@@ -13,6 +13,8 @@ services:
     image: vectorim/element-web:v1.11.85
     volumes:
       - ./element/config.json:/app/config.json:ro
+      - ./element/iris-logo.png:/app/iris-logo.png:ro
+      - ./element/welcome.html:/app/welcome.html:ro
     ports: ["8080:80"]
 
   hapi:

@@ -59,8 +59,11 @@ def text(req: dict, card: dict, checks: list[str] | None = None) -> str:
         return "\n".join(lines + [f"✅ tippen zum Senden · Anfrage {req['id']}"])
     dots = "".join("●" if s["state"] == "done" else "○" for s in card["steps"])
     last = max((s["ts"] for s in card["steps"] if s["ts"]), default=None)
+    phase = PHASE.get(req["status"], req["status"])
+    if req["status"] == "review" and not any(e["event"] == "review_requested" for e in audit.entries(req["id"])):
+        phase = f"Nicht abgelegt – FHIR-Prüfung fehlgeschlagen · erneut prüfen: !ablegen {req['id']}"
     lines = [head, f"an {req['expected_name']} · {VIA.get(req['contact_kind'], req['contact_kind'])}",
-             f"{dots}  {PHASE.get(req['status'], req['status'])}" + (f" · {_time(last)}" if last else "")]
+             f"{dots}  {phase}" + (f" · {_time(last)}" if last else "")]
     if req["status"] == "filed":
         lines += _result(req)
     return "\n".join(lines + [f"⚠️ {a}" for a in card["alerts"]])

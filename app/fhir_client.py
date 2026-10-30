@@ -10,8 +10,11 @@ from app.config import settings
 FHIR_JSON = {"Content-Type": "application/fhir+json", "Accept": "application/fhir+json"}
 
 
-def _client() -> httpx.Client:
-    return httpx.Client(base_url=settings.hapi_url, headers=FHIR_JSON, timeout=20)
+VALIDATE_TIMEOUT_S = 90        # a fresh HAPI loads its validator on the first $validate (observed > 20 s)
+
+
+def _client(timeout: float = 20) -> httpx.Client:
+    return httpx.Client(base_url=settings.hapi_url, headers=FHIR_JSON, timeout=timeout)
 
 
 def read_patient(patient_ref: str) -> dict:
@@ -104,9 +107,15 @@ def validate_resource(resource: dict) -> list[dict]:
 
 def validate(bundle: dict) -> list[dict]:
     """HAPI $validate on the bundle. Returns OperationOutcome issues with severity error/fatal.
-    The official HL7 validator (scripts/validate_all.sh) is the number we report; this is the fast gate."""
-    with _client() as c:
-        r = c.post("Bundle/$validate", json=bundle)
+    The official HL7 validator (scripts/validate_all.sh) is the number we report; this is the fast gate.
+    If HAPI does not answer in time the bundle counts as not validated (an error issue), so nothing unvalidated
+    is filed and the answer goes to review instead of failing the upload."""
+    try:
+        with _client(VALIDATE_TIMEOUT_S) as c:
+            r = c.post("Bundle/$validate", json=bundle)
+    except httpx.TimeoutException:
+        return [{"severity": "error", "code": "timeout",
+                 "diagnostics": f"HAPI $validate hat nicht innerhalb von {VALIDATE_TIMEOUT_S} s geantwortet"}]
     oo = r.json()
     return [i for i in oo.get("issue", []) if i.get("severity") in ("error", "fatal")]
 

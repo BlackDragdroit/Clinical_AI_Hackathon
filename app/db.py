@@ -12,7 +12,7 @@ import json
 import sqlite3
 import uuid
 from contextlib import contextmanager
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterator
 
@@ -171,3 +171,19 @@ def get(table: str, key: str, key_value: Any) -> dict | None:
 def query(sql: str, params: tuple = ()) -> list[dict]:
     with conn() as c:
         return [dict(r) for r in c.execute(sql, params).fetchall()]
+
+
+def purge(quarantine_days: int, token_days: int) -> dict:
+    """Delete expired quarantine answers and spent/expired tokens older than the retention window."""
+    answer_cutoff = (datetime.now(timezone.utc) - timedelta(days=quarantine_days)).isoformat(timespec="seconds")
+    token_cutoff = (datetime.now(timezone.utc) - timedelta(days=token_days)).isoformat(timespec="seconds")
+    with conn() as c:
+        cur_a = c.execute(
+            "DELETE FROM answers WHERE decision = 'reject' AND received_at < ?",
+            (answer_cutoff,),
+        )
+        cur_t = c.execute(
+            "DELETE FROM tokens WHERE (used_at IS NOT NULL OR expires_at < ?) AND created_at < ?",
+            (datetime.now(timezone.utc).isoformat(timespec="seconds"), token_cutoff),
+        )
+    return {"purged_answers": cur_a.rowcount, "purged_tokens": cur_t.rowcount}

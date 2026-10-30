@@ -8,7 +8,7 @@ from __future__ import annotations
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 
-from app import audit, i18n
+from app import audit, db, i18n
 from app.config import settings
 
 router = APIRouter()
@@ -54,6 +54,12 @@ def audit_page_apple(request: Request, request_id: str | None = None):
     if request.query_params.get("lang"):
         i18n.remember(resp, lang)
     return resp
+
+
+@router.post("/admin/purge")
+def admin_purge():
+    result = db.purge(settings.quarantine_ttl_days, settings.token_ttl_days)
+    return {**result, "ttl_days": {"quarantine": settings.quarantine_ttl_days, "token": settings.token_ttl_days}}
 
 
 @router.get("/audit.json")

@@ -51,6 +51,8 @@ class Settings:
     email_channel: str = _env("EMAIL_CHANNEL", "mailpit")                 # mailpit | ftapi
     link_ttl_hours: int = int(_env("LINK_TTL_HOURS", "72"))
     max_identity_attempts: int = int(_env("MAX_IDENTITY_ATTEMPTS", "5"))
+    quarantine_ttl_days: int = int(_env("QUARANTINE_TTL_DAYS", "30"))
+    token_ttl_days: int = int(_env("TOKEN_TTL_DAYS", "90"))
     known_domains: tuple[str, ...] = field(default_factory=lambda: tuple(
         d.strip() for d in _env("KNOWN_DOMAINS", "labor-kanal.example,reha-waldblick.example").split(",") if d.strip()))
 

@@ -52,9 +52,57 @@ def _headline(line: str) -> str:
     return f"<strong>{_inline(line)}</strong>"
 
 
+# Set by the bot once it has uploaded app/chat_icons.py's images: emoji become drawn icons, the ●○ dots the bridge,
+# and lines shrink to what Dr. Hofer needs. Empty (CLI, tests): the plain text is shown as before.
+ICONS: dict[str, str] = {}                  # icon name -> mxc URI
+BRIDGES: dict[tuple[int, str], str] = {}    # (stations done, tone) -> mxc URI
+_EMOJI = {"✅": "check", "⛔": "x", "⚠️": "warn", "🔍": "search", "🔒": "lock"}
+_DOTS = re.compile(r"^([●○]{5})\s+(.*?)(?: – .*?)?((?: · \d\d:\d\d)?)$")
+_GREY = "#5d6b76"
+
+
+def _tone(phase: str) -> str:
+    if phase.startswith(("Nicht abgelegt", "Falsche Person", "Gesperrt", "Verworfen")):
+        return "bad"
+    if phase.startswith("Abgelegt"):
+        return "ok"
+    return "warn" if "prüf" in phase else "accent"
+
+
+def _compact(line: str) -> str:
+    """Only what Dr. Hofer needs: a status line up to its first clause, an alert up to its first sentence."""
+    if m := _DOTS.match(line):
+        return f"{m.group(1)} {m.group(2)}{m.group(3)}"
+    if line.startswith(tuple(_EMOJI)) and ". " in line:
+        return line[:line.index(". ") + 1]
+    return line
+
+
+def _img(uri: str, alt: str) -> str:
+    return f'<img src="{uri}" alt="{html.escape(alt)}" title="{html.escape(alt)}" height="18" data-mx-emoticon>'
+
+
+def _rich(line_html: str, plain: str) -> str:
+    for emoji, name in _EMOJI.items():
+        if name in ICONS:
+            for lead in ("", "<strong>"):
+                if line_html.startswith(lead + emoji):
+                    line_html = lead + _img(ICONS[name], name) + line_html[len(lead + emoji):]
+    if (m := _DOTS.match(plain)) and (key := (m.group(1).count("●"), _tone(m.group(2)))) in BRIDGES:
+        line_html = line_html.replace(m.group(1), _img(BRIDGES[key], f"{key[0]}/5"), 1)
+    if plain.startswith("Verstanden aus"):
+        line_html = f'<font color="{_GREY}">{line_html}</font>'
+    return line_html
+
+
 def to_html(text: str) -> str:
     lines = text.strip().split("\n")
-    return "<br>".join([_headline(lines[0])] + [_inline(l) for l in lines[1:]])
+    if ICONS:
+        lines = [_compact(l) for l in lines]
+    out = [_headline(lines[0])] + [_inline(l) for l in lines[1:]]
+    if ICONS:
+        out = [_rich(h, p) for h, p in zip(out, lines)]
+    return "<br>".join(out)
 
 
 def content(text: str, reply_to: str | None = None) -> dict:

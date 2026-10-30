@@ -1,7 +1,54 @@
 {
   "default_server_config": {
-    "m.homeserver": { "base_url": "http://localhost:8008", "server_name": "klinikum.example" }
+    "m.homeserver": {
+      "base_url": "http://localhost:8008",
+      "server_name": "klinikum.example"
+    }
   },
   "disable_guests": true,
-  "brand": "Klinikum Beispielstadt"
+  "brand": "Klinikum Beispielstadt",
+  "default_theme": "custom-BefundBrücke",
+  "setting_defaults": {
+    "use_system_theme": false,
+    "custom_themes": [
+      {
+        "name": "BefundBrücke",
+        "is_dark": false,
+        "colors": {
+          "accent-color": "#1f5f8b",
+          "primary-color": "#1f5f8b",
+          "warning-color": "#b0241c",
+          "sidebar-color": "#e9eef2",
+          "roomlist-background-color": "#f4f6f8",
+          "roomlist-text-color": "#12202b",
+          "roomlist-text-secondary-color": "#44535f",
+          "roomlist-highlights-color": "#dfe8ef",
+          "roomlist-separator-color": "#cbd3d9",
+          "timeline-background-color": "#ffffff",
+          "timeline-text-color": "#12202b",
+          "secondary-content": "#44535f",
+          "tertiary-content": "#5d6b76",
+          "timeline-text-secondary-color": "#5d6b76",
+          "timeline-highlights-color": "#e8f0f6",
+          "reaction-row-button-selected-bg-color": "#e8f0f6",
+          "menu-selected-color": "#e8f0f6",
+          "username-colors": [
+            "#1f5f8b",
+            "#17693f",
+            "#7c5200",
+            "#5b3fd4",
+            "#0e7490",
+            "#b0241c",
+            "#44535f",
+            "#164a6d"
+          ],
+          "avatar-background-colors": [
+            "#1f5f8b",
+            "#17693f",
+            "#164a6d"
+          ]
+        }
+      }
+    ]
+  }
 }

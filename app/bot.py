@@ -7,12 +7,31 @@ With MATRIX_ENABLED=0 only the console printer runs, so everything else works wi
 from __future__ import annotations
 
 import asyncio
+import io
 import logging
 
-from app import commands, db, engine_client, matrix_format, notify, reactions, status_message
+from app import chat_icons, commands, db, engine_client, matrix_format, notify, reactions, status_message
 from app.config import settings
 
 log = logging.getLogger("befundbruecke.bot")
+
+
+async def upload_chat_images(client) -> None:
+    """Draw the chat icons and bridge images once and upload them; from then on the bot's HTML shows them instead of
+    emoji and dots (app/matrix_format.py). If an upload fails, messages keep their plain text."""
+    async def up(data: bytes, name: str) -> str | None:
+        resp, _ = await client.upload(io.BytesIO(data), content_type="image/png", filename=name, filesize=len(data))
+        return getattr(resp, "content_uri", None)
+    try:
+        icons = {n: await up(chat_icons.icon(n), f"{n}.png") for n in chat_icons.ICON_NAMES}
+        bridges = {(k, t): await up(chat_icons.bridge(k, t), f"bridge-{k}-{t}.png")
+                   for k in range(6) for t in chat_icons.TONES}
+    except Exception:
+        log.exception("chat images not uploaded")
+        return
+    if all(icons.values()) and all(bridges.values()):
+        matrix_format.BRIDGES.update(bridges)
+        matrix_format.ICONS.update(icons)
 
 
 async def console_printer() -> None:
@@ -30,6 +49,7 @@ async def run_bot() -> None:
     resp = await client.login(settings.matrix_bot_password)
     log.info("matrix login: %s", resp)
     await client.join(settings.matrix_room_id)
+    await upload_chat_images(client)
     first = await client.sync(timeout=3000, full_state=True)   # skip history: only react to new messages
     since = first.next_batch
     started = db.now()
@@ -106,7 +126,7 @@ async def run_bot() -> None:
                 if sent_id:
                     status_message.saved(request_id, event_id or sent_id, text)
             for request_id, text, buttons, seq in await asyncio.to_thread(status_message.pings):
-                if await say(text, buttons, status_message.card_event(request_id)):
+                if await say(text, buttons):            # a short line of its own, no quoted card above it
                     status_message.pinged(request_id, seq)
             await asyncio.sleep(1)
 

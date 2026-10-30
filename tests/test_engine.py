@@ -149,6 +149,20 @@ def test_api_key_is_sent_only_when_set(monkeypatch):
     assert seen == [{}, {"Authorization": "Bearer k"}]
 
 
+def test_no_chat_template_kwargs_for_mistral_models(monkeypatch):
+    bodies = []
+
+    def post(url, json=None, headers=None, timeout=None):   # noqa: A002 - mirrors httpx.post
+        bodies.append(json)
+        return httpx.Response(200, json={"choices": [{"message": {"content": "{}"}}]}, request=httpx.Request("POST", url))
+
+    monkeypatch.setattr(llm.httpx, "post", post)
+    monkeypatch.delenv("ENGINE_LLM_CACHE", raising=False)
+    for model in ("ministral-8b", "Qwen/Qwen3-1.7B"):
+        llm.extract("x", {"a": "string"}, "i", url="http://gpu.example/v1", model=model, mode="json_schema")
+    assert "chat_template_kwargs" not in bodies[0] and bodies[1]["chat_template_kwargs"] == {"enable_thinking": False}
+
+
 def test_model_down_falls_back_to_rules(monkeypatch):
     monkeypatch.setattr(llm, "extract", lambda *a, **k: llm.LlmResult(None, "m", 5, "ConnectError"))
     r = request_job.run(SPOKEN_1, PATIENTS)

@@ -65,12 +65,31 @@ def extract(text: str, fields: dict, instructions: str, max_tokens: int = 600,
     else:
         body["messages"] = [{"role": "system", "content": instructions}, {"role": "user", "content": text}]
         body["chat_template_kwargs"] = {"enable_thinking": False}
+    cache = _cache_path(body)
+    if cache and cache.exists():          # same model + prompt + input -> same answer (eval reruns, demo safety)
+        c = json.loads(cache.read_text(encoding="utf-8"))
+        return LlmResult(c["data"], model, c["ms"])
     t0 = time.perf_counter()
     try:
         r = httpx.post(f"{url.rstrip('/')}/chat/completions", json=body, timeout=settings.timeout_s)
         r.raise_for_status()
         content = r.json()["choices"][0]["message"]["content"]
         data = json.loads(content)
-        return LlmResult(data if isinstance(data, dict) else None, model, int((time.perf_counter() - t0) * 1000))
+        out = LlmResult(data if isinstance(data, dict) else None, model, int((time.perf_counter() - t0) * 1000))
+        if cache:
+            cache.parent.mkdir(parents=True, exist_ok=True)
+            cache.write_text(json.dumps({"data": out.data, "ms": out.ms}, ensure_ascii=False), encoding="utf-8")
+        return out
     except Exception as e:  # unreachable, timeout, bad JSON: the rules still answer
         return LlmResult(None, model, int((time.perf_counter() - t0) * 1000), f"{type(e).__name__}: {e}"[:200])
+
+
+def _cache_path(body: dict):
+    """ENGINE_LLM_CACHE=<dir> turns on a disk cache keyed by the whole request body."""
+    import hashlib
+    import os
+    from pathlib import Path
+    d = os.environ.get("ENGINE_LLM_CACHE")
+    if not d:
+        return None
+    return Path(d) / (hashlib.sha256(json.dumps(body, sort_keys=True, ensure_ascii=False).encode()).hexdigest() + ".json")

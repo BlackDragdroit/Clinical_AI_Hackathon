@@ -4,6 +4,10 @@
 #
 # VERIFY on the box: the vLLM tag serves all three models (Qwen3.5-based NuExtract3 needs >= 0.17,
 # Qwen3-ASR >= 0.16); if one fails, swap ENGINE_LLM_MODEL to Qwen/Qwen3.5-4B with ENGINE_LLM_MODE=json_schema.
+# EU (Mistral) alternatives, same Apache-2.0 licence, measured as rungs on the held-out set before choosing:
+#   ENGINE_LLM_MODEL=mistralai/Ministral-3-8B-Instruct-2512 ENGINE_LLM_MODE=json_schema
+#     LLM_EXTRA="--tokenizer-mode mistral --config-format mistral --load-format mistral"
+#   ENGINE_ASR_MODEL=mistralai/Voxtral-Mini-3B-2507  ASR_EXTRA="--tokenizer-mode mistral --config-format mistral --load-format mistral"
 x-gpu: &gpu
   deploy:
     resources:
@@ -23,14 +27,14 @@ services:
     <<: [*vllm, *gpu]
     command: >
       --model ${ENGINE_LLM_MODEL:-numind/NuExtract3} --port 8001 --gpu-memory-utilization 0.42
-      --max-model-len 8192 --max-num-seqs 16 --trust-remote-code --enable-prefix-caching
+      --max-model-len 8192 --max-num-seqs 16 --trust-remote-code --enable-prefix-caching ${LLM_EXTRA:-}
     ports: ["8001:8001"]
 
   asr:                       # speech -> text, German + English
     <<: [*vllm, *gpu]
     command: >
       --model ${ENGINE_ASR_MODEL:-Qwen/Qwen3-ASR-1.7B} --port 8002 --gpu-memory-utilization 0.22
-      --max-model-len 4096 --trust-remote-code
+      --max-model-len 4096 --trust-remote-code ${ASR_EXTRA:-}
     ports: ["8002:8002"]
 
   ocr:                       # page image -> Markdown

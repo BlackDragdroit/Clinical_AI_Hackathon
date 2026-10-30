@@ -86,6 +86,13 @@ CREATE TABLE IF NOT EXISTS matrix_status (
     event_id TEXT NOT NULL,              -- the bot's status message, edited in place as the request moves
     text TEXT NOT NULL                   -- what that message says now
 );
+CREATE TABLE IF NOT EXISTS matrix_actions (
+    event_id TEXT NOT NULL,              -- a bot message that offers buttons (app/reactions.py)
+    key TEXT NOT NULL,                   -- ✅ | ❌
+    command TEXT NOT NULL,               -- e.g. !ablegen ab12cd34
+    used_at TEXT,                        -- set on the first authorised tap; the message's buttons are then spent
+    PRIMARY KEY (event_id, key)
+);
 """
 
 

@@ -1,15 +1,47 @@
 {% extends "base.html" %}
-{% block title %}ID Austria (Simulation){% endblock %}
+{% block title %}{{ t('portal.eid_title') }}{% endblock %}
+{% block style %}
+  .sim { background: #fff3cd; border: 2px solid #e0a800; color: #5c4400; padding: .6rem .8rem; border-radius: 10px; font-weight: 600; font-size: .9rem; margin-bottom: .75rem; }
+  .idp-head { background: #c8102e; color: #fff; padding: .9rem 1.25rem; border-radius: 14px 14px 0 0; display: flex; align-items: center; gap: .6rem; }
+  .idp-head b { font-size: 1.25rem; letter-spacing: .01em; }
+  .idp-head small { opacity: .85; }
+  .idp-body { background: #fff; padding: 1.25rem; border-radius: 0 0 14px 14px; box-shadow: 0 1px 3px #0002; }
+  .svc { background: var(--bg); border-radius: 10px; padding: .6rem .8rem; margin: .5rem 0 1rem; }
+  .svc b { display: block; }
+  .shares { list-style: none; padding: 0; margin: .3rem 0 1rem; font-size: .95rem; }
+  .shares li { padding: .3rem 0; border-bottom: 1px solid #eee; }
+  .shares li::before { content: "✓ "; color: #2e7d32; }
+  .person { display: flex; align-items: center; gap: .8rem; min-height: 60px; padding: .6rem .8rem; border: 2px solid var(--line);
+            border-radius: 12px; margin: .5rem 0; cursor: pointer; font-weight: 500; }
+  .person:has(input:checked) { border-color: #c8102e; background: #fdf1f3; }
+  .person input { width: 22px; height: 22px; min-height: 0; accent-color: #c8102e; }
+  .person small { display: block; color: var(--muted); font-weight: 400; }
+  .btn.idp { background: #c8102e; }
+  .btn.idp:hover { background: #a00d25; }
+{% endblock %}
+{% block steps %}{% set step = 1 %}{% include "_steps.html" %}{% endblock %}
 {% block body %}
-<div class="card">
-  <h2>ID Austria – Simulation</h2>
-  <p class="muted">Testumgebung: wählen Sie eine synthetische Testperson. In Produktion: Anmeldung über ID Austria (OIDC).</p>
+<div class="sim" role="note">⚠ {{ t('portal.eid_sim') }}</div>
+<div class="idp-head"><b>ID Austria</b><small>· {{ t('portal.eid_h') }}</small></div>
+<div class="idp-body">
+  <p style="margin-top:0">{{ t('portal.eid_sub') }}</p>
+  <div class="svc"><span class="muted">{{ t('portal.eid_service') }}</span><b>BefundBrücke · {{ clinic }}</b></div>
+  <details class="muted"><summary>{{ t('portal.eid_shares') }}</summary>
+  <ul class="shares">
+    <li>{{ t('portal.eid_d_name') }}</li><li>{{ t('portal.eid_d_dob') }}</li><li>{{ t('portal.eid_d_bpk') }}</li><li>{{ t('portal.eid_d_loa') }}</li>
+  </ul></details>
   <form method="post" action="/eid/authorize">
     <input type="hidden" name="state" value="{{ state }}">
+    <p style="margin-bottom:0"><strong>{{ t('portal.eid_pick') }}</strong></p>
     {% for key, c in citizens.items() %}
-    <label><input type="radio" name="citizen" value="{{ key }}" {% if loop.first %}checked{% endif %} style="width:auto"> {{ c.given }} {{ c.family }}</label>
+    <label class="person" style="margin-top:.5rem; font-weight:500">
+      <input type="radio" name="citizen" value="{{ key }}" {% if loop.first %}checked{% endif %}>
+      <span>{{ c.given }} {{ c.family }}<small>{{ c.dob }} · {{ c.loa }}</small></span>
+    </label>
     {% endfor %}
-    <p><button class="btn" type="submit">Anmelden</button></p>
+    <p class="muted">{{ t('portal.eid_note') }}</p>
+    <button class="btn idp" type="submit">{{ t('portal.eid_confirm') }}</button>
   </form>
+  <p><a class="btn secondary" href="/r/{{ state }}">{{ t('portal.eid_cancel') }}</a></p>
 </div>
 {% endblock %}

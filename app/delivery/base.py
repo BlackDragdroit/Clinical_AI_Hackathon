@@ -16,7 +16,7 @@ _env = Environment(loader=FileSystemLoader(Path(__file__).resolve().parent.paren
                    undefined=StrictUndefined, autoescape=False)
 
 # every outgoing text template; the leak test renders all of them
-MESSAGE_TEMPLATES = ("email_subject.txt", "email_body.txt", "sms.txt")
+MESSAGE_TEMPLATES = ("email_subject.txt", "email_body.txt", "email_body.html", "sms.txt")
 
 
 def render_message(template: str, link: str) -> str:

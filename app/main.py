@@ -17,6 +17,8 @@ from contextlib import asynccontextmanager
 from datetime import datetime
 from pathlib import Path
 
+from urllib.parse import urlencode
+
 from fastapi import FastAPI, File, Form, Request, UploadFile
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -29,8 +31,8 @@ from app.security import sign, unsign
 templates = Jinja2Templates(directory=str(Path(__file__).resolve().parent / "templates"))
 i18n.install(templates)
 SESSION = "bb_session"
+COOKIE_SECURE = settings.base_url.startswith("https://")
 NEUTRAL = f"{settings.clinic_name} hat eine sichere Dokumentenanfrage an Sie gerichtet."
-DOC_LABEL = {"lab": "Laborbefund", "report": "Entlassungsbericht"}
 
 
 @asynccontextmanager
@@ -47,13 +49,42 @@ app = FastAPI(title="BefundBrücke", lifespan=lifespan)
 app.include_router(dashboard.router)
 
 
+def _tr(request: Request, key: str, **kw) -> str:
+    return i18n.t(key, i18n.resolve_lang(request), clinic=settings.clinic_name, **kw)
+
+
 def _page(request: Request, name: str, status: int = 200, **ctx) -> HTMLResponse:
-    return templates.TemplateResponse(request, name, {"clinic": settings.clinic_name, **ctx}, status_code=status)
+    lang, other = i18n.resolve_lang(request), i18n.other_lang(i18n.resolve_lang(request))
+    # the toggle keeps only the eID page's `state`; never echo a signed assertion (callback) into a link
+    keep = {"state": request.query_params["state"]} if "state" in request.query_params else {}
+
+    def t(key: str, page_lang: str | None = None, **kw) -> str:   # portal: t(key); audit pages: t(key, lang)
+        kw.setdefault("clinic", settings.clinic_name)
+        return i18n.t(key, page_lang or lang, **kw)
+
+    base = {"clinic": settings.clinic_name, "lang": lang, "other_lang": other, "t": t,
+            "switch_href": f"{request.url.path}?{urlencode({**keep, 'lang': other})}"}
+    resp = templates.TemplateResponse(request, name, {**base, **ctx}, status_code=status)
+    if "lang" in request.query_params:
+        i18n.remember(resp, lang, secure=COOKIE_SECURE)
+    return resp
 
 
 def _invalid(request: Request) -> HTMLResponse:
     # same page for unknown / expired / used / blocked links: a guesser learns nothing
     return _page(request, "invalid.html", 404)
+
+
+def _block(req: dict, actor: str) -> None:
+    """Identity attempts exhausted: block the request and alert Dr. Hofer exactly once."""
+    if db.get("requests", "id", req["id"])["status"] == "blocked":
+        return
+    db.update("requests", "id", req["id"], status="blocked")
+    audit.log("request_blocked", req["id"], actor,
+              {"reason": "identity attempts exhausted", "attempts": settings.max_identity_attempts})
+    notify.doctor(f"🔒 Anfrage {req['id']} gesperrt: {settings.max_identity_attempts} fehlgeschlagene "
+                  f"Identitätsprüfungen. Der Link ist deaktiviert. Für einen neuen Versuch bitte eine neue Anfrage "
+                  f"stellen (!anfrage …) und die Adresse prüfen.", req["id"])
 
 
 def _who(request: Request) -> str:
@@ -80,7 +111,7 @@ def open_link(request: Request, raw: str):
         db.update("requests", "id", req["id"], status="opened")
     audit.log("link_opened", req["id"], _who(request),
               {"user_agent": request.headers.get("user-agent", ""), "status": req["status"]})
-    return _page(request, "landing.html", neutral=NEUTRAL, raw=raw)
+    return _page(request, "landing.html", neutral=_tr(request, "portal.neutral"), raw=raw)
 
 
 @app.get("/eid/authorize", response_class=HTMLResponse)
@@ -110,13 +141,16 @@ def eid_callback(request: Request, raw: str, assertion: str):
                   {"type": label, "verified": who.full_name, "expected": req["expected_name"]})
         notify.doctor(f"⚠️ Fehlzustellung erkannt (Anfrage {req['id']}): verifiziert {who.full_name} ≠ "
                       f"{req['expected_name']}. Nichts offengelegt, nichts abgelegt.", req["id"])
+        if attempts >= settings.max_identity_attempts:
+            _block(req, actor)
+            return _invalid(request)        # same neutral page as any dead link
         return _page(request, "identity_failed.html", 403)
     audit.log("identity_checked", req["id"], actor, {"result": "OK", "method": "eid-mock", "loa": who.loa})
     db.update("requests", "id", req["id"], status="identified")
     resp = RedirectResponse(f"/r/{raw}/answer", status_code=303)
     cookie = sign({"th": tokens.token_hash(raw), "name": who.full_name, "pseud": who.pseudonym,
                    "method": policy.identity_method_text(who)}, "portal", 3600)
-    resp.set_cookie(SESSION, cookie, httponly=True, samesite="lax", max_age=3600)   # TODO(SWE 2): secure=True behind HTTPS
+    resp.set_cookie(SESSION, cookie, httponly=True, samesite="lax", max_age=3600, secure=COOKIE_SECURE)
     return resp
 
 
@@ -127,7 +161,7 @@ def answer_form(request: Request, raw: str):
         return _invalid(request)
     req = db.get("requests", "id", tok["request_id"])
     audit.log("patient_revealed", req["id"], f"eid:{sess['pseud']} {sess['name']}", {"after": "identity_checked OK"})
-    return _page(request, "answer.html", raw=raw, req=req, doc_label=DOC_LABEL[req["doc_type"]],
+    return _page(request, "answer.html", raw=raw, req=req, doc_label=_tr(request, f"doc.{req['doc_type']}"),
                  doctor=settings.doctor_name, sender=sess["name"])
 
 
@@ -144,14 +178,14 @@ async def answer_submit(request: Request, raw: str, typed_name: str = Form(...),
         data, filename, ctype = text.encode("utf-8"), "formular.md", "text/markdown"
 
     def form_error(msg: str) -> HTMLResponse:
-        return _page(request, "answer.html", 400, raw=raw, req=req, doc_label=DOC_LABEL[req["doc_type"]],
+        return _page(request, "answer.html", 400, raw=raw, req=req, doc_label=_tr(request, f"doc.{req['doc_type']}"),
                      doctor=settings.doctor_name, sender=sess["name"], error=msg)
     if not data.strip():
-        return form_error("Bitte Datei hochladen oder Text eingeben.")
+        return form_error(_tr(request, "portal.err_empty"))
     eng = engine_client.document(data, filename, ctype, json.loads(req.get("panel_loinc") or "[]"),
                                  datetime.fromisoformat(req["created_at"]), req["doc_type"])
     if not eng["ok"]:
-        return form_error("Das Dokument konnte nicht sicher gelesen werden. Bitte als PDF/Text senden oder den Inhalt einfügen.")
+        return form_error(_tr(request, "portal.err_unreadable"))
     if eng["needs_readback"]:          # scan/photo: the sender confirms what we read before anything is processed
         rb_id = db.new_id()
         db.insert("readbacks", {"id": rb_id, "request_id": req["id"], "created_at": db.now(), "typed_name": typed_name,
@@ -210,7 +244,7 @@ def sms_inbox(request: Request):
 def audit_page(request: Request, request_id: str | None = None):
     # clinic-internal: in production this sits behind the clinic login (footer says so)
     lang = i18n.resolve_lang(request)
-    resp = _page(request, "audit.html", v=audit.view(request_id, lang), lang=lang)
+    resp = _page(request, "audit.html", v=audit.view(request_id, lang), lang=lang, other_lang=i18n.other_lang)   # audit templates call other_lang(lang)
     if request.query_params.get("lang"):
         i18n.remember(resp, lang)
     return resp
@@ -220,7 +254,7 @@ def audit_page(request: Request, request_id: str | None = None):
 def audit_page_apple(request: Request, request_id: str | None = None):
     # same data and query params as /audit, second look (formal audit record) for side-by-side review
     lang = i18n.resolve_lang(request)
-    resp = _page(request, "audit_apple.html", v=audit.view(request_id, lang, base="/audit/apple"), lang=lang)
+    resp = _page(request, "audit_apple.html", v=audit.view(request_id, lang, base="/audit/apple"), lang=lang, other_lang=i18n.other_lang)
     if request.query_params.get("lang"):
         i18n.remember(resp, lang)
     return resp

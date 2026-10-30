@@ -40,3 +40,72 @@ def test_eid_assertion_tamper_fails():
     assert eid_mock.verify(a).family == "Brandl"
     raw, mac = a.split(".")
     assert eid_mock.verify(raw[:-2] + "xx." + mac) is None
+
+
+def _client():
+    from fastapi.testclient import TestClient
+
+    from app.main import app
+    return TestClient(app)
+
+
+def test_landing_neutral_text_is_exact_in_german_and_english():
+    _req()
+    raw = tokens.issue("r1", "e@x.example")
+    with _client() as c:
+        assert f"{settings.clinic_name} hat eine sichere Dokumentenanfrage an Sie gerichtet." in c.get(f"/r/{raw}").text
+        c.get(f"/r/{raw}?lang=en")
+        en = c.get(f"/r/{raw}").text                           # the choice is remembered in the cookie
+    assert f"{settings.clinic_name} has sent you a secure document request." in en
+    assert 'lang="en"' in en
+
+
+def test_german_by_default_whatever_the_browser_says():
+    _req()
+    raw = tokens.issue("r1", "e@x.example")
+    with _client() as c:
+        page = c.get(f"/r/{raw}", headers={"Accept-Language": "en-GB,en;q=0.9"}).text
+        assert "hat eine sichere Dokumentenanfrage an Sie gerichtet." in page and 'lang="de"' in page
+        assert 'lang="de"' in c.get(f"/r/{raw}?lang=xx").text
+
+
+def test_lang_toggle_never_echoes_an_assertion():
+    _req()
+    raw = tokens.issue("r1", "e@x.example")
+    assertion = eid_mock.issue("karl")
+    with _client() as c:
+        page = c.get(f"/r/{raw}/callback", params={"assertion": assertion}).text
+    assert assertion not in page and "?lang=en" in page
+
+
+def test_eid_page_is_labelled_simulation_in_both_languages():
+    with _client() as c:
+        assert "SIMULATION" in c.get("/eid/authorize?state=x").text
+        page = c.get("/eid/authorize?state=x&lang=en").text
+        assert "SIMULATION" in page and "state=x&amp;lang=de" in page   # toggle keeps the link state
+
+
+def test_attempts_exhausted_blocks_request_and_alerts_once():
+    from app import audit
+    _req()
+    raw = tokens.issue("r1", "e@x.example")
+    statuses, bodies = [], []
+    with _client() as c:
+        for _ in range(settings.max_identity_attempts + 2):
+            r = c.get(f"/r/{raw}/callback", params={"assertion": eid_mock.issue("karl")})
+            statuses.append(r.status_code)
+            bodies.append(r.text)
+        landing = c.get(f"/r/{raw}")
+        unknown = c.get("/r/does-not-exist")
+    n = settings.max_identity_attempts
+    assert statuses[:n - 1] == [403] * (n - 1)
+    assert statuses[n - 1:] == [404] * 3                       # last failed attempt and later ones: neutral dead-link page
+    import re
+    def strip(html): return re.sub(r'<a class="lang".*?</a>', "", html)     # the toggle echoes the page's own path
+    assert strip(bodies[n - 1]) == strip(bodies[n]) == strip(unknown.text) == strip(landing.text)
+    assert db.get("requests", "id", "r1")["status"] == "blocked"
+    alerts = [m for m in db.query("SELECT * FROM matrix_outbox WHERE request_id = 'r1'") if "gesperrt" in m["text"]]
+    assert len(alerts) == 1
+    events = [e["event"] for e in audit.entries("r1")]
+    assert events.count("request_blocked") == 1
+    assert events.index("request_blocked") > len(events) - 1 - events[::-1].index("identity_checked")   # after the last failed check

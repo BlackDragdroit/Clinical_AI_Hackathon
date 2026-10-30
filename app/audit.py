@@ -23,9 +23,9 @@ from app.misdelivery import misdelivery_label
 
 # the six steps the track measures (README "Audit coverage")
 REQUIRED = ("request_sent", "link_opened", "identity_checked", "answer_sent", "answer_filed", "misdelivery_caught")
-# extra events we log for need-to-know and review decisions
+# extra events we log for need-to-know, review decisions, blocked links and the engine's read-back
 EXTRA = ("request_drafted", "request_parsed", "patient_revealed", "review_requested", "review_decided",
-         "readback_shown", "readback_confirmed")
+         "request_blocked", "readback_shown", "readback_confirmed")
 EVENTS = REQUIRED + EXTRA
 
 GENESIS = "0" * 64
@@ -213,6 +213,8 @@ def _describe(event: str, d: dict, lang: str) -> str:
         return t("audit.ev.review_requested", lang)
     if event == "review_decided":
         return t("audit.ev.review_file" if d.get("decision") == "ablegen" else "audit.ev.review_discard", lang)
+    if event == "request_blocked":
+        return t("audit.ev.request_blocked", lang, n=d.get("attempts", "?"))
     if event == "request_parsed":
         if d.get("doc_type") and d.get("to"):
             return t("audit.ev.request_parsed_doc", lang, doc=_known("audit.doc", d["doc_type"], lang), to=d["to"])

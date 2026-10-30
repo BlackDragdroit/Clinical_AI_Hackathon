@@ -74,3 +74,12 @@ Append after each milestone: what works, what's next, known issues.
 - Apple variant simplified: no chain strip, coverage as a plain checklist with the score beside the heading, no 'created' column or channel suffix in the requests table (table from 1100 px, list below), no timeline column header, no misdelivery explanation text, routine timeline steps without a coloured tile. 78 tests pass.
 - `/audit/apple` restyled as a formal audit record: "Audit-Protokoll" header with clinic / scope / entries / time zone / classification, "Hash-Kette geprüft: intakt – N Einträge, letzter Hash …", "Pflichtschritte: 6 von 6 protokolliert" as a step/status table, M1–M3 as a type/status/time/request table, plain requests table (navy rule on the selected row), timeline as a ledger (# · time · event · actor · request) with a small "Details" toggle; no icon tiles, shadows or pills; DE | EN as plain text; no horizontal scroll at 375 px.
 - Light/dark/system switch removed again (app/theme.py deleted, theme.* keys and tests gone); both audit pages light only, design switch small in the footer. Tests: 78 passed (2 theme tests out, light-only + footer-switch tests in).
+
+## SWE 2 portal (Fri morning)
+- Works: mobile-first portal with step bar (identity → send → done), DE/EN toggle (German default; the neutral sentence is unchanged and tested), simulated ID Austria page with a SIMULATION banner, `secure` cookies when `BASE_URL` is https. Blocking: when identity attempts run out the request becomes `blocked`, that attempt and every later visit get the neutral dead-link page, Dr. Hofer is alerted once.
+- e2e: `scripts/e2e.py` (Playwright, phone viewport) runs r1, r2 (via /sms), M1, M2, M3 and prints JSON for Biostat (`var/e2e.json`). `--local` passes 5/5 without Docker, request 1 wall time 0.64 s scripted. Not yet run against `make up` (no Docker on SWE 2's machine).
+- Email now has an HTML part with a big "Anfrage öffnen" button (in `MESSAGE_TEMPLATES`, leak test green). README states md/txt-only upload.
+- Next: e2e against the real stack, stopwatch fixes after Biostat's run, preview decision with MedEng.
+- Audit: new extra event `request_blocked` in `app/audit.py` (shared contract, MedEng told). Logged once, after the last failed `identity_checked`.
+- DE/EN: merged with MedEng's `app/i18n.py` (portal strings are `portal.*` keys, toggle is `?lang=`, German default, no Accept-Language).
+- Known issues: the receipt text from intake_service is German only. Not yet tried on a real phone.

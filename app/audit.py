@@ -15,7 +15,8 @@ from app import db
 # the six steps the track measures (README "Audit coverage")
 REQUIRED = ("request_sent", "link_opened", "identity_checked", "answer_sent", "answer_filed", "misdelivery_caught")
 # extra events we log for need-to-know and review decisions
-EXTRA = ("request_drafted", "patient_revealed", "review_requested", "review_decided")
+EXTRA = ("request_drafted", "request_parsed", "patient_revealed", "review_requested", "review_decided",
+         "readback_shown", "readback_confirmed")
 EVENTS = REQUIRED + EXTRA
 
 GENESIS = "0" * 64

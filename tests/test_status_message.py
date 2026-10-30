@@ -42,6 +42,16 @@ def test_draft_card_has_what_to_check_and_one_action(hapi, outbox):
                      f"✅ tippen zum Senden · Anfrage {rid}"]
 
 
+def test_draft_card_keeps_the_replys_warnings_and_is_not_rerendered(hapi, outbox):
+    reply = commands.handle(REQ1.replace("labor-kanal", "labor-kanaI"), DOCTOR)
+    reply += "\nVerstanden aus: „Laborbefund von Dr. Brandl für Maria Beispiel“"       # as the engine adds it
+    rid = status_message.drafted(reply)
+    text = status_message.card_text(rid, reply)
+    assert "⚠️ Kontakt prüfen:" in text and "Verstanden aus: „Laborbefund" in text
+    status_message.saved(rid, "$card", text)
+    assert status_message.updates(EPOCH) == []                        # not edited back to a card without them
+
+
 def test_card_is_edited_through_to_filed(hapi, outbox):
     rid = _carded()
     commands.handle(f"!senden {rid}", DOCTOR)

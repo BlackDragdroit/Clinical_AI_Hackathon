@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="card">
+  <h2>Bitte prüfen</h2>
+  <p>So haben wir Ihr Dokument gelesen. Bitte vergleichen Sie jeden Wert mit dem Original und korrigieren Sie ihn, falls nötig.
+     <span class="warn">Gelb markierte Werte</span> haben unsere zwei Leseverfahren unterschiedlich erkannt.</p>
+  <form method="post" action="/r/{{ raw }}/readback">
+    <input type="hidden" name="rb_id" value="{{ rb_id }}">
+    <table>
+      {% for i in items %}
+      <tr{% if i.agree == false %} class="warnrow"{% endif %}>
+        <th><label for="v{{ loop.index }}">{{ i.label }}</label></th>
+        <td><input id="v{{ loop.index }}" name="v:{{ i.key }}" value="{{ i.value or '' }}" autocomplete="off"></td>
+      </tr>
+      {% endfor %}
+    </table>
+    <p><button class="btn" type="submit">Werte stimmen – sicher senden</button></p>
+  </form>
+</div>
+{% endblock %}

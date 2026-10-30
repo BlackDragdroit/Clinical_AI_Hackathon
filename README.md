@@ -29,7 +29,7 @@ In the room: `!anfrage labor "Dr. Eva Brandl" eva.brandl@labor-kanal.example Pat
 ## Architecture
 BefundBrücke has a deterministic core, a FastAPI service around it, and five off-the-shelf services.
 
-**Models and services. No machine-learning or LLM model is used anywhere.** Patient matching is a calibrated statistical record-linkage model (Fellegi–Sunter, weights estimated on synthetic labelled pairs, `core/weights.json`). Everything else (parsing, LOINC checks, FHIR building, identity policy) is deterministic rules. Services we run but did not write: Synapse, Element Web, HAPI FHIR R4, Mailpit, SQLite.
+**Models and services.** Every decision is deterministic or statistical: patient matching is a calibrated record-linkage model (Fellegi–Sunter, weights estimated on synthetic labelled pairs, `core/weights.json`); parsing of the scenario format, LOINC checks, FHIR building and the identity policy are rules. Models only *read* (see [AI engine](#ai-engine)): Dr. Hofer's typed or spoken request, and answers that arrive as PDF, scan or phone photo. They run self-hosted on one GPU (vLLM), every value they return must be a slice of the input, and the rules above still decide. Services we run but did not write: Synapse, Element Web, HAPI FHIR R4, Mailpit, SQLite.
 
 | Component | Built / used | Role |
 |---|---|---|
@@ -40,6 +40,8 @@ BefundBrücke has a deterministic core, a FastAPI service around it, and five of
 | `app/identity/` | built | `eid_mock.py`: simulated ID Austria assertion (name, birth date, bPK-like pseudonym, level of assurance), HMAC-signed. `policy.py`: name binding, the eID name must equal the person Dr. Hofer named. |
 | `app/audit.py` | built | Append-only log, SHA-256 hash chain; the 6 required events (request_sent, link_opened, identity_checked, answer_sent, answer_filed, misdelivery_caught) plus extra events. |
 | `app/notify.py` | built | Outbox table that the bot drains into the Matrix room. |
+| `engine/` (FastAPI, :8100) | built | AI engine, see [AI engine](#ai-engine): request job (typed/spoken DE+EN → checked request) and document job (Markdown/PDF/scan/photo → scenario-shaped Markdown + completeness/recency/plausibility checks). Stateless; the app calls it over HTTP (`ENGINE_URL`). |
+| vLLM: NuExtract3 4B, Qwen3-ASR 1.7B, PaddleOCR-VL 1.6 | used | Open-weight models on one A5000 (`deploy/gpu/`). Each is optional: without it the engine falls back to rules / CPU (Tesseract, Parakeet ONNX). |
 | Synapse + Element Web | used | Matrix homeserver (`klinikum.example`) and Dr. Hofer's client. |
 | HAPI FHIR R4 | used | Patient source, Task lifecycle, `$validate`, store for filed resources. |
 | Mailpit | used | Catches the outgoing emails. |
@@ -102,6 +104,47 @@ sequenceDiagram
 - Unknown, expired, used and exhausted links all get the same neutral answer, so a guesser learns nothing.
 - Only Matrix IDs in `AUTHORIZED_SENDERS` (the clinic directory; default Dr. Hofer) can make the bot request documents or file answers. Anyone else in the room gets "Keine Berechtigung" and nothing happens.
 - The public portal is the part that faces the internet. In the prototype we host it ourselves. In production it can move to a third-party trust provider such as FTAPI SubmitBox, behind the `Channel` and portal boundary, because it needs no patient data before the identity check. The prototype does not use FTAPI (see below).
+
+## AI engine
+
+One service, two jobs, one rule: **models read, rules decide, and every value must be a slice of the input.**
+
+```mermaid
+flowchart LR
+  subgraph IN[Input]
+    T["Typed request (DE/EN)"]
+    V["Voice note (Element)"]
+    MD["Markdown / text"]
+    PDF["PDF"]
+    IMG["Scan / phone photo"]
+  end
+  V -->|"Qwen3-ASR 1.7B (vLLM) · CPU: Parakeet"| N
+  T --> N["normalize dictation: 'punkt' → '.', 'at' → '@', spoken digits"]
+  N --> R["rules (always)"] & L["NuExtract3 4B (vLLM, JSON schema)"]
+  R & L --> G["ground: value must occur in the text, else dropped"]
+  G --> P["patient: name + birth date → FHIR search → Fellegi–Sunter rank"]
+  P --> CARD["draft card → !senden"]
+  MD --> CP["core parser (exact)"]
+  PDF -->|"text layer"| CP
+  PDF -->|"image only"| O
+  IMG --> O["PaddleOCR-VL + Tesseract (two readers)"]
+  CP -->|"parser fails"| L2["NuExtract3, grounded"]
+  O --> RB["read-back: sender confirms values; disagreements highlighted"]
+  CP & L2 & RB --> CK["checks: completeness, recency, plausibility, document type"]
+  CK --> INTAKE["core intake: 3-way patient check → FHIR"]
+```
+
+| Job | Input | Models (GPU) | CPU fallback | What is guaranteed |
+|---|---|---|---|---|
+| Request | typed or spoken German/English | Qwen3-ASR 1.7B, NuExtract3 4B | rules (regex, cue words), Parakeet TDT 0.6B v3 ONNX | every field is a slice of the transcript; contact disagreements between rules and model are asked back; a patient is picked only with two identifiers and a ≥6-bit margin |
+| Document | Markdown, text | — (core parser) | — | identical to the scenario path |
+| Document | PDF with text layer | — | pdfplumber | exact characters; same parser |
+| Document | unusual text shape | NuExtract3 4B | — | only values that occur verbatim survive; numbers must match exactly |
+| Document | scan, photo, image PDF | PaddleOCR-VL 1.6 | Tesseract (always runs, second reader) | never filed directly: the sender confirms a read-back screen; Provenance records it |
+
+Checks on every answer (deterministic, never change a value): requested tests delivered (e.g. "4/4 angefragte Parameter"), sample age vs. request date, unit and physical plausibility per LOINC, document type vs. request. They appear in Dr. Hofer's message.
+
+Run it: `make engine` (local, rules + CPU), `make gpu-up` on the A5000 VM, then `ENGINE=http://<vm>:8100 make gpu-smoke`; point the app at it with `ENGINE_URL`. Model choices and the research behind them: DECISIONS.md.
 
 ## Design answers
 ### 1. How does an outside person prove who they are without a directory?

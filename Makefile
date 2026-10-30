@@ -47,4 +47,23 @@ metrics:         ## build METRICS.md from the running stack
 jury-eval:       ## core decisions on metrics/jury_docs vs expected
 	$(RUN) python -m metrics.eval_jury_docs
 
-.PHONY: help env install test dev up down reset logs seed validate metrics jury-eval
+engine:          ## AI engine locally on :8100 (models via ENGINE_*_URL; without them: rules + CPU fallbacks)
+	$(RUN) uvicorn engine.api:app --reload --port 8100
+
+gpu-up:          ## on the A5000 VM: vLLM (text, speech, OCR) + engine on :8100
+	docker compose -f deploy/gpu/docker-compose.yml up -d --build
+
+gpu-smoke:       ## check every model answers: ENGINE=http://<vm>:8100 make gpu-smoke
+	$(RUN) python -m scripts.gpu_smoke --engine $${ENGINE:-http://localhost:8100}
+
+LLAMA ?= $(HOME)/.cache/befundbruecke
+cpu-llm:         ## small model on this laptop's CPU (llama.cpp b11985): MODEL=NuExtract3|Qwen3-1.7B -> http://localhost:8011/v1
+	$(LLAMA)/llama/llama-server -m $(LLAMA)/models/$${MODEL:-NuExtract3}-Q4_K_M.gguf --jinja -c 8192 --port 8011 -t $$(nproc)
+
+engine-data:     ## build the engine test sets (patients, requests, documents) under eval/data
+	$(RUN) python -m eval.build_data
+
+engine-eval:     ## run the engine on the test sets -> eval/RESULTS.md (CIs, model ladder)
+	$(RUN) python -m eval.run_eval
+
+.PHONY: help env install test dev up down reset logs seed validate metrics jury-eval engine gpu-up gpu-smoke engine-data engine-eval

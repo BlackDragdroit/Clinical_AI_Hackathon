@@ -50,11 +50,12 @@ def _card(request_id: str) -> tuple[dict, dict]:
     return req, dashboard.card(req, audit.entries(request_id))
 
 
-def text(req: dict, card: dict) -> str:
+def text(req: dict, card: dict, checks: list[str] | None = None) -> str:
+    """`checks`: the draft reply's own warning lines (address lint, engine flags, what the engine heard)."""
     head = f"{card['doc']} · {card['patient']}"
     if req["status"] == "draft":
         lines = [f"{head}, geb. {_dob(req['patient_dob'])}", f"an {req['expected_name']} · {req['contact']}"]
-        lines += [f"⚠️ Adresse prüfen: {w}" for w in json.loads(req["lint_warnings"] or "[]")]
+        lines += checks if checks is not None else [f"⚠️ Kontakt prüfen: {w}" for w in json.loads(req["lint_warnings"] or "[]")]
         return "\n".join(lines + [f"✅ tippen zum Senden · Anfrage {req['id']}"])
     dots = "".join("●" if s["state"] == "done" else "○" for s in card["steps"])
     last = max((s["ts"] for s in card["steps"] if s["ts"]), default=None)
@@ -78,8 +79,10 @@ def _result(req: dict) -> list[str]:
     return out
 
 
-def card_text(request_id: str) -> str:
-    return text(*_card(request_id))
+def card_text(request_id: str, reply: str | None = None) -> str:
+    """The card; for a draft, `reply` (commands' draft answer) supplies the warning lines to keep."""
+    checks = [line for line in reply.split("\n") if line.startswith(("⚠️", "Verstanden aus"))] if reply else None
+    return text(*_card(request_id), checks)
 
 
 def drafted(reply: str) -> str | None:
@@ -114,8 +117,8 @@ def updates(since: str) -> list[tuple[str | None, str, str]]:
     out = []
     for card in dashboard.cards():
         row, sent = known.get(card["id"]), card["steps"][0]["ts"]
-        if not row and not (sent and sent >= since):
-            continue
+        if card["status"] == "draft" or (not row and not (sent and sent >= since)):
+            continue                                    # a draft card only changes once it is sent
         new = text(reqs[card["id"]], card)
         if row and row["text"] != new:
             out.append((row["event_id"], card["id"], new))

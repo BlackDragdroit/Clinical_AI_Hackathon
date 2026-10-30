@@ -102,13 +102,13 @@ def eid_page(request: Request, state: str):
 
 @router.post("/eid/authorize")
 def eid_login(state: str = Form(...), citizen: str = Form(...)):
-    return RedirectResponse(f"/r/{state}/callback?assertion={eid_mock.issue(citizen)}", status_code=303)
+    return RedirectResponse(f"/r/{state}/callback?assertion={eid_mock.issue(citizen, link_token=state)}", status_code=303)
 
 
 @router.get("/r/{raw}/callback", response_class=HTMLResponse)
 def eid_callback(request: Request, raw: str, assertion: str):
     tok = tokens.resolve(raw)
-    who = eid_mock.verify(assertion)
+    who = eid_mock.verify(assertion, link_token=raw)
     if not tok or not who:
         return _invalid(request)
     req = db.get("requests", "id", tok["request_id"])

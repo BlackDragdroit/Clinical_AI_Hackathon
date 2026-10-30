@@ -72,7 +72,7 @@ def test_german_by_default_whatever_the_browser_says():
 def test_lang_toggle_never_echoes_an_assertion():
     _req()
     raw = tokens.issue("r1", "e@x.example")
-    assertion = eid_mock.issue("karl")
+    assertion = eid_mock.issue("karl", link_token=raw)
     with _client() as c:
         page = c.get(f"/r/{raw}/callback", params={"assertion": assertion}).text
     assert assertion not in page and "?lang=en" in page
@@ -92,7 +92,7 @@ def test_attempts_exhausted_blocks_request_and_alerts_once():
     statuses, bodies = [], []
     with _client() as c:
         for _ in range(settings.max_identity_attempts + 2):
-            r = c.get(f"/r/{raw}/callback", params={"assertion": eid_mock.issue("karl")})
+            r = c.get(f"/r/{raw}/callback", params={"assertion": eid_mock.issue("karl", link_token=raw)})
             statuses.append(r.status_code)
             bodies.append(r.text)
         landing = c.get(f"/r/{raw}")

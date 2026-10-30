@@ -1,10 +1,13 @@
 """Edge-case security and robustness tests (T1–T8 from .bob/agents/playtest.md)."""
 from __future__ import annotations
 
+import importlib
+import os
 import re
 
 import httpx
 import pytest
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from app import commands, db, engine_client, fhir_client, tokens
@@ -31,7 +34,6 @@ def _send(cmd: str) -> str:
 # nonce/state binding is implemented.
 # ---------------------------------------------------------------------------
 
-@pytest.mark.xfail(strict=True, reason="requires production OIDC nonce/state binding (O4 in PLAYTEST_REPORT.md)")
 def test_eid_assertion_cannot_be_replayed_on_another_link(hapi, outbox):
     """Assertion issued for link A must be rejected when presented to link B."""
     _send(REQ1)
@@ -40,15 +42,14 @@ def test_eid_assertion_cannot_be_replayed_on_another_link(hapi, outbox):
     token_b = link_path(outbox[1]["link"]).rsplit("/", 1)[1]
 
     with TestClient(app) as client:
-        # Complete eID on link A to get a valid "session-bound" assertion
+        # Get a valid assertion bound to link A
         client.get(f"/r/{token_a}")
-        client.post("/eid/authorize", data={"state": token_a, "citizen": "eva"})
+        assertion_for_a = eid_mock.issue("eva", link_token=token_a)
 
-        # Now try to use the same identity on link B — should be rejected by state check
+        # Try to replay the link-A assertion on link B's callback
         client.get(f"/r/{token_b}")
-        r = client.get(f"/r/{token_b}/callback", params={"assertion": eid_mock.issue("eva")})
-        # In production the state must not match; for now the mock accepts it
-        assert r.status_code == 403, "Assertion must not succeed on a different link"
+        r = client.get(f"/r/{token_b}/callback", params={"assertion": assertion_for_a})
+        assert r.status_code == 404, "Assertion bound to link A must be rejected on link B"
 
 
 # ---------------------------------------------------------------------------
@@ -258,7 +259,7 @@ def test_blocked_link_same_response_as_expired(hapi, outbox):
         # Exhaust all identity attempts with the wrong person
         for _ in range(n):
             client.get(path)
-            client.get(f"/r/{token}/callback", params={"assertion": eid_mock.issue("karl")})
+            client.get(f"/r/{token}/callback", params={"assertion": eid_mock.issue("karl", link_token=token)})
 
         # Now the link is blocked — opening it should return the same neutral dead-link page
         blocked_resp = client.get(path)
@@ -269,3 +270,30 @@ def test_blocked_link_same_response_as_expired(hapi, outbox):
     assert _strip_lang_links(blocked_resp.text) == _strip_lang_links(unknown_resp.text), (
         "blocked link response differs from unknown link — leaks state to a guesser"
     )
+
+
+# ---------------------------------------------------------------------------
+# PORTAL_ONLY split (wave-3 coverage)
+# ---------------------------------------------------------------------------
+
+def test_portal_only_hides_clinic_routes():
+    """When PORTAL_ONLY=1 the clinic routes (/audit, /audit/apple, /audit.json) must not be mounted.
+    GET /health (portal route) must still return 200."""
+    # Build a fresh FastAPI app without clinic_router (mimicking main.py when PORTAL_ONLY=1).
+    portal_router = importlib.import_module("app.portal_router").router
+
+    portal_only_app = FastAPI(title="BefundBrücke-PortalOnly")
+    portal_only_app.include_router(portal_router)
+    # clinic_router deliberately NOT included
+
+    with TestClient(portal_only_app) as client:
+        health = client.get("/health")
+        audit_html = client.get("/audit")
+        audit_json = client.get("/audit.json")
+        audit_apple = client.get("/audit/apple")
+
+    assert health.status_code == 200, f"Expected /health=200, got {health.status_code}"
+    assert audit_html.status_code == 404, f"Expected /audit=404 in PORTAL_ONLY, got {audit_html.status_code}"
+    assert audit_json.status_code == 404, f"Expected /audit.json=404 in PORTAL_ONLY, got {audit_json.status_code}"
+    assert audit_apple.status_code == 404, f"Expected /audit/apple=404 in PORTAL_ONLY, got {audit_apple.status_code}"
+

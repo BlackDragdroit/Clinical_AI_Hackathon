@@ -42,10 +42,16 @@ TEST_CITIZENS: dict[str, EidAssertion] = {
 }
 
 
-def issue(citizen_key: str, ttl_s: int = 300) -> str:
-    return sign(asdict(TEST_CITIZENS[citizen_key]), PURPOSE, ttl_s)
+def issue(citizen_key: str, ttl_s: int = 300, link_token: str = "") -> str:
+    payload = {**asdict(TEST_CITIZENS[citizen_key]), "lt": link_token}
+    return sign(payload, PURPOSE, ttl_s)
 
 
-def verify(assertion: str) -> EidAssertion | None:
+def verify(assertion: str, link_token: str = "") -> EidAssertion | None:
     body = unsign(assertion, PURPOSE)
-    return EidAssertion(**body) if body else None
+    if not body:
+        return None
+    if body.get("lt", "") != link_token:
+        return None
+    fields = {k: v for k, v in body.items() if k != "lt"}
+    return EidAssertion(**fields)

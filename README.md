@@ -116,6 +116,8 @@ sequenceDiagram
 - Only Matrix IDs in `AUTHORIZED_SENDERS` (the clinic directory; default Dr. Hofer) can make the bot request documents or file answers. Anyone else in the room gets "Keine Berechtigung" and nothing happens.
 - The public portal is the part that faces the internet. In the prototype we host it ourselves. In production it can move to a third-party trust provider such as FTAPI SubmitBox, behind the `Channel` and portal boundary, because it needs no patient data before the identity check. The prototype does not use FTAPI (see below).
 
+> **Production: eID Austria.** The mock eID (`eid_mock.py`) is for the prototype only and is not bound to the link. In production: use the ID Austria OIDC authorization-code flow; encode the link token in the `state` parameter; use a single-use `nonce` bound to the session to prevent replay. The `EidAssertion` interface stays the same — only `eid_mock.verify()` is replaced by the OIDC library callback.
+
 ## AI engine
 
 One service, two jobs, one rule: **models read, rules decide, and every value must be a slice of the input.**
@@ -285,6 +287,20 @@ Data protection, as designed (a design, not a legal assessment; a DPIA would com
 - **Roles.** The clinic is the controller. Whoever hosts the portal or delivers the messages (us, FTAPI, an SMS gateway) is a processor and needs a processor agreement (Art. 28 GDPR).
 - **Retention: not built.** Answers, including quarantined ones about another patient, used tokens and the audit log are kept in SQLite with no deletion, and each filed bundle is also written to `var/filed/`. Production needs retention periods per kind of record, starting with deleting quarantined answers once Dr. Hofer has dealt with them.
 - **Accountability.** The audit log is append-only with a SHA-256 hash chain: editing a row, or deleting one before the newest, breaks `verify_chain()`. That makes tampering visible, not impossible: cutting off the newest entries, or rebuilding the whole chain with write access to the database, is only detected if the latest hash is also kept somewhere else, which is not built. The `/audit` page has no login yet; in production it belongs behind the clinic login.
+
+## Production deployment
+
+All settings come from environment variables. The table below covers the variables added in wave 1 and 2 that matter for a production deployment.
+
+| Env var | Default | Purpose |
+|---|---|---|
+| `PORTAL_ONLY` | `` (empty) | When set to `1`, only the public portal routes are mounted (omits `/audit`, `/dashboard`). Run two containers from the same image: one internet-facing with `PORTAL_ONLY=1`, one internal without. |
+| `AUDIT_TOKEN` | `` (empty) | When non-empty, `/audit`, `/audit/apple` and `/audit.json` require `?token=<value>` or `Authorization: Bearer <value>`. Set this to a random secret for production. |
+| `QUARANTINE_TTL_DAYS` | `30` | Days after which rejected/quarantined answers are eligible for purge via `POST /admin/purge`. |
+| `TOKEN_TTL_DAYS` | `90` | Days after which used or expired tokens are eligible for purge. |
+| `ENGINE_URL` | `` (empty) | URL of the AI engine service (e.g. `http://engine:8100`). When unset, the engine runs in-process (dev/test mode). |
+
+**`PORTAL_ONLY` split.** `app/portal_router.py` carries the public-facing routes: link open, mock eID login, answer form, readback confirmation, and the simulated SMS inbox. `app/clinic_router.py` carries the clinic-internal routes: `/audit`, `/audit/apple`, `/audit.json`, and `/dashboard`. Setting `PORTAL_ONLY=1` mounts only the portal router and omits the clinic router. In production, run two containers from the same image: the internet-facing pod sets `PORTAL_ONLY=1` (no audit or dashboard routes reachable from outside), and the internal pod leaves it unset (full access to audit and dashboard, reachable only from within the clinic network). A minimal Docker Compose would use `image: befundbruecke` for both services, with the internet-facing service adding `environment: [PORTAL_ONLY=1]` and publishing port 443, while the internal service publishes only to the clinic VPN interface.
 
 ## Every component is replaceable
 Each simulated part sits behind one small interface. Swapping it touches the file named in the right column, not the rest.

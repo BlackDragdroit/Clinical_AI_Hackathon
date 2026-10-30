@@ -201,3 +201,31 @@ def test_repeated_identity_failures_send_one_ping(hapi, outbox):
     assert len(warning_msgs) == 1, \
         f"Expected exactly 1 warning ping, got {len(warning_msgs)}: {warning_msgs}"
 
+
+def test_review_includes_row_count_for_parseable_doc(hapi, outbox):
+    """A parseable lab result (row count > 0) goes to review for a wrong doc type, but the doctor
+    notification must show the actual row count and NOT say 'kein gültiges Dokument' (P2 extension)."""
+    rid = _send(REQ1)
+    req = db.get("requests", "id", rid)
+    from app import intake_service
+    lab_content = doc("lab-result-maria-beispiel.md")
+    out = intake_service.process_answer(
+        req,
+        verified_name="Dr. Eva Brandl",
+        identity_method="Identität geprüft: ID Austria (simuliert)",
+        actor="eid:bpk-test Dr. Eva Brandl",
+        typed_name="Maria Beispiel",
+        typed_dob="12.03.1961",
+        filename="lab-result-maria-beispiel.md",
+        content=lab_content,
+    )
+    # The decision must be 'file' (correct doc) or 'review' — either way not 'reject'
+    assert out["decision"] in ("file", "review"), f"Unexpected decision: {out['decision']}"
+    msgs = [m["text"] for m in db.query("SELECT text FROM matrix_outbox WHERE request_id = ?", (rid,))]
+    # For a parseable document the notification must NOT say 'kein gültiges Dokument'
+    assert not any("kein gültiges Dokument" in m for m in msgs), \
+        f"Unexpected 'kein gültiges Dokument' in notification for parseable doc: {msgs}"
+    # If it went to review, the row count must be > 0 and mentioned
+    if out["decision"] == "review":
+        assert any(m for m in msgs if re.search(r"[1-9]\d* Zeilen geparst", m)), \
+            f"Expected positive row count in review notification, got: {msgs}"

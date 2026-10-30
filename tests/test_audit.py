@@ -339,3 +339,24 @@ def test_audit_requires_token_when_configured(monkeypatch):
     finally:
         object.__setattr__(settings, "audit_token", "")
 
+
+def test_audit_token_via_bearer_header():
+    """AUDIT_TOKEN set: Authorization: Bearer <token> on /audit.json returns 200 (wave-3 coverage)."""
+    from app.config import settings
+    object.__setattr__(settings, "audit_token", "wave3-bearer-token")
+    try:
+        with TestClient(app) as client:
+            # No token → 403
+            r_none = client.get("/audit.json")
+            assert r_none.status_code == 403
+            # Wrong bearer → 403
+            r_wrong = client.get("/audit.json", headers={"Authorization": "Bearer wrong-token"})
+            assert r_wrong.status_code == 403
+            # Correct Bearer header → 200
+            r_ok = client.get("/audit.json", headers={"Authorization": "Bearer wave3-bearer-token"})
+            assert r_ok.status_code == 200
+            data = r_ok.json()
+            assert "chain_ok" in data
+    finally:
+        object.__setattr__(settings, "audit_token", "")
+

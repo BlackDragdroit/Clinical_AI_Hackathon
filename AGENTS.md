@@ -78,22 +78,26 @@ Each agent picks its own items (column "Owner"). COORDINATOR updates this table 
 
 | # | Item | Owner | Branch | Status |
 |---|---|---|---|---|
-| P1 | O1 — lab request answered with discharge report auto-filed (should be `review`) | IMPROVE | `improve/doc-type-mismatch` | ✅ |
-| P2 | O3 — junk/unparseable answer goes to review without a summary shown to Dr. Hofer | IMPROVE | `improve/review-summary` | open |
-| P3 | O6 — 5 failed identity pings flood Matrix (deduplicate to 1 + counter) | IMPROVE | `improve/identity-ping-dedup` | open |
-| P4 | README answer 4 (misdelivery numbers, Biostat TODO) | DOCS | `docs/answer-4` | ✅ |
-| P5 | README "What works / what doesn't" completion | DOCS | `docs/what-works` | ✅ |
-| P6 | METRICS.md full run on the live stack (G1) | PLAYTEST | `playtest/g1-metrics` | open |
-| P7 | e2e on real `make up` stack (G2) | PLAYTEST | `playtest/g2-e2e-stack` | open |
-| P8 | HL7 validator rerun on bundles filed through the live stack | FHIR | `fhir/validator-live` | open |
-| P9 | NuExtract3 vLLM format verification on A5000 | ENGINE | `engine/nuextract3-vllm` | open |
+| P1 | O1 — lab request answered with discharge report auto-filed (should be `review`) | IMPROVE | `improve/doc-type-mismatch` | ✅ wave-1 |
+| P2 | O3 — review ping shows row count / reason | IMPROVE | `improve/wave2` | ✅ wave-2 |
+| P3 | O6 — identity failure ping deduplication | IMPROVE | `improve/wave2` | ✅ wave-2 |
+| P4 | README answer 4 (misdelivery numbers) | DOCS | `docs/answer-4` | ✅ wave-1 |
+| P5 | README "What works / what doesn't" completion | DOCS | `docs/what-works` | ✅ wave-1 |
+| P6 | METRICS.md full run on the live stack (G1) | PLAYTEST | `playtest/g1-metrics` | open (needs Docker) |
+| P7 | e2e on real `make up` stack (G2) | PLAYTEST | `playtest/g2-e2e-stack` | open (needs Docker) |
+| P8 | HL7 validator rerun on live-stack bundles | FHIR | `fhir/validator-live` | open (needs Docker) |
+| P9 | NuExtract3 vLLM format verification on A5000 | ENGINE | `engine/nuextract3-vllm` | open (needs GPU) |
 | P10 | Retention / deletion of stored answers and quarantine | IMPROVE | `improve/retention` | open |
-| P11 | Portal split: internet-facing vs. clinic-side (production boundary) | REWRITE | `rewrite/portal-split` | open |
-| P12 | Practitioner / Organization deduplication (no identifier today) | FHIR | `fhir/practitioner-dedup` | open |
-| P13 | Audit page behind clinic login | IMPROVE | `improve/audit-login` | open |
-| P14 | Name check: double given names ("Eva Maria Brandl" blocked by policy) | FHIR | `fhir/name-policy` | ✅ |
-| P15 | O4 — mock eID assertion not tied to the link (state+nonce for production) | DOCS | `docs/eid-production-note` | open |
-| P16 | ELGA LOINC preferred codes folded into the lexicon | ENGINE | `engine/elga-loinc` | ✅ |
+| P11 | Portal split: internet-facing vs. clinic-side | REWRITE | `rewrite/portal-split` | ✅ wave-2 |
+| P12 | Practitioner / Organization deduplication | FHIR | `fhir/practitioner-dedup` | ✅ wave-2 |
+| P13 | Audit page behind optional auth token | IMPROVE | `improve/wave2` | ✅ wave-2 |
+| P14 | Name check: double given names | FHIR | `fhir/name-policy` | ✅ wave-1 |
+| P15 | O4 — mock eID assertion not tied to link (production OIDC note) | DOCS | `docs/eid-production-note` | open |
+| P16 | ELGA LOINC preferred codes in lexicon | ENGINE | `engine/elga-loinc` | ✅ wave-1 |
+| P17 | Retention/purge: TTL-based deletion of quarantine + used tokens | IMPROVE | `improve/retention` | open |
+| P18 | README: production deployment notes (PORTAL_ONLY, AUDIT_TOKEN, ifNoneExist) | DOCS | `docs/wave3` | open |
+| P19 | DECISIONS.md: document wave-1/2 changes (P1, P11, P12, P13) | DOCS | `docs/wave3` | open |
+| P20 | T1 eID replay test: bind assertion to link in mock (O4 fix) | IMPROVE | `improve/wave3` | open |
 
 ---
 

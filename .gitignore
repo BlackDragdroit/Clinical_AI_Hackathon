@@ -18,3 +18,5 @@ eval/data/external/elga/
 eval/data/external/statistik_austria/
 eval/data/external/elga_cda_examples/
 eval/data/external/grascco/
+# written by scripts/public_up.sh with the current tunnel address
+deploy/public/element-public.json

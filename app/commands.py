@@ -107,6 +107,9 @@ def from_engine(res: dict, sender: str, source: str) -> str:
     patient = res.get("patient") or {}
     if not res.get("ready"):
         audit.log("request_parsed", None, sender, meta)
+        if {"recipient_name", "contact", "patient"} <= set(res.get("missing", [])):
+            from app import status_message   # a question ("Wo ist der Befund?"), not a request: show where things are
+            return status_message.recent(en)
         if en:
             ask = [MISSING_EN.get(k, k) for k in res.get("missing", [])]
             lines = ["Request not complete yet", f"Understood: “{heard}”",

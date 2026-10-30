@@ -115,7 +115,8 @@ def test_filed_pings_once(hapi, outbox):
     assert _pings() == []                                             # sending and opening need no ping
     _flow(outbox)
     [(req, text, buttons, seq)] = status_message.pings()
-    assert (req, text, buttons) == (rid, "✅ Laborbefund · Maria Beispiel ist da.", {})
+    assert (req, buttons) == (rid, {}) and text.startswith("✅ Laborbefund · Maria Beispiel ist da: INR (prothrombin time): 1.0")
+    assert "[Befund öffnen](" in text                                 # the values and where to open them
     status_message.pinged(rid, seq)
     assert _pings() == []
 
@@ -188,6 +189,21 @@ def test_english_request_gets_an_english_card_and_pings(hapi, outbox):
     assert "Sent – waiting for the link to be opened" in sent and "\nto Dr. Eva Brandl · email" in sent
     _flow(outbox)
     pings = [p[1] for p in status_message.pings() if p[0] == req["id"]]
-    assert pings == ["✅ Lab result · Maria Beispiel has arrived."]
+    assert len(pings) == 1 and pings[0].startswith("✅ Lab result · Maria Beispiel has arrived: INR") and "[Open result](" in pings[0]
     html = matrix_format.to_html(status_message.card_text(req["id"]))
     assert '<font color="#17693f">Filed · ' in html and "Open result" in html
+
+
+def test_a_question_is_answered_with_the_latest_results(hapi, outbox):
+    """'Wo ist der Befund?' has no recipient, contact or patient: no 'incomplete request', but where things are."""
+    rid = _carded()
+    commands.handle(f"!senden {rid}", DOCTOR)
+    _flow(outbox)
+    question = {"ready": False, "missing": ["recipient_name", "contact", "patient"],
+                "input": {"normalized": "Wo ist der Befund?", "language": "de"}}
+    reply = commands.from_engine(question, DOCTOR, "text")
+    assert reply.startswith("Keine neue Anfrage erkannt. Zuletzt:")
+    assert "Laborbefund · Maria Beispiel – Abgelegt" in reply and "INR (prothrombin time): 1.0" in reply and "[Befund öffnen](" in reply
+    question["input"]["language"] = "en"
+    assert commands.from_engine(question, DOCTOR, "text").startswith("No new request recognised. Latest:\nLab result · Maria Beispiel – Filed")
+

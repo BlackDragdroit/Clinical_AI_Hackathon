@@ -109,7 +109,7 @@ def text(req: dict, card: dict, checks: list[str] | None = None) -> str:
     return "\n".join(lines + [f"⚠️ {_alert(req, a)}" for a in card["alerts"]])
 
 
-def _result(req: dict) -> list[str]:
+def _result(req: dict, en: bool | None = None) -> list[str]:
     rows = db.query("SELECT * FROM answers WHERE request_id = ? AND filed_refs != '[]' ORDER BY received_at DESC", (req["id"],))
     if not rows:
         return []
@@ -118,7 +118,7 @@ def _result(req: dict) -> list[str]:
     main = next((r for t in ("DiagnosticReport", "DocumentReference") for r in refs if r.startswith(t + "/")), None)
     out = [" · ".join(summary)] if summary and req["doc_type"] == "lab" else []   # a report is read in full, not here
     if main:
-        out.append(f"[{'Open result' if _en(req) else 'Befund öffnen'}]({settings.hapi_public_url}/{main})")
+        out.append(f"[{'Open result' if (_en(req) if en is None else en) else 'Befund öffnen'}]({settings.hapi_public_url}/{main})")
     return out
 
 
@@ -177,9 +177,24 @@ def saved(request_id: str, event_id: str, text_now: str) -> None:
         db.insert("matrix_cards", {"request_id": request_id, "event_id": event_id, "text": text_now})
 
 
-def _head(req: dict) -> str:
-    doc = (DOC_EN if _en(req) else dashboard.DOC).get(req["doc_type"], req["doc_type"])
+def _head(req: dict, en: bool | None = None) -> str:
+    doc = (DOC_EN if (_en(req) if en is None else en) else dashboard.DOC).get(req["doc_type"], req["doc_type"])
     return f"{doc} · {req['patient_name']}"
+
+
+def recent(en: bool, n: int = 3) -> str:
+    """For a chat message that is no request ("Wo ist der Befund?"): the latest requests, filed ones with their values
+    and a link, in the language of the question."""
+    reqs = db.query("SELECT * FROM requests WHERE status != 'draft' ORDER BY created_at DESC LIMIT ?", (n,))
+    lines = ["No new request recognised. Latest:" if en else "Keine neue Anfrage erkannt. Zuletzt:"]
+    for req in reqs:
+        steps = dashboard.card(req, audit.entries(req["id"]))["steps"]
+        last = max((s["ts"] for s in steps if s["ts"]), default=None)
+        phase = (PHASE_EN if en else PHASE).get(req["status"], req["status"]).split(" – ")[0]
+        line = f"{_head(req, en)} – {phase}" + (f" · {_time(last)}" if last else "")
+        result = _result(req, en) if req["status"] == "filed" else []
+        lines.append(line + (": " + " · ".join(result) if result else ""))
+    return "\n".join(lines if reqs else lines[:1] + ["–"])
 
 
 def card_event(request_id: str) -> str | None:
@@ -204,7 +219,9 @@ def pings() -> list[tuple[str, str, dict[str, str], int]]:
                 out.append((rid, f"🔍 {head}: {'Match uncertain. File or discard?' if en else REVIEW_Q}",
                             {reactions.ABLEGEN: f"!ablegen {rid}", reactions.VERWERFEN: f"!verwerfen {rid}"}, ev["seq"]))
             elif ev["event"] == "answer_filed" and not decided:      # after a review she tapped it herself
-                out.append((rid, f"✅ {head} {'has arrived' if en else 'ist da'}.", {}, ev["seq"]))
+                result = " · ".join(_result(req))     # the values and where to open it, so nobody has to ask
+                out.append((rid, f"✅ {head} {'has arrived' if en else 'ist da'}" + (f": {result}" if result else "."),
+                            {}, ev["seq"]))
             elif ev["event"] == "misdelivery_caught" and d.get("type") == "M3":
                 out.append((rid, f"⛔ {head}: Document is about another patient. Not filed. Link used up – send a new "
                                  f"request for the right document." if en else

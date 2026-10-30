@@ -1,53 +1,121 @@
-{% extends "base.html" %}
-{% block title %}{{ t('portal.eid_title') }}{% endblock %}
-{% block style %}
-  .sim { display: flex; gap: 10px; align-items: flex-start; background: var(--warn-soft); color: var(--warn); padding: 10px 12px;
-         border-radius: var(--r-m); font-weight: 600; font-size: 14.5px; margin-bottom: 12px; }
-  .sim svg { flex: none; width: 18px; height: 18px; margin-top: 2px; }
-  .idp-head { background: #c8102e; color: #fff; padding: 14px 20px; border-radius: var(--r-l) var(--r-l) 0 0; display: flex; align-items: baseline; gap: 8px; }
-  .idp-head b { font-size: 19px; letter-spacing: .005em; }
-  .idp-head small { opacity: .9; font-size: 15px; }
-  .idp-body { background: var(--paper); padding: 20px; border: 1px solid var(--line); border-top: 0; border-radius: 0 0 var(--r-l) var(--r-l); box-shadow: var(--shadow); }
-  .svc { background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--r-m); padding: 10px 12px; margin: 8px 0 14px; }
-  .svc b { display: block; }
-  details summary { cursor: pointer; color: var(--ink-2); }
-  .shares { list-style: none; padding: 0; margin: 6px 0 14px; font-size: 15px; }
-  .shares li { position: relative; padding: 6px 0 6px 24px; border-bottom: 1px solid var(--line); }
-  .shares li::before { content: ""; position: absolute; left: 5px; top: 10px; width: 5px; height: 10px; border: solid var(--ok);
-                       border-width: 0 2px 2px 0; transform: rotate(45deg); }
-  .person { display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 10px 12px; border: 1.5px solid var(--line-2);
-            border-radius: var(--r-m); margin: 8px 0; cursor: pointer; font-weight: 500;
-            transition: border-color var(--t-fast), background var(--t-fast); }
-  .person:hover { border-color: var(--ink-3); }
-  .person:has(input:checked) { border-color: #c8102e; background: #fdf3f4; }
-  .person input { width: 22px; height: 22px; min-height: 0; accent-color: #c8102e; }
-  .person small { display: block; color: var(--ink-3); font-weight: 400; font-size: 14px; }
-  .btn.idp { background: #c8102e; }
-  .btn.idp:hover { background: #a00d25; }
-{% endblock %}
-{% block steps %}{% set step = 1 %}{% include "_steps.html" %}{% endblock %}
-{% block body %}
-<div class="sim" role="note"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8 15 14H1z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 6v3.6M8 11.6v.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span>{{ t('portal.eid_sim') }}</span></div>
-<div class="idp-head"><b>ID Austria</b><small>· {{ t('portal.eid_h') }}</small></div>
-<div class="idp-body">
-  <p style="margin-top:0">{{ t('portal.eid_sub') }}</p>
-  <div class="svc"><span class="muted">{{ t('portal.eid_service') }}</span><b>IRIS · {{ clinic }}</b></div>
-  <details class="muted"><summary>{{ t('portal.eid_shares') }}</summary>
-  <ul class="shares">
-    <li>{{ t('portal.eid_d_name') }}</li><li>{{ t('portal.eid_d_dob') }}</li><li>{{ t('portal.eid_d_bpk') }}</li><li>{{ t('portal.eid_d_loa') }}</li>
-  </ul></details>
-  <form method="post" action="/eid/authorize">
+{#- DemoID: the simulated identity provider that stands in for ID Austria in the demo. Its own name, a
+    permanent SIMULATION badge and a footer naming it a simulation (not ID Austria); no official logo.
+    The familiar steps (who asks, account, approval in the app, data release) fit on one screen.
+    Owner: SWE 2 (edited by MedEng). -#}
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light">
+<title>{{ t('portal.eid_title') }}</title>
+<style>
+  :root {
+    --page: #f2f5f9; --card: #ffffff; --ink: #030d20; --ink-2: #2f3d58; --ink-3: #5c7097;
+    --line: #d9e0ed; --line-2: #b9c5dc; --blue: #1e4ea6; --blue-ink: #163c82; --blue-soft: #eef3fb; --navy: #030d20;
+    --sim: #7c5200; --sim-soft: #fbf1d9; --ok: #17693f;
+    --font: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body { margin: 0; display: flex; flex-direction: column; background: var(--page); color: var(--ink); font: 15px/1.45 var(--font); }
+  .top { background: var(--card); border-bottom: 1px solid var(--line); }
+  .bar { display: flex; align-items: center; gap: 10px; max-width: 40rem; margin: 0 auto; padding: 10px 16px; }
+  .word { font-weight: 700; font-size: 19px; letter-spacing: -.01em; }
+  .pill { font-size: 11.5px; font-weight: 700; letter-spacing: .06em; color: var(--sim); background: var(--sim-soft);
+          border: 1px solid #ecd9a6; border-radius: 4px; padding: 1px 6px; }
+  .lang { margin-left: auto; font-size: 14px; color: var(--ink-2); text-decoration: none; border-bottom: 1px solid var(--line-2); }
+  main { flex: 1; width: 100%; max-width: 40rem; margin: 0 auto; padding: 14px 16px;
+         display: flex; flex-direction: column; justify-content: center; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 2px 10px rgb(3 13 32 / .05); }
+  .card > section { padding: 14px 18px; }
+  .card > section + section { border-top: 1px solid var(--line); }
+  h1 { font-size: 21px; line-height: 1.2; margin: 0; letter-spacing: -.01em; }
+  h2 { display: flex; align-items: center; gap: 8px; font-size: 14px; margin: 0 0 8px; }
+  h2 .n { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--ink);
+          color: #fff; font-size: 11.5px; font-weight: 700; }
+  .svc { margin: 3px 0 0; font-size: 14px; color: var(--ink-2); }
+  .svc b { color: var(--ink); }
+  .accts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .acct { display: flex; align-items: center; gap: 9px; min-width: 0; padding: 8px 10px; border: 1px solid var(--line-2);
+          border-radius: 10px; cursor: pointer; transition: border-color 120ms, background 120ms; }
+  .acct:hover { border-color: var(--ink-3); }
+  .acct:has(input:checked) { border-color: var(--blue); background: var(--blue-soft); box-shadow: inset 3px 0 0 var(--blue); }
+  .acct input { flex: none; width: 16px; height: 16px; margin: 0; accent-color: var(--blue); }
+  .av { flex: none; display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 50%;
+        background: var(--page); color: var(--ink-2); font-weight: 700; font-size: 12.5px; }
+  .who { min-width: 0; font-weight: 600; font-size: 14px; line-height: 1.3; }
+  .who small { display: block; color: var(--ink-3); font-size: 12.5px; font-weight: 400; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .app { display: flex; gap: 10px; align-items: center; margin: 0; font-size: 13.5px; color: var(--ink-2); }
+  .phone { flex: none; width: 30px; height: 50px; border: 2px solid var(--ink); border-radius: 7px; display: grid; place-items: center; }
+  .phone svg { width: 16px; height: 16px; color: var(--ok); }
+  .data { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 0; padding: 0; }
+  .data li { font-size: 12.5px; color: var(--ink-2); background: var(--page); border: 1px solid var(--line); border-radius: 100px; padding: 2px 9px; }
+  .actions { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; }
+  .btn { display: flex; align-items: center; justify-content: center; min-height: 46px; padding: 0 14px; border-radius: 100px;
+         font: inherit; font-weight: 600; text-decoration: none; cursor: pointer; }
+  .btn.go { border: 0; background: var(--blue); color: #fff; }
+  .btn.go:hover { background: var(--blue-ink); }
+  .btn.back { border: 1px solid var(--line-2); background: #fff; color: var(--ink); font-weight: 500; }
+  .btn:focus-visible, .acct:focus-within, .lang:focus-visible { outline: 3px solid #1f5f8b; outline-offset: 2px; }
+  .foot { margin: 0; color: #d9e0ed; background: var(--navy); font-size: 12px; text-align: center; padding: 9px 16px; }
+  @media (max-width: 520px) {
+    .two { grid-template-columns: 1fr; gap: 10px; }
+    .card > section { padding: 12px 14px; }
+    .av { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="top"><header class="bar">
+  <span class="word">{{ t('portal.eid_brand') }}</span>
+  <span class="pill">SIMULATION</span>
+  <a class="lang" href="{{ switch_href }}" hreflang="{{ other_lang }}" lang="{{ other_lang }}">{{ t('lang.switch') }}</a>
+</header></div>
+<main>
+  <form class="card" method="post" action="/eid/authorize">
     <input type="hidden" name="state" value="{{ state }}">
-    <p style="margin-bottom:0"><strong>{{ t('portal.eid_pick') }}</strong></p>
-    {% for key, c in citizens.items() %}
-    <label class="person" style="margin-top:.5rem; font-weight:500">
-      <input type="radio" name="citizen" value="{{ key }}" {% if loop.first %}checked{% endif %}>
-      <span>{{ c.given }} {{ c.family }}<small>{{ c.dob }} · {{ c.loa }}</small></span>
-    </label>
-    {% endfor %}
-    <p class="muted">{{ t('portal.eid_note') }}</p>
-    <button class="btn idp" type="submit">{{ t('portal.eid_confirm') }}</button>
+    <section>
+      <h1>{{ t('portal.eid_h') }}</h1>
+      <p class="svc">{{ t('portal.eid_service') }}: <b>IRIS · {{ clinic }}</b></p>
+    </section>
+
+    <section aria-labelledby="h-acct">
+      <h2 id="h-acct"><span class="n">1</span>{{ t('portal.eid_pick') }}</h2>
+      <div class="accts">
+      {%- for key, c in citizens.items() %}
+        <label class="acct">
+          <input type="radio" name="citizen" value="{{ key }}" {% if loop.first %}checked{% endif %}>
+          <span class="av" aria-hidden="true">{{ c.given[:1] }}{{ c.family[:1] }}</span>
+          <span class="who">{{ c.given }} {{ c.family }}<small>{{ t('portal.eid_acct_meta', dob=c.dob, loa=c.loa) }}</small></span>
+        </label>
+      {%- endfor %}
+      </div>
+    </section>
+
+    <section class="two">
+      <div>
+        <h2><span class="n">2</span>{{ t('portal.eid_app_h') }}</h2>
+        <p class="app"><span class="phone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17.5 19 7"/></svg></span>{{ t('portal.eid_note') }}</p>
+      </div>
+      <div>
+        <h2><span class="n">3</span>{{ t('portal.eid_shares') }}</h2>
+        <ul class="data">
+          <li>{{ t('portal.eid_d_name') }}</li><li>{{ t('portal.eid_d_dob') }}</li>
+          <li title="{{ t('portal.eid_d_bpk') }}">bPK ({{ t('portal.eid_d_bpk_short') }})</li><li>{{ t('portal.eid_d_loa') }}</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="actions">
+      <a class="btn back" href="/r/{{ state }}">{{ t('portal.eid_cancel') }}</a>
+      <button class="btn go" type="submit">{{ t('portal.eid_confirm') }}</button>
+    </section>
   </form>
-  <p><a class="btn secondary" href="/r/{{ state }}">{{ t('portal.eid_cancel') }}</a></p>
-</div>
-{% endblock %}
+</main>
+<p class="foot">{{ t('portal.eid_foot') }}</p>
+</body>
+</html>

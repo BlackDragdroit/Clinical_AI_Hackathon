@@ -14,6 +14,7 @@ import time
 from engine import rules
 from engine._core import parse_dob
 from engine.backends import llm
+from engine.config import settings
 from engine.ground import locate
 from engine.normalize import language, normalize
 from engine.patients import Directory, PatientMatch, resolve
@@ -34,6 +35,12 @@ INSTRUCTIONS = (
     "document_type: lab_result for lab or blood values, discharge_report for discharge or rehab reports, else other. "
     "requested_tests = the tests or panel asked for (e.g. 'Gerinnung', 'blood count'). reason = why it is needed."
 )
+# ENGINE_LLM_FIELDS=core asks the model only for what it measurably adds (held-out 300: recipient +69, patient +58;
+# contact is the cross-check); document type, tests, reason and organisation then come from the rules alone.
+# On the laptop CPU that is 22 % faster, but on the same 100 held-out requests it scored 84 vs 86 fully correct and
+# 3 vs 2 silent errors (the model more often took the patient or the e-mail for the recipient), so it is opt-in.
+CORE = ("recipient_name", "contact", "patient_name", "patient_birth_date")
+CORE_INSTRUCTIONS = INSTRUCTIONS.split(" document_type:")[0]
 _LLM_KEY = {"recipient_name": "recipient_name", "recipient_org": "recipient_organisation", "contact": "contact",
             "patient_name": "patient_name", "patient_dob": "patient_birth_date", "panel": "requested_tests",
             "reason": "reason"}
@@ -103,7 +110,9 @@ def run(text: str, directory: Directory | None = None, use_llm: bool = True, use
     lang = language(norm)
     r = rules.extract(norm) if use_rules else dict.fromkeys(rules.extract(norm))
     t_rules = time.perf_counter()
-    res = llm.extract(norm, FIELDS, INSTRUCTIONS) if use_llm else llm.LlmResult(None, "", 0, "disabled")
+    asked, instructions = ((FIELDS, INSTRUCTIONS) if settings.llm_fields == "all"
+                           else ({k: FIELDS[k] for k in CORE}, CORE_INSTRUCTIONS))
+    res = llm.extract(norm, asked, instructions) if use_llm else llm.LlmResult(None, "", 0, "disabled")
     data = res.data or {}
     flags: list[str] = []
     dropped: list[str] = []

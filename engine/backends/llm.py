@@ -65,14 +65,16 @@ def extract(text: str, fields: dict, instructions: str, max_tokens: int = 600,
                                         "enable_thinking": False}
     else:
         body["messages"] = [{"role": "system", "content": instructions}, {"role": "user", "content": text}]
-        body["chat_template_kwargs"] = {"enable_thinking": False}
+        if "stral" not in model.lower():   # vLLM's Mistral tokenizer rejects chat_template_kwargs (and has no thinking)
+            body["chat_template_kwargs"] = {"enable_thinking": False}
     cache = _cache_path(body)
     if cache and cache.exists():          # same model + prompt + input -> same answer (eval reruns, demo safety)
         c = json.loads(cache.read_text(encoding="utf-8"))
         return LlmResult(c["data"], model, c["ms"], cached=True)
+    headers = {"Authorization": f"Bearer {settings.llm_api_key}"} if settings.llm_api_key else {}
     t0 = time.perf_counter()
     try:
-        r = httpx.post(f"{url.rstrip('/')}/chat/completions", json=body, timeout=settings.timeout_s)
+        r = httpx.post(f"{url.rstrip('/')}/chat/completions", json=body, headers=headers, timeout=settings.timeout_s)
         r.raise_for_status()
         content = r.json()["choices"][0]["message"]["content"]
         data = json.loads(content)

@@ -1,6 +1,8 @@
 """Engine units: dictation normalization, grounding, request job (rules + fake model), patient lookup, document job."""
+import dataclasses
 from datetime import datetime
 
+import httpx
 import pytest
 
 from engine import document_job, request_job
@@ -119,6 +121,46 @@ def test_contact_disagreement_blocks(fake_llm):
     r = request_job.run("Bei Dr. Eva Brandl eva.brandl@labor-kanal.example (Sekretariat info@labor-kanal.example) "
                         "Gerinnung von Frau Maria Beispiel, geb. 12.03.1961", PATIENTS)
     assert r["fields"]["contact"] is None and "contact" in r["missing"]
+
+
+def test_model_is_asked_for_all_fields_unless_core(monkeypatch):
+    asked = []
+    monkeypatch.setattr(llm, "extract", lambda text, fields, instr, **kw: asked.append(set(fields)) or llm.LlmResult(None, "m", 1))
+    for setting in ("all", "core"):
+        monkeypatch.setattr(request_job, "settings", dataclasses.replace(request_job.settings, llm_fields=setting))
+        request_job.run(SPOKEN_1, PATIENTS)
+    assert asked == [set(request_job.FIELDS), set(request_job.CORE)]
+    assert type(request_job.settings)().llm_fields == "all"     # the default
+
+
+def test_api_key_is_sent_only_when_set(monkeypatch):
+    seen = []
+
+    def post(url, json=None, headers=None, timeout=None):   # noqa: A002 - mirrors httpx.post
+        seen.append(headers)
+        return httpx.Response(200, json={"choices": [{"message": {"content": "{}"}}]}, request=httpx.Request("POST", url))
+
+    monkeypatch.setattr(llm.httpx, "post", post)
+    monkeypatch.delenv("ENGINE_LLM_CACHE", raising=False)
+    base = dataclasses.replace(llm.settings, llm_url="http://gpu.example/v1")
+    for key in ("", "k"):
+        monkeypatch.setattr(llm, "settings", dataclasses.replace(base, llm_api_key=key))
+        assert llm.extract("x", {"a": "string"}, "i").error is None
+    assert seen == [{}, {"Authorization": "Bearer k"}]
+
+
+def test_no_chat_template_kwargs_for_mistral_models(monkeypatch):
+    bodies = []
+
+    def post(url, json=None, headers=None, timeout=None):   # noqa: A002 - mirrors httpx.post
+        bodies.append(json)
+        return httpx.Response(200, json={"choices": [{"message": {"content": "{}"}}]}, request=httpx.Request("POST", url))
+
+    monkeypatch.setattr(llm.httpx, "post", post)
+    monkeypatch.delenv("ENGINE_LLM_CACHE", raising=False)
+    for model in ("ministral-8b", "Qwen/Qwen3-1.7B"):
+        llm.extract("x", {"a": "string"}, "i", url="http://gpu.example/v1", model=model, mode="json_schema")
+    assert "chat_template_kwargs" not in bodies[0] and bodies[1]["chat_template_kwargs"] == {"enable_thinking": False}
 
 
 def test_model_down_falls_back_to_rules(monkeypatch):

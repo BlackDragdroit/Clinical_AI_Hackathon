@@ -1,6 +1,6 @@
 """Matrix bot (matrix-nio): relays Dr. Hofer's commands to commands.handle, keeps one card per request up to
-date with a one-line ping only where she has to look (app/status_message.py), turns ✅/❌ reactions into
-commands (app/reactions.py) and drains the outbox. Owner: SWE 1.
+date with a one-line ping only where she has to look (app/status_message.py), turns reactions ("Senden",
+"Ablegen", "Verwerfen") into commands (app/reactions.py) and drains the outbox. Owner: SWE 1.
 
 With MATRIX_ENABLED=0 only the console printer runs, so everything else works without Synapse.
 """
@@ -66,7 +66,7 @@ async def run_bot() -> None:
         if not event_id:
             return None
         keys = reactions.offer(event_id, buttons) if buttons is not None else reactions.register(event_id, text)
-        for key in keys:                                   # ✅ / ❌ under the message, tapped like a button
+        for key in keys:                                   # word pills under the message, tapped like a button
             await client.room_send(settings.matrix_room_id, "m.reaction",
                                    {"m.relates_to": {"rel_type": "m.annotation", "event_id": event_id, "key": key}})
         return event_id
@@ -74,7 +74,7 @@ async def run_bot() -> None:
     async def answer(command: str, reply: str) -> None:
         if rid := status_message.drafted(reply):        # the draft becomes the request's card
             text = await asyncio.to_thread(status_message.card_text, rid, reply)
-            if event_id := await say(text, {"✅": f"!senden {rid}"}):
+            if event_id := await say(text, {reactions.SENDEN: f"!senden {rid}"}):
                 status_message.saved(rid, event_id, text)
         elif status_message.is_ack(command, reply):      # acks are not posted: the card shows the change
             reactions.spend(command)                      # typed or tapped: its buttons are used up either way

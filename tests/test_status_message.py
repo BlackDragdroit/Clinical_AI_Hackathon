@@ -39,7 +39,7 @@ def test_draft_card_has_what_to_check_and_one_action(hapi, outbox):
     lines = status_message.card_text(rid).split("\n")
     assert lines == ["Laborbefund · Maria Beispiel, geb. 12.03.1961",
                      "an Dr. Eva Brandl · eva.brandl@labor-kanal.example",
-                     f"✅ tippen zum Senden · Anfrage {rid}"]
+                     f"„Senden“ tippen · Anfrage {rid}"]
 
 
 def test_draft_card_keeps_the_replys_warnings_and_is_not_rerendered(hapi, outbox):
@@ -146,7 +146,7 @@ def test_review_pings_with_buttons_and_no_done_ping_after_own_decision(hapi, out
     _flow(outbox, typed=("Maria Beispiel", "13.03.1961"))
     [(_, text, buttons, seq)] = status_message.pings()
     assert text == "🔍 Laborbefund · Maria Beispiel: Zuordnung unsicher. Ablegen oder verwerfen?"
-    assert buttons == {"✅": f"!ablegen {rid}", "❌": f"!verwerfen {rid}"}
+    assert buttons == {"Ablegen": f"!ablegen {rid}", "Verwerfen": f"!verwerfen {rid}"}
     status_message.pinged(rid, seq)
     commands.handle(f"!ablegen {rid}", DOCTOR)
     assert _pings() == []                                             # she tapped it: no "ist da"
@@ -170,5 +170,5 @@ def test_ping_is_a_reply_to_its_card_and_shows_the_decision(hapi, outbox):
     assert status_message.decided(f"!senden {rid}") == []
     [(event_id, text)] = status_message.decided(f"!ablegen {rid}")
     assert event_id == "$ping"
-    assert re.fullmatch(r"🔍 Laborbefund · Maria Beispiel: Zuordnung unsicher → ✅ abgelegt · \d\d:\d\d", text)
+    assert re.fullmatch(r"🔍 Laborbefund · Maria Beispiel: Zuordnung unsicher → abgelegt · \d\d:\d\d", text)
     assert "→ verworfen ·" in status_message.decided(f"!verwerfen {rid}")[0][1]

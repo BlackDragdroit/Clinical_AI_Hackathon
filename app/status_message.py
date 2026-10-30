@@ -2,8 +2,9 @@
 
 The bot's answer to `!anfrage` is the card. It is edited in place as the request moves (sent, opened, identity,
 answer, filed), so the room gets no message per step. A new message appears only when something is done (✅),
-needs a decision (🔍, with ✅/❌ buttons) or went wrong (⚠️/⛔). Acknowledgements of Dr. Hofer's own actions are
-not posted: the card already shows them. The steps are the dashboard's (app/dashboard.py), from the audit log.
+needs a decision (🔍, with Ablegen/Verwerfen buttons) or went wrong (⚠️/⛔). Acknowledgements of Dr. Hofer's own
+actions are not posted: the card already shows them. The steps are the dashboard's (app/dashboard.py), from the
+audit log.
 """
 from __future__ import annotations
 
@@ -12,7 +13,7 @@ import re
 from datetime import date, datetime
 from zoneinfo import ZoneInfo
 
-from app import audit, dashboard, db
+from app import audit, dashboard, db, reactions
 from app.config import settings
 
 TZ = ZoneInfo("Europe/Vienna")
@@ -57,7 +58,7 @@ def text(req: dict, card: dict, checks: list[str] | None = None) -> str:
     if req["status"] == "draft":
         lines = [f"{head}, geb. {_dob(req['patient_dob'])}", f"an {req['expected_name']} · {req['contact']}"]
         lines += checks if checks is not None else [f"⚠️ Kontakt prüfen: {w}" for w in json.loads(req["lint_warnings"] or "[]")]
-        return "\n".join(lines + [f"✅ tippen zum Senden · Anfrage {req['id']}"])
+        return "\n".join(lines + [f"„{reactions.SENDEN}“ tippen · Anfrage {req['id']}"])
     dots = "".join("●" if s["state"] == "done" else "○" for s in card["steps"])
     last = max((s["ts"] for s in card["steps"] if s["ts"]), default=None)
     phase = PHASE.get(req["status"], req["status"])
@@ -163,7 +164,8 @@ def pings() -> list[tuple[str, str, dict[str, str], int]]:
                 continue
             d, rid = ev["details"], req["id"]
             if ev["event"] == "review_requested":
-                out.append((rid, f"🔍 {head}: {REVIEW_Q}", {"✅": f"!ablegen {rid}", "❌": f"!verwerfen {rid}"}, ev["seq"]))
+                out.append((rid, f"🔍 {head}: {REVIEW_Q}",
+                            {reactions.ABLEGEN: f"!ablegen {rid}", reactions.VERWERFEN: f"!verwerfen {rid}"}, ev["seq"]))
             elif ev["event"] == "answer_filed" and not decided:      # after a review she tapped it herself
                 out.append((rid, f"✅ {head} ist da.", {}, ev["seq"]))
             elif ev["event"] == "misdelivery_caught" and d.get("type") == "M3":
@@ -181,7 +183,7 @@ def decided(command: str) -> list[tuple[str, str]]:
     m = _CMD.match(command.strip())
     if not m or m.group(1) == "senden" or not (req := db.get("requests", "id", m.group(2))):
         return []
-    outcome = "✅ abgelegt" if m.group(1) == "ablegen" else "verworfen"
+    outcome = "abgelegt" if m.group(1) == "ablegen" else "verworfen"
     text = f"🔍 {_head(req)}: Zuordnung unsicher → {outcome} · {_time(db.now())}"
     rows = db.query("SELECT DISTINCT event_id FROM matrix_actions WHERE command = ?", (f"!ablegen {req['id']}",))
     return [(r["event_id"], text) for r in rows]

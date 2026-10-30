@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/img/iris-logo.png" alt="IRIS logo" width="180">
+  <img src="docs/img/iris-logo.png" alt="IRIS eye: an iris shaped like a camera aperture" width="220">
 </p>
 
 <h1 align="center">IRIS</h1>

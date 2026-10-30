@@ -105,7 +105,15 @@ sequenceDiagram
 
 ## Design answers
 ### 1. How does an outside person prove who they are without a directory?
-<!-- TODO(MedEng) -->
+There is no directory of outside people, so Dr. Hofer's request takes its place: she names who must answer and one contact (`!anfrage labor "Dr. Eva Brandl" eva.brandl@labor-kanal.example …`). The outside person then proves two things, and sees nothing about the patient until both hold. No account, no password, no app: a browser and the eID they already have.
+
+1. **Possession of the contact.** The email or SMS carries a single-use link: a 256-bit random token (`app/tokens.py`). Only its SHA-256 hash is stored, together with the one request and the contact it was sent to. It expires after 72 h, stops working after 5 failed identity checks and is spent when the answer is submitted. Before login the page shows one neutral sentence with the clinic name; unknown, expired, used and exhausted links all get the same neutral page.
+2. **Identity.** The person logs in with ID Austria, which returns name, birth date, a sector-specific pseudonym (bPK) and the level of assurance. The prototype simulates this with an HMAC-signed assertion carrying the same fields (`app/identity/eid_mock.py`); production uses the ID Austria OIDC login. People outside Austria use their own national EU eID through eIDAS (see answer 2).
+3. **Binding.** The verified name must equal the name Dr. Hofer typed; titles, case and umlaut spelling are ignored (`policy.names_match`). If it doesn't match, nothing is shown, the attempt is counted, `identity_checked FAILED` and `misdelivery_caught` go to the audit log, and Dr. Hofer gets a warning in Matrix.
+4. **Need-to-know reveal.** Only after both proofs does the portal show the patient's name, birth date and what is requested, logged as `patient_revealed`.
+5. **Record.** The audit log names `eid:<pseudonym> <name>` as the actor of `identity_checked`, `patient_revealed` and `answer_sent`. In FHIR, `Provenance.agent.who` is the verified sender, and its role text states both proofs ("ID Austria (simuliert, LoA high), Namensabgleich OK; Besitz der Kontaktadresse über Einmal-Link"). The pseudonym stays in the audit log; it is not written to FHIR.
+
+What this does not prove: that the person holds a role or licence. The eID proves *who* they are; that this person is the right one to send a lab result rests on Dr. Hofer's choice, as it does today when she picks up the phone. A lookup in a professional register is not built.
 ### 2. Which identity check per document type, and why?
 Every answer needs two proofs: **possession** of the single-use link sent to the contact Dr. Hofer typed, and **identity** through ID Austria, with the verified name matching the person she named. What differs per document type is what we record and why the check matters. The rules live in `app/identity/policy.py`.
 
@@ -120,11 +128,101 @@ In every case a borderline patient match goes to Dr. Hofer (`review`, she confir
 
 **Deliberately not offered: link possession alone.** It can't tell the named person from a colleague she forwarded the email to (misdelivery M2), so the patient's data would be shown to whoever holds the link. People with no eID at all (most people outside the EU) can't answer through this service; for them the clinic stays on its current channel. We name this limit rather than weaken the check.
 ### 3. Which FHIR resources, and how do they reference each other and the patient?
-<!-- TODO(MedEng): Mermaid diagram -->
+The Patient already exists on the clinic's FHIR server; we read it, never create it. Sending a request creates a **Task**. An accepted answer is filed as one **transaction Bundle** (`core/fhir_build.py`): every new resource has a `urn:uuid` fullUrl, the server resolves the references, and either all resources are stored or none. Before that, HAPI `$validate` must report no errors (`intake_service._file`), and the Task is then set to `completed` with every filed resource in `Task.output`. Edge labels below are the FHIR elements as filed.
+
+Request 1, lab result (10 resources in the Bundle, plus the Task):
+
+```mermaid
+flowchart LR
+  PAT["Patient<br/>maria-beispiel<br/>(existing)"]
+  TASK["Task<br/>requested → completed<br/>input: LOINC 11502-2"]
+  OBS["Observation × 4<br/>INR · aPTT · platelets · fibrinogen"]
+  DR["DiagnosticReport<br/>LAB, LOINC 11502-2"]
+  DOC["DocumentReference<br/>LOINC 11502-2<br/>original file"]
+  PROV["Provenance"]
+  PRAC["Practitioner<br/>Dr. Eva Brandl<br/>(verified sender)"]
+  ORG["Organization<br/>Labor Kanalstraße"]
+  DEV["Device<br/>BefundBrücke intake"]
+
+  TASK -->|for| PAT
+  TASK -.->|"output.valueReference<br/>(every filed resource)"| DR
+  OBS -->|subject| PAT
+  DR -->|subject| PAT
+  DOC -->|subject| PAT
+  DR -->|result| OBS
+  OBS -->|performer| PRAC
+  OBS -->|performer| ORG
+  DR -->|performer| PRAC
+  DR -->|performer| ORG
+  DOC -->|author| PRAC
+  DOC -->|custodian| ORG
+  PROV -->|target| OBS
+  PROV -->|target| DR
+  PROV -->|target| DOC
+  PROV -->|"entity.what (role source)"| DOC
+  PROV -->|"agent.who (author)"| PRAC
+  PROV -->|"agent.onBehalfOf"| ORG
+  PROV -->|"agent.who (assembler)"| DEV
+```
+
+Request 2, rehab discharge report (6 resources, plus the Task). The report's author comes from the document and is not identity-checked; the sender is.
+
+```mermaid
+flowchart LR
+  PAT["Patient<br/>maria-beispiel<br/>(existing)"]
+  TASK["Task<br/>requested → completed<br/>input: LOINC 18842-5"]
+  DOC["DocumentReference<br/>LOINC 18842-5 discharge summary<br/>context.period = stay"]
+  PROV["Provenance"]
+  AUTH["Practitioner<br/>Dr. Johanna Leitner<br/>(author per document)"]
+  SEND["Practitioner<br/>Stefan Kern<br/>(verified sender)"]
+  ORG["Organization<br/>Reha Waldblick"]
+  DEV["Device<br/>BefundBrücke intake"]
+
+  TASK -->|for| PAT
+  TASK -.->|"output.valueReference<br/>(every filed resource)"| DOC
+  DOC -->|subject| PAT
+  DOC -->|"author (1st)"| AUTH
+  DOC -->|"author (2nd)"| SEND
+  DOC -->|custodian| ORG
+  PROV -->|target| DOC
+  PROV -->|"agent.who (author)"| SEND
+  PROV -->|"agent.onBehalfOf"| ORG
+  PROV -->|"agent.who (assembler)"| DEV
+```
+
+| Resource | Purpose | Key elements and codes |
+|---|---|---|
+| Patient | Who it is about (existing record) | Read for name and birth date, the "requested" side of the three-way patient check |
+| Task | The open request and its outcome | `status` requested → completed (filed) or → in-progress (wrong patient, still waiting); `intent` order; `for` Patient; `input` = requested document type (LOINC 11502-2 / 18842-5); `executionPeriod` start at sending, end at closing; `restriction.period.end` = link expiry; `requester` / `owner` as display names; `output` = filed resources |
+| Observation | One per lab value, so values are queryable, not just a PDF | `category` laboratory; `code` LOINC (INR 6301-6, aPTT 14979-9, platelets 777-3, fibrinogen 3255-7) plus the lab's own label; `valueQuantity` with UCUM (`s`, `10*9/L`, `g/L`; INR has no unit); `referenceRange` low/high + the lab's text; `interpretation` (v3 ObservationInterpretation, here all `N`); `effectiveDateTime` = sample taken, `issued` = reported |
+| DiagnosticReport | The lab report as a whole | `category` v2-0074 LAB; `code` LOINC 11502-2; `result` → Observations; `presentedForm` = original; `conclusion` = the lab's comment |
+| DocumentReference | The original, unchanged | Lab: type LOINC 11502-2. Rehab: LOINC 18842-5, `context.period` = stay. Original Markdown as attachment with size and SHA-1 hash; `author`, `custodian` |
+| Provenance | Who sent it, how that was checked, what software filed it | `target` = the clinical resources (Observations, DiagnosticReport, DocumentReference); `occurredDateTime` / `recorded`; `policy` → answer 2; agent `author` = verified sender, `role.text` = both identity proofs, `onBehalfOf` = their organisation; agent `assembler` = Device; lab only: `entity` (source) = the original DocumentReference |
+| Practitioner, Organization, Device | Targets of the references above | Name only, no identifier |
+
+The filed resources do not point back at the Task (no `basedOn`); `Task.output` is the link from request to answer. FHIR timestamps are Europe/Vienna, so offsets are correct across daylight saving time.
+
+**Validation.** The official HL7 validator (`make validate`, `-version 4.0`) reports **0 errors** on both scenario bundles built by `core/` (10 and 6 warnings, all dom-6 "resource should have narrative", a best-practice hint). That needs the `Provenance.policy` fix in an open PR (`medeng/validator-zero`): until it is merged, `policy` points at example.org and the validator reports 1 error per bundle. The rerun on bundles filed through the live stack is still to do.
 ### 4. How do we notice a misdelivery?
 <!-- TODO(Biostat): lint + identity binding + three-way Fellegi–Sunter, numbers from METRICS.md -->
 ### 5. Where does the service run?
-<!-- TODO(MedEng) -->
+Mostly at the clinic. Only the link page and the answer form face the internet, and the outside organisation runs nothing.
+
+| Part | Runs at | Sees patient data |
+|---|---|---|
+| Matrix (Synapse), bot, request and intake logic, `core/` (patient check, FHIR building), HAPI, audit log, SQLite | Clinic, inside its network | Yes. The clinic is the controller, and the data stays there. |
+| Portal: link page, eID login, answer form | Internet-facing. Prototype: hosted by us. Production: the clinic's DMZ, or a third-party trust provider such as FTAPI SubmitBox | Nothing before the identity check. After it: the requested patient's name and birth date, the request, and the uploaded answer in transit. |
+| Email / SMS delivery | Any SMTP relay or SMS gateway | No: recipient and link only |
+| ID Austria / eIDAS eID | The eID provider | No: it only sees that the person logs in to the service |
+| Outside organisation | Nothing to install: a browser and their eID | Only the request addressed to them, after identity |
+
+In the prototype, one FastAPI process serves the portal and the clinic side (`app/main.py`). The split above is the boundary we built for (`Channel.send(to, link)` and `EidAssertion`, see [Every component is replaceable](#every-component-is-replaceable)); it is not yet two separate deployments.
+
+Data protection, as designed (a design, not a legal assessment; a DPIA would come before production):
+- **Minimisation.** Emails and SMS carry only the link and the clinic name; `tests/test_template_leak.py` fails if a template contains a patient name, birth date or document-type word. The audit log stores contacts masked (`e***@labor-kanal.example`), and for a wrong-patient answer (M3) only match scores, never the other patient's name or birth date.
+- **Roles.** The clinic is the controller. Whoever hosts the portal or delivers the messages (us, FTAPI, an SMS gateway) is a processor and needs a processor agreement (Art. 28 GDPR).
+- **Retention: not built.** Answers, including quarantined ones about another patient, used tokens and the audit log are kept in SQLite with no deletion, and each filed bundle is also written to `var/filed/`. Production needs retention periods per kind of record, starting with deleting quarantined answers once Dr. Hofer has dealt with them.
+- **Accountability.** The audit log is append-only with a SHA-256 hash chain: editing a row, or deleting one before the newest, breaks `verify_chain()`. That makes tampering visible, not impossible: cutting off the newest entries, or rebuilding the whole chain with write access to the database, is only detected if the latest hash is also kept somewhere else, which is not built. The `/audit` page has no login yet; in production it belongs behind the clinic login.
 
 ## Every component is replaceable
 Each simulated part sits behind one small interface. Swapping it touches the file named in the right column, not the rest.
@@ -144,6 +242,16 @@ See [METRICS.md](METRICS.md) (generated by `make metrics`) and [core/METRICS_mat
 
 ## What works / what doesn't
 <!-- TODO(all, Friday): honest list, same as in the video -->
+
+**MedEng (safety, identity, FHIR, audit)**
+- Works: identity binding (M1, M2). On the live stack, an eID name that isn't the named person gets a 403 with nothing shown; `identity_checked FAILED` and `misdelivery_caught` are logged and Dr. Hofer is warned in Matrix.
+- Works: three-way patient check (M3, requested ↔ typed ↔ document). A document about another patient is quarantined, not filed; the Task goes back to `in-progress`, and the Matrix message does not name the other patient.
+- Works: audit log with all 6 required events and a SHA-256 hash chain; `tests/test_audit.py` shows that editing a row breaks the chain.
+- Works, with an open PR: HL7 validator, 0 errors on both scenario bundles built by `core/` (dom-6 narrative warnings only). It needs the `Provenance.policy` fix in `medeng/validator-zero`; without it, 1 error per bundle. Not yet rerun on bundles filed through the live stack.
+- Open PR, not in this branch: the address lint (`medeng/address-lint`) warns on the draft card before `!senden` about look-alike domains (`labor-kanaI`), typos and odd phone numbers, and never blocks. Without it, M1 is caught only after sending, by the identity binding, and the audit label reads "M1/M2".
+- Deliberately missing: answering without an eID (possession of the link alone). People with no eID at all can't use the service (answer 2).
+- Not supported: PDF upload. The upload takes Markdown and plain-text files, or text typed into the form. There is no PDF text extraction: a PDF does not parse and goes to Dr. Hofer's review; it is never filed automatically.
+- Limits: the name check needs every token to match, so "Eva Maria Brandl" in the eID against "Dr. Eva Brandl" in the request is blocked (safe, but a false block). Each answer creates a new Practitioner and Organization without an identifier (no de-duplication). No retention or deletion of stored answers (answer 5).
 
 ## Team
 See [TEAM.md](TEAM.md).

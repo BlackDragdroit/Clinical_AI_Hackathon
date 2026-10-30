@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BefundBrücke – Anfragen</title>
+<style>
+  :root { --bg: #f5f7f8; --card: #fff; --fg: #1d2327; --muted: #5f6b72; --accent: #1f5f8b; --line: #e3e7ea; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #15191c; --card: #1f2528; --fg: #e6eaec; --muted: #9aa5ab; --accent: #6fb3e0; --line: #2e363a; }
+  }
+  body { font: 14px/1.45 system-ui, sans-serif; margin: 0; background: var(--bg); color: var(--fg); }
+  main { padding: .75rem 1rem; }
+  h1 { font-size: 1rem; margin: 0 0 .6rem; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: .6rem .8rem; margin-bottom: .5rem; }
+  .muted { color: var(--muted); }
+  .status { float: right; color: var(--accent); font-weight: 600; }
+</style>
+</head>
+<body><main>
+<h1>{{ clinic }} · Dokumentenanfragen</h1>
+{% for r in requests %}
+<div class="card">
+  <span class="status">{{ r.status }}</span>
+  <strong>{{ r.id }}</strong> · {{ r.doc_type }} · {{ r.patient_name }}<br>
+  <span class="muted">an {{ r.expected_name }} ({{ r.contact_kind }}) · {{ r.created_at }}</span>
+</div>
+{% else %}
+<p class="muted">Noch keine Anfragen. Im Chat: <code>!anfrage …</code></p>
+{% endfor %}
+</main></body>
+</html>

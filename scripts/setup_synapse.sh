@@ -56,4 +56,17 @@ if [ -z "${MATRIX_ROOM_ID:-}" ]; then
 fi
 curl -fs -XPOST "$HS/_matrix/client/v3/join/$(urlq "$MATRIX_ROOM_ID")" \
   -H "Authorization: Bearer $BOT" -H 'Content-Type: application/json' -d '{}' >/dev/null
-echo "== room $MATRIX_ROOM_ID ready (written to .env)"
+
+# Dashboard as an Element widget pinned above the timeline. Lena adds it herself, so Element loads it without
+# the "added by someone else" prompt. Re-running replaces it with a fresh signed URL.
+state() {  # event_type state_key json
+  curl -fs -XPUT "$HS/_matrix/client/v3/rooms/$(urlq "$MATRIX_ROOM_ID")/state/$1/$2" \
+    -H "Authorization: Bearer $LENA" -H 'Content-Type: application/json' -d "$3" >/dev/null
+}
+WIDGET_URL=$(uv run --no-sync python -m app.dashboard)
+state im.vector.modular.widgets bb-dashboard "$(python3 -c 'import json,sys; print(json.dumps({
+  "type": "m.custom", "id": "bb-dashboard", "name": "BefundBrücke Dashboard", "url": sys.argv[1],
+  "creatorUserId": sys.argv[2], "data": {}}))' "$WIDGET_URL" "$DOCTOR_MXID")"
+state io.element.widgets.layout "" \
+  '{"widgets":{"bb-dashboard":{"container":"top","index":0,"width":100,"height":45}}}'
+echo "== room $MATRIX_ROOM_ID ready (written to .env), dashboard widget pinned"

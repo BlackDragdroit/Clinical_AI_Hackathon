@@ -221,8 +221,13 @@ def test_apple_page_shows_full_coverage_after_scenario(hapi, outbox):
         r = client.get("/audit/apple")
     assert r.status_code == 200
     html = r.text
-    assert "Hash-Kette intakt" in html
-    assert re.search(r'class="cov-num num">6</span><span class="cov-of">/ 6', html)
+    assert "Hash-Kette geprüft: intakt" in html
+    assert re.search(r"Hash-Kette geprüft: intakt.*?\d+ Einträge, letzter Hash</span>\s*<code class=\"hash\"", html, re.DOTALL)
+    assert "Pflichtschritte: 6 von 6 protokolliert" in html
+    assert html.count(">protokolliert<") == 6 and ">fehlt<" not in html   # each step in words
+    assert "Klinik</dt>" in html and re.search(r"Umfang</dt>\s*<dd>Alle Anfragen</dd>", html)   # document header
+    assert 'class="c-seq r">#</th>' in html and 'scope="rowgroup"' in html     # the timeline is a ledger table
+    assert "tile" not in html and "segment" not in html                 # no icon tiles, no pill controls
     for label in ("Anfrage gesendet", "Link geöffnet", "Identität geprüft", "Antwort übermittelt", "In FHIR abgelegt",
                   "Fehlzustellung erkannt"):
         assert label in html
@@ -245,8 +250,10 @@ def test_apple_page_english_toggle_keeps_filter(hapi, outbox):
     with TestClient(app) as client:
         r = client.get(f"/audit/apple?request_id={ids['r1']}&lang=en")
     html = r.text
-    assert '<html lang="en">' in html and "Hash chain intact" in html and "Hash-Kette" not in html
-    assert re.search(r'class="cov-num num">5</span><span class="cov-of">/ 6', html)
+    assert '<html lang="en">' in html and "Hash chain verified: intact" in html and "Hash-Kette" not in html
+    assert "Required steps: 5 of 6 logged" in html and "none in this request" in html
+    assert ">Deutsch</a>" in html and ">English</a>" in html                       # plain text language switch
+    assert "Show all requests" in html and "Clinic-internal" in html
     assert f'href="/audit/apple?request_id={ids["r1"]}&amp;lang=de"' in html        # DE segment keeps the filter
     assert f'href="/audit/apple?request_id={ids["r1"]}&amp;lang=en"' in html        # EN segment (current)
     assert f'href="/audit?request_id={ids["r1"]}&amp;lang=en"' in html              # design switch keeps both
@@ -295,23 +302,21 @@ def test_standard_page_only_gains_the_design_switch(hapi, outbox):
 
 
 @pytest.mark.parametrize("page", ["/audit", "/audit/apple"])
-def test_theme_switch_light_dark_system(page):
+def test_audit_pages_are_light_only(page):
     with TestClient(app) as client:
-        html = client.get(page).text                                        # default: follow the system
-        assert "data-theme=" not in html.split("<head>", 1)[0]
-        r = client.get(f"{page}?theme=light&lang=en")
-        assert '<html lang="en" data-theme="light">' in r.text and r.cookies.get("theme") == "light"
-        assert '<html lang="de" data-theme="light">' in client.get(f"{page}?lang=de").text   # cookie remembered
-        assert 'data-theme="dark"' in client.get(f"{page}?theme=dark").text.split("<head>", 1)[0]
-        assert "data-theme=" not in client.get(f"{page}?theme=system").text.split("<head>", 1)[0]
-        assert "data-theme=" not in client.get(f"{page}?theme=sepia").text.split("<head>", 1)[0]
+        for url in (page, f"{page}?lang=en", f"{page}?theme=dark"):
+            html = client.get(url).text
+            assert "data-theme" not in html and "prefers-color-scheme: dark" not in html
+            assert '<meta name="color-scheme" content="light">' in html and "color-scheme: light dark" not in html
+            assert "theme=" not in html                                     # no appearance switch left
 
 
-def test_theme_links_keep_filter_and_language(hapi, outbox):
+def test_design_switch_sits_in_the_footer(hapi, outbox):
     ids = _scenario(outbox)
     with TestClient(app) as client:
-        html = client.get(f"/audit/apple?request_id={ids['r1']}&lang=en&theme=dark").text
-    assert '<meta name="color-scheme" content="dark">' in html
-    for th in ("light", "dark", "system"):
-        assert f'href="/audit/apple?request_id={ids["r1"]}&amp;lang=en&amp;theme={th}"' in html
-    assert ">Light<" in html and ">Dark<" in html and ">System<" in html
+        for url, other in ((f"/audit/apple?request_id={ids['r1']}&lang=en", "/audit?"),
+                           (f"/audit?request_id={ids['r1']}&lang=en", "/audit/apple?")):
+            html = client.get(url).text
+            footer = html.split("<footer", 1)[1]
+            assert 'class="design-switch"' in footer and 'class="design-switch"' not in html.split("<footer", 1)[0]
+            assert f'href="{other}request_id={ids["r1"]}&amp;lang=en"' in footer

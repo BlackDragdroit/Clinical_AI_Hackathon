@@ -1,8 +1,8 @@
 {#- Styles for /audit only. Navy for chrome and text, iris violet for accent and focus, semantic
-    green / amber / red / orange for outcomes (always paired with an icon and a word). Owner: MedEng. -#}
+    green / amber / red / orange for outcomes (always paired with an icon and a word). Light only. Owner: MedEng. -#}
 <style>
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
   --bar: #14213d;          /* navy chrome */
   --bar-ink: #f3f4fa;
   --bar-ink-2: #b9c0d6;
@@ -28,56 +28,6 @@
   --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --mono: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bar: #0b1428;
-    --bar-ink: #eceffa;
-    --bar-ink-2: #9ea7c2;
-    --bg: #0e1526;
-    --surface: #151d31;
-    --surface-2: #1a2339;
-    --line: #27314a;
-    --line-2: #36415e;
-    --ink: #e6e9f3;
-    --ink-2: #b4bbd0;
-    --ink-3: #939bb3;
-    --iris: #a897ff;
-    --iris-ink: #b8aaff;
-    --iris-soft: #2a2552;
-    --iris-on-bar: #b8aaff;
-    --ok: #62d29c;  --ok-soft: #12301f;
-    --warn: #f1b84e; --warn-soft: #33280f;
-    --bad: #ff8d84;  --bad-soft: #3b1816;
-    --alert: #ffa266; --alert-soft: #3a2212;
-    --muted-soft: #1f2840;
-    --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 6px 18px rgb(0 0 0 / .2);
-  }
-}
-:root[data-theme="dark"] {
-    --bar: #0b1428;
-    --bar-ink: #eceffa;
-    --bar-ink-2: #9ea7c2;
-    --bg: #0e1526;
-    --surface: #151d31;
-    --surface-2: #1a2339;
-    --line: #27314a;
-    --line-2: #36415e;
-    --ink: #e6e9f3;
-    --ink-2: #b4bbd0;
-    --ink-3: #939bb3;
-    --iris: #a897ff;
-    --iris-ink: #b8aaff;
-    --iris-soft: #2a2552;
-    --iris-on-bar: #b8aaff;
-    --ok: #62d29c;  --ok-soft: #12301f;
-    --warn: #f1b84e; --warn-soft: #33280f;
-    --bad: #ff8d84;  --bad-soft: #3b1816;
-    --alert: #ffa266; --alert-soft: #3a2212;
-    --muted-soft: #1f2840;
-    --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 6px 18px rgb(0 0 0 / .2);
-  }
-:root[data-theme="light"] { color-scheme: light; }
-:root[data-theme="dark"] { color-scheme: dark; }
 
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
@@ -112,7 +62,6 @@ code, .mono { font-family: var(--mono); font-size: .86em; }
 .lang a { color: var(--bar-ink); display: inline-block; padding: .35rem .7rem; border: 1px solid rgb(255 255 255 / .28);
           border-radius: 999px; font-size: .8125rem; text-decoration: none; }
 .lang a[aria-current] { background: rgb(255 255 255 / .16); font-weight: 600; }
-.theme-switch { display: inline-flex; gap: .25rem; }
 .lang a:hover { border-color: var(--iris-on-bar); }
 .lang a:focus-visible { outline-color: var(--iris-on-bar); }
 
@@ -259,6 +208,9 @@ h2 .count { font-weight: 500; color: var(--ink-3); margin-left: .25rem; }
 .foot { border-top: 1px solid var(--line-2); margin-top: .5rem; }
 .foot-in { padding-top: 1rem; padding-bottom: 2rem; display: flex; flex-wrap: wrap; gap: .4rem 1.5rem; font-size: .8125rem; }
 .internal { display: inline-flex; align-items: center; gap: .4rem; font-weight: 600; color: var(--ink-2); }
+/* design switch: for the team only, so small and grey at the very end */
+.design-switch { margin-left: auto; color: var(--ink-3); font-size: .75rem; }
+.design-switch a { color: var(--ink-2); }
 
 @media (min-width: 720px) {
   .wrap, .bar-in { padding-left: 24px; padding-right: 24px; }
@@ -286,7 +238,7 @@ h2 .count { font-weight: 500; color: var(--ink-3); margin-left: .25rem; }
   a, .btn-quiet, .lang a { transition: color .15s ease-out, border-color .15s ease-out, background-color .15s ease-out; }
 }
 @media print {
-  .bar, .skip, .lang, .btn-quiet { display: none; }
+  .bar, .skip, .lang, .btn-quiet, .design-switch { display: none; }
   .panel { box-shadow: none; border: 1px solid #ccc; }
   .raw dl { display: grid; }
 }

@@ -193,6 +193,21 @@ MESSAGES: dict[str, dict[str, str]] = {
     "audit.apple.strip": {"de": "Ein Glied pro Eintrag, ältester links.", "en": "One link per entry, oldest first."},
     "audit.apple.strip_scope": {"de": "Gefüllt: Einträge dieser Anfrage.", "en": "Filled: entries of this request."},
     "audit.apple.jump_broken": {"de": "Zum ersten verletzten Eintrag", "en": "Go to the first broken entry"},
+    # /audit/apple as a formal audit record: document header, findings as statements, ledger columns
+    "audit.apple.meta.clinic": {"de": "Klinik", "en": "Clinic"},
+    "audit.apple.meta.scope": {"de": "Umfang", "en": "Scope"},
+    "audit.apple.meta.tz": {"de": "Zeitzone", "en": "Time zone"},
+    "audit.apple.meta.tz_value": {"de": "{tz}, gespeichert als UTC", "en": "{tz}, stored as UTC"},
+    "audit.apple.meta.class": {"de": "Einstufung", "en": "Classification"},
+    "audit.apple.meta.internal": {"de": "Klinikintern", "en": "Clinic-internal"},
+    "audit.apple.show_all": {"de": "Alle Anfragen anzeigen", "en": "Show all requests"},
+    "audit.apple.chain_ok": {"de": "Hash-Kette geprüft: intakt", "en": "Hash chain verified: intact"},
+    "audit.apple.chain_detail": {"de": "{n} Einträge, letzter Hash", "en": "{n} entries, latest hash"},
+    "audit.apple.coverage": {"de": "Pflichtschritte: {n} von 6 protokolliert", "en": "Required steps: {n} of 6 logged"},
+    "audit.apple.logged": {"de": "protokolliert", "en": "logged"},
+    "audit.apple.col.step": {"de": "Schritt", "en": "Step"},
+    "audit.apple.col.actor": {"de": "Akteur", "en": "Actor"},
+    "audit.apple.col.type": {"de": "Typ", "en": "Type"},
 
     # audit page: who
     "audit.actor.link": {"de": "Link (IP {ip})", "en": "Link (IP {ip})"},
@@ -263,11 +278,6 @@ MESSAGES: dict[str, dict[str, str]] = {
     "lang.name.en": {"de": "Englisch", "en": "English"},
     "lang.switch": {"de": "English", "en": "Deutsch"},
 
-    # appearance toggle (app/theme.py)
-    "theme.label": {"de": "Darstellung", "en": "Appearance"},
-    "theme.light": {"de": "Hell", "en": "Light"},
-    "theme.dark": {"de": "Dunkel", "en": "Dark"},
-    "theme.system": {"de": "System", "en": "System"},
 }
 
 

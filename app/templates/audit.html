@@ -16,11 +16,12 @@
 {%- endmacro -%}
 {%- set tone_icon = {"ok": "check", "pass": "check", "warn": "warn", "bad": "x", "alert": "shield", "info": "dot"} -%}
 <!doctype html>
-<html lang="{{ lang }}"{% if theme != "system" %} data-theme="{{ theme }}"{% endif %}>
+<html lang="{{ lang }}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
+<meta name="color-scheme" content="light">
 <title>{{ t("audit.title", lang) }} · I.R.I.S.</title>
 {% include "_audit_style.html" %}
 </head>
@@ -38,12 +39,6 @@
       <span class="brand-name">{{ t("audit.brand", lang) }}</span>
       <span class="brand-clinic">{{ clinic }}</span>
     </p>
-    <nav class="design-switch" aria-label="{{ t('audit.design', lang) }}" style="margin-left:auto;font-size:.8125rem;color:var(--bar-ink-2)">{{ t("audit.design", lang) }}: <span aria-current="page">{{ t("audit.design.standard", lang) }}</span> / <a href="{{ v.links.design.apple }}" style="color:var(--bar-ink)">{{ t("audit.design.apple", lang) }}</a></nav>
-    <nav class="lang theme-switch" aria-label="{{ t('theme.label', lang) }}">
-      {%- for th in ("light", "dark", "system") %}
-      <a href="{{ theme_links[th] }}"{% if th == theme %} aria-current="true"{% endif %}>{{ t("theme." ~ th, lang) }}</a>
-      {%- endfor %}
-    </nav>
     <nav class="lang" aria-label="{{ t('audit.lang_label', lang) }}">
       <a href="{{ v.links.toggle }}" hreflang="{{ other_lang(lang) }}" lang="{{ other_lang(lang) }}">{{ t("lang.switch", lang) }}</a>
     </nav>
@@ -230,6 +225,7 @@
   <div class="wrap foot-in">
     <p class="internal">{{ icon("shield") }}{{ t("audit.footer.internal", lang) }}</p>
     <p class="muted">{{ t("audit.footer.tz", lang, tz=v.tz) }}</p>
+    <nav class="design-switch" aria-label="{{ t('audit.design', lang) }}">{{ t("audit.design", lang) }}: <span aria-current="page">{{ t("audit.design.standard", lang) }}</span> / <a href="{{ v.links.design.apple }}">{{ t("audit.design.apple", lang) }}</a></nav>
   </div>
 </footer>
 </body>

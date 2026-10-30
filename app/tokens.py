@@ -53,3 +53,15 @@ def count_failed_attempt(raw: str) -> int:
 
 def mark_used(raw: str) -> None:
     db.update("tokens", "token_hash", _hash(raw), used_at=db.now())
+
+
+def claim(raw: str) -> bool:
+    """Mark the link used, atomically: True for exactly one of several concurrent submits."""
+    with db.conn() as c:
+        cur = c.execute("UPDATE tokens SET used_at = ? WHERE token_hash = ? AND used_at IS NULL", (db.now(), _hash(raw)))
+        return cur.rowcount == 1
+
+
+def reopen(raw: str) -> None:
+    """Undo claim() when processing failed before anything was filed, so the sender can try again."""
+    db.update("tokens", "token_hash", _hash(raw), used_at=None)

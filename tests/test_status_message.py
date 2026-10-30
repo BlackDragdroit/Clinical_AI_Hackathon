@@ -135,7 +135,8 @@ def test_wrong_patient_pings_without_naming_them(hapi, outbox):
     rid = _carded()
     commands.handle(f"!senden {rid}", DOCTOR)
     _flow(outbox, document="lab-result-max-beispiel.md", typed=("Max Beispiel", "01.01.1960"))
-    assert _pings() == ["⛔ Laborbefund · Maria Beispiel: Dokument betrifft anderen Patienten. Nicht abgelegt."]
+    assert _pings() == ["⛔ Laborbefund · Maria Beispiel: Dokument betrifft anderen Patienten. Nicht abgelegt. "
+                        "Link verbraucht – für das richtige Dokument neue Anfrage stellen."]
     assert "Max" not in status_message.card_text(rid)
 
 

@@ -48,7 +48,8 @@ def process_answer(req: dict, *, verified_name: str, identity_method: str, actor
         audit.log("misdelivery_caught", req["id"], SYSTEM,
                   {"type": "M3", "what": "Dokument betrifft anderen Patienten", "answer": answer_id,
                    "quarantined": True, "match": _scores(res.match)})
-        notify.doctor(f"{res.doctor_message_de} (Anfrage {req['id']})", req["id"])
+        notify.doctor(f"{res.doctor_message_de} (Anfrage {req['id']})\nDer Link ist verbraucht. Für das richtige Dokument "
+                      f"bitte eine neue Anfrage stellen: !anfrage …", req["id"])
     return {"decision": decision, "sender_message_de": res.sender_message_de, "answer_id": answer_id}
 
 

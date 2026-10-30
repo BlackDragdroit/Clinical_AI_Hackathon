@@ -52,3 +52,73 @@ One honest limit: someone with no eID can't answer this way. For them, the old r
 | 110–120 | Closing card: gains + the limit | |
 
 Before recording: the 64–74 s shot needs the address-lint PR (`medeng/address-lint`) merged; without it the draft card shows no warning.
+
+## Demo tips
+
+### M1 shot (seconds 64–74): wrong-address warning
+
+The eID simulation page **preselects Eva Brandl** by default (PLAYTEST O7).
+For this shot you are demonstrating that a *typo in the address* is caught **before** sending —
+not an identity failure — so you do not reach the eID page at all.
+
+Steps:
+1. Start from Dr. Hofer's room in Element.
+2. Type `!anfrage labor eva.brandl@labor-kanaI.example …` (capital I, not lowercase l).
+3. The draft card appears with a red lint warning: "Möglicher Tippfehler in der Adresse (Zeichenähnlichkeit)".
+4. Do **not** type `!senden` — the shot ends on the warning card.
+5. Cut to the next shot. The request is still in `draft`; you can `!verwerfen` it after recording.
+
+> ⚠️ Prerequisite: the `medeng/address-lint` PR must be merged before recording (noted in the shot list).
+
+---
+
+### M2 shot (seconds 74–86): forwarded link / wrong person
+
+The eID simulation page preselects Eva Brandl.
+For this shot you must pick **Karl Kollege** instead.
+
+Steps:
+1. Copy the link from the Mailpit email as usual.
+2. Open the link. On the simulated ID Austria page, change the pre-selected person to **Karl Kollege**.
+3. Submit. The portal shows "Anfrage nicht für Sie bestimmt" (403); nothing else is revealed.
+4. Switch to Element — Dr. Hofer's room should show the ⚠️ identity-failure ping.
+
+---
+
+### M3 shot (seconds 86–98): wrong patient's document uploaded
+
+The eID simulation page preselects Eva Brandl — leave it as-is (she is the correct recipient).
+
+Steps:
+1. Complete the identity step as Eva Brandl (the correct person).
+2. On the answer form, type the name and date-of-birth fields for **Maria Beispiel** (the requested patient).
+3. For the file upload, choose **`scenario/documents/lab-result-max-beispiel.md`** — that is Max Beispiel's lab result, a different patient.
+4. Submit. The portal shows the "Nicht zugeordnet" receipt (no tick).
+5. Switch to Element — Dr. Hofer's room shows the ⚠️ quarantine ping without Max's name.
+
+> Note: `scenario/documents/rehab-report-maria-beispiel.md` triggers the *doc-type mismatch* path (P1), not M3.
+> For the pure M3 shot use the wrong-patient lab file above.
+
+---
+
+### Timings: what to cut if time runs short
+
+| Cut first | Why | Impact |
+|---|---|---|
+| M2 (74–86 s) | M1 already covers the misdelivery concept | Loses the "forwarded email" angle |
+| Audit shot (98–110 s) | Can be shown in a follow-up slide | Loses the chain-of-proof evidence |
+| Closing card (110–120 s) | Can be spoken without a screen | Minimal |
+
+Never cut M1, M3 or the HAPI structured-values shot (52–64 s) — they are the three differentiators for the jury.
+
+---
+
+### Common mistakes (from PLAYTEST_REPORT.md findings)
+
+- **O7 – preselected wrong person**: the ID Austria simulation always opens with Eva Brandl selected.
+  For M1/M2 you must actively choose the stranger/Karl — easy to miss under time pressure.
+- **M1 needs the lint PR merged**: without `medeng/address-lint` the draft card shows no warning and the shot looks broken.
+- **M3 wrong file**: uploading `rehab-report-maria-beispiel.md` triggers the doc-type-mismatch path (review ⚠️) rather than quarantine. Use `lab-result-max-beispiel.md` for the genuine M3 story.
+- **DOB format on iPhone**: the phone keypad has no dot; typing `12031961` without dots is now handled (fix 1 in PLAYTEST_REPORT.md), but the read-back confirmation step may surprise a presenter who has not seen it — rehearse on a phone.
+- **Audit page not behind login in the demo**: `/audit` is public in the prototype. Do not open it while a patient name is visible on screen before you mean to show the audit trail.
+- **HAPI cold-start**: the first `$validate` call after a fresh `make up` can take 30–60 s (downloading IG packages). Run `scripts/dev/flow.sh r1` once before recording to warm it up.

@@ -81,8 +81,8 @@ Each agent picks its own items (column "Owner"). COORDINATOR updates this table 
 | P1 | O1 — lab request answered with discharge report auto-filed (should be `review`) | IMPROVE | `improve/doc-type-mismatch` | open |
 | P2 | O3 — junk/unparseable answer goes to review without a summary shown to Dr. Hofer | IMPROVE | `improve/review-summary` | open |
 | P3 | O6 — 5 failed identity pings flood Matrix (deduplicate to 1 + counter) | IMPROVE | `improve/identity-ping-dedup` | open |
-| P4 | README answer 4 (misdelivery numbers, Biostat TODO) | DOCS | `docs/answer-4` | open |
-| P5 | README "What works / what doesn't" completion | DOCS | `docs/what-works` | open |
+| P4 | README answer 4 (misdelivery numbers, Biostat TODO) | DOCS | `docs/answer-4` | ✅ |
+| P5 | README "What works / what doesn't" completion | DOCS | `docs/what-works` | ✅ |
 | P6 | METRICS.md full run on the live stack (G1) | PLAYTEST | `playtest/g1-metrics` | open |
 | P7 | e2e on real `make up` stack (G2) | PLAYTEST | `playtest/g2-e2e-stack` | open |
 | P8 | HL7 validator rerun on bundles filed through the live stack | FHIR | `fhir/validator-live` | open |
@@ -91,9 +91,9 @@ Each agent picks its own items (column "Owner"). COORDINATOR updates this table 
 | P11 | Portal split: internet-facing vs. clinic-side (production boundary) | REWRITE | `rewrite/portal-split` | open |
 | P12 | Practitioner / Organization deduplication (no identifier today) | FHIR | `fhir/practitioner-dedup` | open |
 | P13 | Audit page behind clinic login | IMPROVE | `improve/audit-login` | open |
-| P14 | Name check: double given names ("Eva Maria Brandl" blocked by policy) | FHIR | `fhir/name-policy` | open |
+| P14 | Name check: double given names ("Eva Maria Brandl" blocked by policy) | FHIR | `fhir/name-policy` | ✅ |
 | P15 | O4 — mock eID assertion not tied to the link (state+nonce for production) | DOCS | `docs/eid-production-note` | open |
-| P16 | ELGA LOINC preferred codes folded into the lexicon | ENGINE | `engine/elga-loinc` | open |
+| P16 | ELGA LOINC preferred codes folded into the lexicon | ENGINE | `engine/elga-loinc` | ✅ |
 
 ---
 

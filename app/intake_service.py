@@ -28,7 +28,8 @@ def process_answer(req: dict, *, verified_name: str, identity_method: str, actor
     # Downgrade file -> review when the sender sent the wrong document type (e.g. discharge report instead of lab).
     if decision == "file" and doc_type_mismatch:
         decision = "review"
-    # TODO(MedEng): downgrade file -> review when policy.auto_file_allowed is False (possession-only path)
+    # TODO(MedEng) → see AGENTS.md P1 (doc-type downgrade already done above); possession-only path (auto_file_allowed)
+    # requires a policy change in app/identity/policy.py — owned by FHIR/IMPROVE agents.
     answer_id = db.new_id()
     db.insert("answers", {
         "id": answer_id, "request_id": req["id"], "received_at": db.now(), "verified_name": verified_name,

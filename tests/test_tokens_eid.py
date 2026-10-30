@@ -54,25 +54,35 @@ def test_landing_neutral_text_is_exact_in_german_and_english():
     raw = tokens.issue("r1", "e@x.example")
     with _client() as c:
         assert f"{settings.clinic_name} hat eine sichere Dokumentenanfrage an Sie gerichtet." in c.get(f"/r/{raw}").text
-        c.get("/lang/en?next=/health")
-        en = c.get(f"/r/{raw}").text
+        c.get(f"/r/{raw}?lang=en")
+        en = c.get(f"/r/{raw}").text                           # the choice is remembered in the cookie
     assert f"{settings.clinic_name} has sent you a secure document request." in en
     assert 'lang="en"' in en
 
 
-def test_lang_switch_rejects_open_redirect():
+def test_german_by_default_whatever_the_browser_says():
+    _req()
+    raw = tokens.issue("r1", "e@x.example")
     with _client() as c:
-        for bad in ("https://evil.example", "//evil.example", "/\\evil.example"):
-            r = c.get("/lang/en", params={"next": bad}, follow_redirects=False)
-            assert r.headers["location"] == "/"
-        assert c.get("/lang/xx", follow_redirects=False).cookies.get("bb_lang") == "de"
+        page = c.get(f"/r/{raw}", headers={"Accept-Language": "en-GB,en;q=0.9"}).text
+        assert "hat eine sichere Dokumentenanfrage an Sie gerichtet." in page and 'lang="de"' in page
+        assert 'lang="de"' in c.get(f"/r/{raw}?lang=xx").text
+
+
+def test_lang_toggle_never_echoes_an_assertion():
+    _req()
+    raw = tokens.issue("r1", "e@x.example")
+    assertion = eid_mock.issue("karl")
+    with _client() as c:
+        page = c.get(f"/r/{raw}/callback", params={"assertion": assertion}).text
+    assert assertion not in page and "?lang=en" in page
 
 
 def test_eid_page_is_labelled_simulation_in_both_languages():
     with _client() as c:
         assert "SIMULATION" in c.get("/eid/authorize?state=x").text
-        c.get("/lang/en")
-        assert "SIMULATION" in c.get("/eid/authorize?state=x").text
+        page = c.get("/eid/authorize?state=x&lang=en").text
+        assert "SIMULATION" in page and "state=x&amp;lang=de" in page   # toggle keeps the link state
 
 
 def test_attempts_exhausted_blocks_request_and_alerts_once():

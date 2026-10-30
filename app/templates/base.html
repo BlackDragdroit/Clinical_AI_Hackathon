@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>{% block title %}{{ t('title') if t is defined else 'Sichere Dokumentenanfrage' }}{% endblock %}</title>
+<title>{% block title %}{{ t('portal.title') if t is defined else 'Sichere Dokumentenanfrage' }}{% endblock %}</title>
 <style>
   :root { --brand: #1f5f8b; --brand-dark: #174a6d; --bg: #f5f7f8; --ink: #1d2327; --muted: #566269; --line: #c4ccd1; --err: #a4262c; }
   * { box-sizing: border-box; }
@@ -39,9 +39,9 @@
 </head>
 <body><main>
   {% if switch_href is defined %}<div class="top"><span class="brand">{{ clinic }}</span>
-    <a class="lang" href="{{ switch_href }}" hreflang="{{ other_lang }}" lang="{{ other_lang }}">{{ t('lang_switch') }}</a></div>{% endif %}
+    <a class="lang" href="{{ switch_href }}" hreflang="{{ other_lang }}" lang="{{ other_lang }}">{{ t('lang.switch') }}</a></div>{% endif %}
   {% block steps %}{% endblock %}
   {% block body %}{% endblock %}
-  {% if t is defined %}<p class="muted foot">{{ t('footer') }}</p>{% endif %}
+  {% if t is defined %}<p class="muted foot">{{ t('portal.footer') }}</p>{% endif %}
 </main></body>
 </html>

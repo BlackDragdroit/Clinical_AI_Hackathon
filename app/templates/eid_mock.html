@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ t('eid_title') }}{% endblock %}
+{% block title %}{{ t('portal.eid_title') }}{% endblock %}
 {% block style %}
   .sim { background: #fff3cd; border: 2px solid #e0a800; color: #5c4400; padding: .6rem .8rem; border-radius: 10px; font-weight: 600; font-size: .9rem; margin-bottom: .75rem; }
   .idp-head { background: #c8102e; color: #fff; padding: .9rem 1.25rem; border-radius: 14px 14px 0 0; display: flex; align-items: center; gap: .6rem; }
@@ -21,27 +21,27 @@
 {% endblock %}
 {% block steps %}{% set step = 1 %}{% include "_steps.html" %}{% endblock %}
 {% block body %}
-<div class="sim" role="note">⚠ {{ t('eid_sim') }}</div>
-<div class="idp-head"><b>ID Austria</b><small>· {{ t('eid_h') }}</small></div>
+<div class="sim" role="note">⚠ {{ t('portal.eid_sim') }}</div>
+<div class="idp-head"><b>ID Austria</b><small>· {{ t('portal.eid_h') }}</small></div>
 <div class="idp-body">
-  <p style="margin-top:0">{{ t('eid_sub') }}</p>
-  <div class="svc"><span class="muted">{{ t('eid_service') }}</span><b>BefundBrücke · {{ clinic }}</b></div>
-  <details class="muted"><summary>{{ t('eid_shares') }}</summary>
+  <p style="margin-top:0">{{ t('portal.eid_sub') }}</p>
+  <div class="svc"><span class="muted">{{ t('portal.eid_service') }}</span><b>BefundBrücke · {{ clinic }}</b></div>
+  <details class="muted"><summary>{{ t('portal.eid_shares') }}</summary>
   <ul class="shares">
-    <li>{{ t('eid_d_name') }}</li><li>{{ t('eid_d_dob') }}</li><li>{{ t('eid_d_bpk') }}</li><li>{{ t('eid_d_loa') }}</li>
+    <li>{{ t('portal.eid_d_name') }}</li><li>{{ t('portal.eid_d_dob') }}</li><li>{{ t('portal.eid_d_bpk') }}</li><li>{{ t('portal.eid_d_loa') }}</li>
   </ul></details>
   <form method="post" action="/eid/authorize">
     <input type="hidden" name="state" value="{{ state }}">
-    <p style="margin-bottom:0"><strong>{{ t('eid_pick') }}</strong></p>
+    <p style="margin-bottom:0"><strong>{{ t('portal.eid_pick') }}</strong></p>
     {% for key, c in citizens.items() %}
     <label class="person" style="margin-top:.5rem; font-weight:500">
       <input type="radio" name="citizen" value="{{ key }}" {% if loop.first %}checked{% endif %}>
       <span>{{ c.given }} {{ c.family }}<small>{{ c.dob }} · {{ c.loa }}</small></span>
     </label>
     {% endfor %}
-    <p class="muted">{{ t('eid_note') }}</p>
-    <button class="btn idp" type="submit">{{ t('eid_confirm') }}</button>
+    <p class="muted">{{ t('portal.eid_note') }}</p>
+    <button class="btn idp" type="submit">{{ t('portal.eid_confirm') }}</button>
   </form>
-  <p><a class="btn secondary" href="/r/{{ state }}">{{ t('eid_cancel') }}</a></p>
+  <p><a class="btn secondary" href="/r/{{ state }}">{{ t('portal.eid_cancel') }}</a></p>
 </div>
 {% endblock %}

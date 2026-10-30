@@ -25,7 +25,8 @@ POLICIES = {
                      "Entlassungsberichte versendet oft die Verwaltung im Auftrag der Ärztin: Absender per ID Austria geprüft, "
                      "Autorin laut Dokument wird getrennt festgehalten."),
 }
-# TODO(MedEng): possession-only path (no eID available) -> allowed to answer, never auto-filed (always review)
+# No possession-only path (link without eID), on purpose: it cannot tell a forwarded link from the named person (M2).
+# People without ID Austria use their own national eID: ID Austria accepts eIDAS-notified EU eIDs (README answer 2).
 
 
 def policy_for(doc_type: str) -> Policy:
@@ -33,9 +34,24 @@ def policy_for(doc_type: str) -> Policy:
 
 
 def names_match(expected_name: str, verified: EidAssertion) -> bool:
-    """Same person by name: titles, case, umlaut spelling ignored; all given + family tokens must agree.
-    TODO(MedEng): decide on double names / missing middle names, add cases to tests/test_policy.py."""
-    return norm_tokens(expected_name) == norm_tokens(verified.full_name)
+    """Is the eID-verified person the one Dr. Hofer named? Conservative: a false "no" only costs a retry.
+
+    Titles, case and umlaut spelling are ignored, and hyphen == space (both via norm_tokens), so
+    "Müller-Lüdenscheidt" == "Mueller Luedenscheidt" and "Eva-Maria" == "Eva Maria".
+    - Family name: the eID family name (all its parts) must be exactly the last tokens Dr. Hofer typed.
+      A missing or extra family-name part on either side is no match ("Eva Müller-Brandl" ≠ eID "Eva Brandl").
+    - Given names: every given name Dr. Hofer typed must appear on the eID, in the same order. The eID may
+      carry additional given names she did not type ("Eva Brandl" == eID "Eva Maria Brandl"), not the reverse.
+    - At least one given name must be typed: a family name alone ("Dr. Brandl") never binds an identity.
+    """
+    typed = norm_tokens(expected_name)
+    family = norm_tokens(verified.family)
+    given = norm_tokens(verified.given)
+    n = len(family)
+    if not n or len(typed) <= n or typed[-n:] != family:
+        return False
+    remaining = iter(given)
+    return all(tok in remaining for tok in typed[:-n])      # ordered subsequence of the eID given names
 
 
 def identity_method_text(verified: EidAssertion) -> str:

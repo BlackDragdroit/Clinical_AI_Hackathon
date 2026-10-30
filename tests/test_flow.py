@@ -164,3 +164,40 @@ def test_wrong_doc_type_goes_to_review(hapi, outbox):
     msgs = [m["text"] for m in db.query("SELECT text FROM matrix_outbox WHERE request_id = ?", (rid,))]
     assert any("Falscher Dokumenttyp" in m or "Laborbefund" in m for m in msgs), \
         f"Expected mismatch reason in doctor notification, got: {msgs}"
+
+def test_review_ping_shows_row_count(hapi, outbox):
+    """Junk content goes to review and the doctor ping shows the parsed row count (P2)."""
+    rid = _send(REQ1)
+    req = db.query("SELECT * FROM requests WHERE id = ?", (rid,))[0]
+    from app import intake_service
+    out = intake_service.process_answer(
+        req,
+        verified_name="Dr. Eva Brandl",
+        identity_method="Identität geprüft: ID Austria (simuliert)",
+        actor="eid:bpk-test Dr. Eva Brandl",
+        typed_name="Maria Beispiel",
+        typed_dob="12.03.1961",
+        filename="formular.md",
+        content="hallo",
+    )
+    assert out["decision"] == "review"
+    msgs = [m["text"] for m in db.query("SELECT text FROM matrix_outbox WHERE request_id = ?", (rid,))]
+    assert any("0" in m and ("Zeilen" in m or "geparst" in m) for m in msgs), \
+        f"Expected row count in doctor notification, got: {msgs}"
+
+
+def test_repeated_identity_failures_send_one_ping(hapi, outbox):
+    """3 consecutive identity failures must produce exactly 1 warning ping, not 3 (P3)."""
+    rid = _send(REQ1)
+    path = link_path(outbox[0]["link"])
+    with TestClient(app) as client:
+        for _ in range(3):
+            client.get(path)
+            client.post("/eid/authorize", data={"state": path.rsplit("/", 1)[1], "citizen": "karl"})
+    # Only the first failure should have sent a warning ping; block ping is separate
+    warning_msgs = [m["text"] for m in db.query("SELECT text FROM matrix_outbox WHERE request_id = ?", (rid,))
+                    if "Identitätsprüfung fehlgeschlagen" in m["text"] or
+                    ("⚠️" in m["text"] and "Versuch" in m["text"])]
+    assert len(warning_msgs) == 1, \
+        f"Expected exactly 1 warning ping, got {len(warning_msgs)}: {warning_msgs}"
+

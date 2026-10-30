@@ -320,3 +320,22 @@ def test_design_switch_sits_in_the_footer(hapi, outbox):
             footer = html.split("<footer", 1)[1]
             assert 'class="design-switch"' in footer and 'class="design-switch"' not in html.split("<footer", 1)[0]
             assert f'href="{other}request_id={ids["r1"]}&amp;lang=en"' in footer
+
+def test_audit_requires_token_when_configured(monkeypatch):
+    """When AUDIT_TOKEN is set, /audit returns 403 without token and 200 with correct token (P13)."""
+    from app.config import settings
+    object.__setattr__(settings, "audit_token", "secret-token")
+    try:
+        with TestClient(app) as client:
+            r_no_token = client.get("/audit")
+            r_wrong_token = client.get("/audit?token=wrong")
+            r_correct_token = client.get("/audit?token=secret-token")
+            r_bearer = client.get("/audit", headers={"Authorization": "Bearer secret-token"})
+        assert r_no_token.status_code == 403
+        assert "Zugriff verweigert" in r_no_token.text
+        assert r_wrong_token.status_code == 403
+        assert r_correct_token.status_code == 200
+        assert r_bearer.status_code == 200
+    finally:
+        object.__setattr__(settings, "audit_token", "")
+

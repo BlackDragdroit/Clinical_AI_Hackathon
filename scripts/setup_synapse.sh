@@ -58,7 +58,7 @@ fi
 curl -fs -XPOST "$HS/_matrix/client/v3/join/$(urlq "$MATRIX_ROOM_ID")" \
   -H "Authorization: Bearer $BOT" -H 'Content-Type: application/json' -d '{}' >/dev/null
 
-# Dashboard as an Element widget, pinned at the top of the room above the chat. Lena adds it herself, so Element loads it without the "added by someone else" prompt.
+# Dashboard as an Element widget, open in the side panel next to the chat. Lena adds it herself, so Element loads it without the "added by someone else" prompt.
 # Re-running replaces it with a fresh signed URL.
 state() {  # event_type state_key json
   curl -fs -XPUT "$HS/_matrix/client/v3/rooms/$(urlq "$MATRIX_ROOM_ID")/state/$1/$2" \
@@ -68,5 +68,5 @@ WIDGET_URL=$(uv run --no-sync python -m app.dashboard)
 state im.vector.modular.widgets bb-dashboard "$(python3 -c 'import json,sys; print(json.dumps({
   "type": "m.custom", "id": "bb-dashboard", "name": "BefundBrücke Dashboard", "url": sys.argv[1],
   "creatorUserId": sys.argv[2], "data": {}}))' "$WIDGET_URL" "$DOCTOR_MXID")"
-state io.element.widgets.layout "" '{"widgets":{"bb-dashboard":{"container":"top","index":0,"width":100,"height":55}}}'   # pinned above the chat
+state io.element.widgets.layout "" '{"widgets":{"bb-dashboard":{"container":"right"}}}'   # beside the chat, in the side panel
 echo "== room $MATRIX_ROOM_ID ready (written to .env), dashboard widget under room info → Extensions"

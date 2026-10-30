@@ -41,8 +41,10 @@ def test_long_first_line_bolds_only_first_clause():
     msg = ("✅ Antwort von Eva Brandl (Labor Kanalstraße) abgelegt – 11 FHIR-Ressourcen. Identität geprüft: "
            "ID Austria (simuliert, LoA high), Namensabgleich OK http://localhost:8090/fhir/DiagnosticReport/1")
     h = matrix_format.to_html(msg)
-    assert h.startswith("<strong>✅ Antwort von Eva Brandl (Labor Kanalstraße) abgelegt</strong> – 11 FHIR")
+    # no emoji in what Element shows: the status colour instead; only the first sentence, links kept
+    assert h.startswith('<font color="#17693f"><strong>Antwort von Eva Brandl (Labor Kanalstraße) abgelegt</strong> – 11 FHIR')
     assert h.count("<strong>") == 1 and '<a href="http://localhost:8090/fhir/DiagnosticReport/1">' in h
+    assert "✅" not in h and "Identität geprüft" not in h
 
 
 def test_labelled_link():
@@ -54,4 +56,5 @@ def test_cut_after_sentence_keeps_the_space():
     msg = ("✅ Antwort ab12cd34 nach Prüfung abgelegt. http://localhost:8090/fhir/DocumentReference/644c4329-8893-4427 "
            "http://localhost:8090/fhir/DiagnosticReport/6c9a2ff1")
     h = matrix_format.to_html(msg)
-    assert h.startswith('<strong>✅ Antwort ab12cd34 nach Prüfung abgelegt.</strong> <a href=')
+    assert h.startswith('<font color="#17693f"><strong>Antwort ab12cd34 nach Prüfung abgelegt.</strong> <a href=')
+    assert h.count("<a href=") == 2

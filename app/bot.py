@@ -49,7 +49,8 @@ async def run_bot() -> None:
     resp = await client.login(settings.matrix_bot_password)
     log.info("matrix login: %s", resp)
     await client.join(settings.matrix_room_id)
-    await upload_chat_images(client)
+    if settings.chat_images:
+        await upload_chat_images(client)
     first = await client.sync(timeout=3000, full_state=True)   # skip history: only react to new messages
     since = first.next_batch
     started = db.now()

@@ -40,8 +40,8 @@ async def run_bot() -> None:
             log.warning("matrix send failed: %s", resp)
         return getattr(resp, "event_id", None)
 
-    async def say(text: str, buttons: dict[str, str] | None = None) -> str | None:
-        event_id = await send(matrix_format.content(text))
+    async def say(text: str, buttons: dict[str, str] | None = None, reply_to: str | None = None) -> str | None:
+        event_id = await send(matrix_format.content(text, reply_to))
         if not event_id:
             return None
         keys = reactions.offer(event_id, buttons) if buttons is not None else reactions.register(event_id, text)
@@ -55,7 +55,11 @@ async def run_bot() -> None:
             text = await asyncio.to_thread(status_message.card_text, rid, reply)
             if event_id := await say(text, {"✅": f"!senden {rid}"}):
                 status_message.saved(rid, event_id, text)
-        elif not status_message.is_ack(command, reply):  # acks are not posted: the card shows the change
+        elif status_message.is_ack(command, reply):      # acks are not posted: the card shows the change
+            reactions.spend(command)                      # typed or tapped: its buttons are used up either way
+            for event_id, text in await asyncio.to_thread(status_message.decided, command):
+                await send(matrix_format.edit(event_id, text))   # the 🔍 ping shows the outcome where she tapped
+        else:
             await say(reply)
 
     async def on_message(room: MatrixRoom, event: RoomMessageText) -> None:
@@ -102,7 +106,7 @@ async def run_bot() -> None:
                 if sent_id:
                     status_message.saved(request_id, event_id or sent_id, text)
             for request_id, text, buttons, seq in await asyncio.to_thread(status_message.pings):
-                if await say(text, buttons):
+                if await say(text, buttons, status_message.card_event(request_id)):
                     status_message.pinged(request_id, seq)
             await asyncio.sleep(1)
 

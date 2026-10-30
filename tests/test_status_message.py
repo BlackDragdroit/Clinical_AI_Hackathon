@@ -5,7 +5,7 @@ import re
 
 from fastapi.testclient import TestClient
 
-from app import commands, db, matrix_format, status_message
+from app import commands, db, matrix_format, reactions, status_message
 from app.config import settings
 from app.main import app
 from tests.conftest import REQ1, REQ2, link_path
@@ -156,3 +156,18 @@ def test_edit_content_replaces_original():
     c = matrix_format.edit("$orig", "Laborbefund · Maria Beispiel\n●○○○○  Gesendet")
     assert c["m.relates_to"] == {"rel_type": "m.replace", "event_id": "$orig"}
     assert c["m.new_content"]["body"] == "Laborbefund · Maria Beispiel\n●○○○○  Gesendet" and c["body"].startswith("* ")
+
+
+def test_ping_is_a_reply_to_its_card_and_shows_the_decision(hapi, outbox):
+    rid = _carded()
+    commands.handle(f"!senden {rid}", DOCTOR)
+    _flow(outbox, typed=("Maria Beispiel", "13.03.1961"))
+    [(_, _, buttons, _)] = status_message.pings()
+    assert status_message.card_event(rid) == "$card"
+    assert matrix_format.content("x", "$card")["m.relates_to"] == {"m.in_reply_to": {"event_id": "$card"}}
+    reactions.offer("$ping", buttons)
+    assert status_message.decided(f"!senden {rid}") == []
+    [(event_id, text)] = status_message.decided(f"!ablegen {rid}")
+    assert event_id == "$ping"
+    assert re.fullmatch(r"🔍 Laborbefund · Maria Beispiel: Zuordnung unsicher → ✅ abgelegt · \d\d:\d\d", text)
+    assert "→ verworfen ·" in status_message.decided(f"!verwerfen {rid}")[0][1]

@@ -32,6 +32,7 @@ VIA = {"email": "E-Mail", "sms": "SMS"}
 REPLACED = ("✅ Antwort", "🔍 ", "⚠️ Fehlzustellung", "⚠️ Antwort NICHT abgelegt: Das übermittelte")
 _DRAFTED = re.compile(r"^Anfrage (\w+): Entwurf")
 _CMD = re.compile(r"^!(senden|ablegen|verwerfen) (\w+)")
+REVIEW_Q = "Zuordnung unsicher. Ablegen oder verwerfen?"
 
 
 def _time(ts: str) -> str:
@@ -139,12 +140,22 @@ def saved(request_id: str, event_id: str, text_now: str) -> None:
         db.insert("matrix_cards", {"request_id": request_id, "event_id": event_id, "text": text_now})
 
 
+def _head(req: dict) -> str:
+    return f"{dashboard.DOC.get(req['doc_type'], req['doc_type'])} · {req['patient_name']}"
+
+
+def card_event(request_id: str) -> str | None:
+    """The card's event id: pings are posted as replies to it, so Element shows which request they are about."""
+    row = db.get("matrix_cards", "request_id", request_id)
+    return row["event_id"] if row else None
+
+
 def pings() -> list[tuple[str, str, dict[str, str], int]]:
     """(request_id, one-line text, buttons, audit seq) for each event since the last ping that needs Dr. Hofer."""
     out = []
     for row in db.query("SELECT * FROM matrix_cards"):
         req = db.get("requests", "id", row["request_id"])
-        head = f"{dashboard.DOC.get(req['doc_type'], req['doc_type'])} · {req['patient_name']}"
+        head = _head(req)
         decided = False
         for ev in audit.entries(row["request_id"]):
             decided = decided or ev["event"] == "review_decided"
@@ -152,8 +163,7 @@ def pings() -> list[tuple[str, str, dict[str, str], int]]:
                 continue
             d, rid = ev["details"], req["id"]
             if ev["event"] == "review_requested":
-                out.append((rid, f"🔍 {head}: Zuordnung unsicher. Ablegen oder verwerfen?",
-                            {"✅": f"!ablegen {rid}", "❌": f"!verwerfen {rid}"}, ev["seq"]))
+                out.append((rid, f"🔍 {head}: {REVIEW_Q}", {"✅": f"!ablegen {rid}", "❌": f"!verwerfen {rid}"}, ev["seq"]))
             elif ev["event"] == "answer_filed" and not decided:      # after a review she tapped it herself
                 out.append((rid, f"✅ {head} ist da.", {}, ev["seq"]))
             elif ev["event"] == "misdelivery_caught" and d.get("type") == "M3":
@@ -162,6 +172,18 @@ def pings() -> list[tuple[str, str, dict[str, str], int]]:
                 out.append((rid, f"⚠️ {head}: {d.get('verified', 'Unbekannt')} hat den Link geöffnet, nicht "
                                  f"{d.get('expected', 'die angefragte Person')}. Nichts offengelegt.", {}, ev["seq"]))
     return out
+
+
+def decided(command: str) -> list[tuple[str, str]]:
+    """After a successful !ablegen / !verwerfen: (event_id, new text) for the 🔍 ping it answered, so the ping
+    itself shows the outcome where Dr. Hofer tapped."""
+    m = _CMD.match(command.strip())
+    if not m or m.group(1) == "senden" or not (req := db.get("requests", "id", m.group(2))):
+        return []
+    outcome = "✅ abgelegt" if m.group(1) == "ablegen" else "verworfen"
+    text = f"🔍 {_head(req)}: Zuordnung unsicher → {outcome} · {_time(db.now())}"
+    rows = db.query("SELECT DISTINCT event_id FROM matrix_actions WHERE command = ?", (f"!ablegen {req['id']}",))
+    return [(r["event_id"], text) for r in rows]
 
 
 def pinged(request_id: str, seq: int) -> None:

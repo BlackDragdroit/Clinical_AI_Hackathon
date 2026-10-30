@@ -57,8 +57,11 @@ def to_html(text: str) -> str:
     return "<br>".join([_headline(lines[0])] + [_inline(l) for l in lines[1:]])
 
 
-def content(text: str) -> dict:
-    return {"msgtype": "m.text", "body": text, "format": "org.matrix.custom.html", "formatted_body": to_html(text)}
+def content(text: str, reply_to: str | None = None) -> dict:
+    c = {"msgtype": "m.text", "body": text, "format": "org.matrix.custom.html", "formatted_body": to_html(text)}
+    if reply_to:     # Element shows the message as a reply to `reply_to`, with a link to jump there
+        c["m.relates_to"] = {"m.in_reply_to": {"event_id": reply_to}}
+    return c
 
 
 def edit(event_id: str, text: str) -> dict:

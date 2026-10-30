@@ -38,6 +38,14 @@ def register(event_id: str, text: str) -> list[str]:
     return offer(event_id, buttons(text))
 
 
+def spend(command: str) -> None:
+    """`command` ran (typed or tapped): every message offering it has its buttons used up, so a later tap
+    cannot run it again or its alternative."""
+    with db.conn() as c:
+        c.execute("UPDATE matrix_actions SET used_at = ? WHERE used_at IS NULL AND event_id IN "
+                  "(SELECT event_id FROM matrix_actions WHERE command = ?)", (db.now(), command.strip()))
+
+
 def handle(event_id: str, key: str, sender: str) -> tuple[str, str] | None:
     """A reaction arrived. Returns (command run, the bot's reply), or None if the reaction is not a button."""
     key = ALIASES.get(key.replace("️", ""))

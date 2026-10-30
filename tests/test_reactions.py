@@ -79,3 +79,11 @@ def test_review_tap_discards(hapi, outbox):
     reactions.register("$review", msg)
     assert _tap("$review", "👎", DOCTOR) == f"Antwort {rid} verworfen."
     assert db.get("requests", "id", rid)["status"] == "discarded"
+
+
+def test_typed_command_spends_the_buttons_that_offered_it(hapi, outbox):
+    rid, card = _draft()
+    reactions.register("$draft", card)
+    commands.handle(f"!senden {rid}", DOCTOR)                       # typed instead of tapped
+    reactions.spend(f"!senden {rid}")
+    assert _tap("$draft", "✅", DOCTOR) is None                      # the leftover pill does nothing

@@ -96,5 +96,6 @@ def test_attempts_exhausted_blocks_request_and_alerts_once():
     assert db.get("requests", "id", "r1")["status"] == "blocked"
     alerts = [m for m in db.query("SELECT * FROM matrix_outbox WHERE request_id = 'r1'") if "gesperrt" in m["text"]]
     assert len(alerts) == 1
-    flags = [e["details"]["blocked"] for e in audit.entries("r1") if e["event"] == "identity_checked"]
-    assert flags == [False] * (n - 1) + [True]                 # the exhausting attempt is marked in the audit trail
+    events = [e["event"] for e in audit.entries("r1")]
+    assert events.count("request_blocked") == 1
+    assert events.index("request_blocked") > len(events) - 1 - events[::-1].index("identity_checked")   # after the last failed check

@@ -68,11 +68,13 @@ def _invalid(request: Request) -> HTMLResponse:
     return _page(request, "invalid.html", 404)
 
 
-def _block(req: dict) -> None:
+def _block(req: dict, actor: str) -> None:
     """Identity attempts exhausted: block the request and alert Dr. Hofer exactly once."""
     if db.get("requests", "id", req["id"])["status"] == "blocked":
         return
     db.update("requests", "id", req["id"], status="blocked")
+    audit.log("request_blocked", req["id"], actor,
+              {"reason": "identity attempts exhausted", "attempts": settings.max_identity_attempts})
     notify.doctor(f"🔒 Anfrage {req['id']} gesperrt: {settings.max_identity_attempts} fehlgeschlagene "
                   f"Identitätsprüfungen. Der Link ist deaktiviert. Bitte neu senden, wenn der Empfänger stimmt.", req["id"])
 
@@ -135,14 +137,13 @@ def eid_callback(request: Request, raw: str, assertion: str):
         attempts = tokens.count_failed_attempt(raw)
         label = misdelivery.classify_identity_failure(req)
         audit.log("identity_checked", req["id"], actor,
-                  {"result": "FAILED", "method": "eid-mock", "loa": who.loa, "attempt": attempts,
-                   "blocked": attempts >= settings.max_identity_attempts})
+                  {"result": "FAILED", "method": "eid-mock", "loa": who.loa, "attempt": attempts})
         audit.log("misdelivery_caught", req["id"], actor,
                   {"type": label, "verified": who.full_name, "expected": req["expected_name"]})
         notify.doctor(f"⚠️ Fehlzustellung erkannt (Anfrage {req['id']}): verifiziert {who.full_name} ≠ "
                       f"{req['expected_name']}. Nichts offengelegt, nichts abgelegt.", req["id"])
         if attempts >= settings.max_identity_attempts:
-            _block(req)
+            _block(req, actor)
             return _invalid(request)        # same neutral page as any dead link
         return _page(request, "identity_failed.html", 403)
     audit.log("identity_checked", req["id"], actor, {"result": "OK", "method": "eid-mock", "loa": who.loa})

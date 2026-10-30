@@ -167,7 +167,8 @@ def pings() -> list[tuple[str, str, dict[str, str], int]]:
             elif ev["event"] == "answer_filed" and not decided:      # after a review she tapped it herself
                 out.append((rid, f"✅ {head} ist da.", {}, ev["seq"]))
             elif ev["event"] == "misdelivery_caught" and d.get("type") == "M3":
-                out.append((rid, f"⛔ {head}: Dokument betrifft anderen Patienten. Nicht abgelegt.", {}, ev["seq"]))
+                out.append((rid, f"⛔ {head}: Dokument betrifft anderen Patienten. Nicht abgelegt. "
+                                 f"Link verbraucht – für das richtige Dokument neue Anfrage stellen.", {}, ev["seq"]))
             elif ev["event"] == "misdelivery_caught":
                 out.append((rid, f"⚠️ {head}: {d.get('verified', 'Unbekannt')} hat den Link geöffnet, nicht "
                                  f"{d.get('expected', 'die angefragte Person')}. Nichts offengelegt.", {}, ev["seq"]))

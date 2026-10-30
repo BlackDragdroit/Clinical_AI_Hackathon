@@ -1,138 +1,153 @@
 <p align="center">
-  <img src="docs/img/iris-logo.png" alt="IRIS logo: a stylised eye whose iris is a camera aperture" width="200">
+  <img src="docs/img/iris-logo.png" alt="IRIS logo" width="180">
 </p>
 
 <h1 align="center">IRIS</h1>
 
-<p align="center"><b>Identity-Verified Record Intake System</b><br>
-The right record, from the right person, about the right patient.</p>
-
 <p align="center">
-  <b>6/6</b> audit steps logged&nbsp;·&nbsp;<b>3/3</b> misdeliveries caught&nbsp;·&nbsp;<b>0/17</b> jury-style documents filed to the wrong patient&nbsp;·&nbsp;<b>0</b> patient data in 24 emails and 5 SMS&nbsp;·&nbsp;<b>0</b> HL7 validator errors
+  <b>Identity-Verified Record Intake System</b><br>
+  Secure document requests from outside the clinic, filed as valid FHIR R4. Verified sender, verified patient, full audit trail.
 </p>
 
-A doctor in a closed Matrix network asks someone outside it for a document. IRIS gets it in through a one-time
-link, proves it comes from the right person and is about the right patient, and files it as valid FHIR R4:
-automatically, audited, with the doctor told in Matrix.
+<p align="center">
+  <img src="https://img.shields.io/badge/FHIR-R4-e8562a" alt="FHIR R4">
+  <img src="https://img.shields.io/badge/HL7%20validator-0%20errors-2ea44f" alt="HL7 validator: 0 errors">
+  <img src="https://img.shields.io/badge/Matrix-Element%20%2B%20Synapse-0dbd8b" alt="Matrix">
+  <img src="https://img.shields.io/badge/Python-3.12%2B-3776ab" alt="Python 3.12+">
+  <img src="https://img.shields.io/badge/FastAPI-portal%20%2B%20engine-009688" alt="FastAPI">
+  <img src="https://img.shields.io/badge/data-synthetic%20only-6c757d" alt="Synthetic data only">
+</p>
 
-AIM Healthcare Hackathon Vienna 2026, Track 2 (Health Data Interoperability, partner FTAPI). Synthetic data only.
+<p align="center">
+  <b>AIM Healthcare Hackathon Vienna 2026</b> · Track 2: Health Data Interoperability · partner FTAPI
+</p>
 
 ---
 
-## A Thursday morning in Vienna
+## Overview
 
-**Dr. Lena Hofer** has a patient on tomorrow's list: Maria Beispiel, 65, due for a procedure. One piece is
-missing: her coagulation values, sitting in a lab across town, outside the clinic's network. Today that means a
-phone call, a fax, and someone typing numbers in by hand. And one wrong letter in an email address sends a
-patient's name and results to a stranger.
+Austrian doctors are moving to a closed, encrypted document network on Matrix. Labs, rehab clinics and patients
+outside that network are still reached by fax or plain email, and their results come back as scans that someone
+retypes by hand.
 
-With IRIS, she types one sentence into her clinic chat:
+**IRIS closes that gap.** A doctor requests a document from her Matrix room in one sentence. The outside person
+gets a neutral one-time link, proves who they are with an electronic ID, and uploads the answer in the browser:
+no account, no install. IRIS checks that it is the right person and the right patient, turns the answer into
+coded FHIR R4 with a Provenance record, files it on the clinic's FHIR server, and tells the doctor in Matrix.
+Every step lands in a hash-chained audit log.
 
-> *"Please ask Dr. Eva Brandl at eva.brandl@labor-kanal.example for the coagulation values of Maria Beispiel, born 12 March 1961, before her procedure."*
-
-IRIS turns it into a request card, checks the address, finds the patient on the clinic's FHIR server and waits
-for her OK. One click, and it's on its way.
-
-### Across town: a link that gives nothing away
-
-**Dr. Eva Brandl**, lab physician, gets an email with one link. No patient name, no birth date, no document
-type: just "Klinikum Beispielstadt has sent you a secure document request." She opens it on her phone.
-
-<table>
-  <tr>
-    <td align="center" width="25%"><img src="docs/img/02-link.png" alt="The neutral link page: Klinikum Beispielstadt has sent you a secure document request. Sign in with ID Austria." width="230"></td>
-    <td align="center" width="25%"><img src="docs/img/03-demoid.png" alt="DemoID, the simulated eID login: choose a test person, approve in the app, data that will be shared" width="230"></td>
-    <td align="center" width="25%"><img src="docs/img/04-answer.png" alt="Answer form, shown only after the identity check: lab result requested for Maria Beispiel, upload a document" width="230"></td>
-    <td align="center" width="25%"><img src="docs/img/05-receipt.png" alt="Receipt: Thank you, your answer was sent securely" width="230"></td>
-  </tr>
-  <tr>
-    <td align="center"><b>1 · The link</b><br><sub>Nothing about the patient yet. No account, no install.</sub></td>
-    <td align="center"><b>2 · Who are you?</b><br><sub>Electronic ID (simulated here as <i>DemoID</i>; ID Austria in production).</sub></td>
-    <td align="center"><b>3 · Only now: the request</b><br><sub>Patient and document appear after the name matches. She drops in the PDF.</sub></td>
-    <td align="center"><b>4 · Done</b><br><sub>A receipt number, nothing else. No account was created.</sub></td>
-  </tr>
-</table>
-
-### Back at the clinic: coded, validated, signed
-
-Seconds later the values are in Maria's record: every value a FHIR Observation with its LOINC code, unit and
-reference range, out-of-range values flagged, the original PDF attached, and a Provenance that says exactly who
-sent it and how their identity was checked. Dr. Hofer gets a message in her chat with the link.
-
-<p align="center"><img src="docs/img/06-report.png" alt="The filed lab result as Dr. Hofer opens it: ten values with LOINC codes, glucose and CRP flagged high" width="760"></p>
-
-### Three things that go wrong in real life, and don't here
-
-| What happens | What IRIS does |
+| | |
 |---|---|
-| **One wrong letter in the address.** `eva.brandl@labor-kanaI.example`: a capital I instead of an l. | The draft card warns *before* anything is sent: *the domain looks like labor-kanal.example but isn't the same ("I" instead of "l").* |
-| **The email gets forwarded.** A colleague, Karl, opens the link. | His electronic ID says he's not Dr. Brandl. He sees nothing, can't answer, and Dr. Hofer is told. |
-| **The wrong patient's result is uploaded.** Max Beispiel instead of Maria. | A calibrated record-linkage check compares the requested patient, the typed patient and the document. It doesn't match: nothing is filed, and the other patient is never named. |
+| **6/6** | required audit steps logged, with who, what and when |
+| **3/3** | misdelivery tests caught (wrong address, forwarded link, wrong patient) |
+| **0 / 17** | jury-style documents filed to the wrong patient |
+| **0** | patient names, birth dates or document types in 24 emails and 5 SMS |
+| **0** | HL7 validator errors on the filed bundles |
+
+## Features
+
+- **One-sentence requests.** Dr. Hofer types or dictates the request in German or English. The AI engine extracts recipient, contact, patient and document type; every extracted value must literally occur in her text, and the patient is matched on two identifiers against the FHIR server.
+- **Address lint before sending.** Look-alike domains (`labor-kanaI` with a capital I), typos and implausible phone numbers are flagged on the draft card before anything leaves the clinic.
+- **Neutral delivery.** Email and SMS carry only the clinic name and a 256-bit single-use link. A test fails the build if a template could ever contain a patient name, birth date or document type.
+- **Identity first, data second.** The link page shows one neutral sentence. Only after an eID login whose verified name matches the person the doctor named does the patient appear (*DemoID* simulates ID Austria; production uses the OIDC login).
+- **Any document format.** PDF (exact text layer), Markdown, plain text or pasted text; photos and scans are read by a vision model and confirmed by the sender before filing.
+- **Right-patient guarantee.** A calibrated Fellegi–Sunter record-linkage model compares the requested patient, the patient typed by the sender and the patient in the document. Mismatches are quarantined, borderline cases go to the doctor.
+- **Standards-native output.** One FHIR R4 transaction Bundle per answer: an Observation per value with LOINC, UCUM units, reference range and interpretation, a DiagnosticReport, the original as DocumentReference, and a Provenance naming the verified sender and how they were identified. Validated with `$validate` before filing.
+- **Tamper-evident audit.** Append-only log with a SHA-256 hash chain, a 6/6 coverage view and a plain-language timeline on `/audit`, in English and German.
+- **Replaceable parts.** Email, SMS, eID, FHIR server, secure-transfer provider and models each sit behind one small interface.
+
+## Screenshots
 
 <table>
   <tr>
-    <td align="center" width="50%"><img src="docs/img/07-blocked.png" alt="This request is not for you: the identity does not match, no content is shown" width="280"></td>
-    <td align="center" width="50%"><img src="docs/img/08-wrong-patient.png" alt="Not matched: the document does not fit the requested person and was not saved" width="280"></td>
+    <td align="center"><img src="docs/img/02-link.png" alt="Neutral link page" width="200"></td>
+    <td align="center"><img src="docs/img/03-demoid.png" alt="DemoID eID login" width="200"></td>
+    <td align="center"><img src="docs/img/04-answer.png" alt="Answer form after identity check" width="200"></td>
+    <td align="center"><img src="docs/img/05-receipt.png" alt="Receipt" width="200"></td>
   </tr>
   <tr>
-    <td align="center"><b>Forwarded link</b><br><sub>Wrong person, nothing revealed.</sub></td>
-    <td align="center"><b>Wrong patient</b><br><sub>Never filed, never named.</sub></td>
+    <td align="center"><sub><b>Link page</b><br>nothing about the patient</sub></td>
+    <td align="center"><sub><b>eID login</b> (DemoID)<br>name must match</sub></td>
+    <td align="center"><sub><b>Answer form</b><br>shown only after identity</sub></td>
+    <td align="center"><sub><b>Receipt</b><br>no account created</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/img/07-blocked.png" alt="Forwarded link blocked" width="200"></td>
+    <td align="center"><img src="docs/img/08-wrong-patient.png" alt="Wrong patient not filed" width="200"></td>
+    <td align="center" colspan="2"><img src="docs/img/06-report.png" alt="Filed lab result with LOINC codes" width="420"></td>
+  </tr>
+  <tr>
+    <td align="center"><sub><b>Forwarded link</b><br>wrong person, nothing shown</sub></td>
+    <td align="center"><sub><b>Wrong patient</b><br>not filed, not named</sub></td>
+    <td align="center" colspan="2"><sub><b>Filed result</b>: LOINC-coded values, out-of-range flagged, link to every FHIR resource</sub></td>
   </tr>
 </table>
 
-### Every step on record
+<p align="center"><img src="docs/img/09-audit.png" alt="Audit log: hash chain intact, 6 of 6 steps, misdeliveries caught" width="860"><br>
+<sub><b>Audit log</b>: chain verified, 6/6 required steps, misdeliveries M2 and M3 caught</sub></p>
 
-Request sent, link opened, identity checked, answer sent, answer filed, misdelivery caught: each step is written
-to an append-only log where every row carries the hash of the row before it. Change or delete an entry, and the
-chain breaks from that point.
+## How it works
 
-<p align="center"><img src="docs/img/09-audit.png" alt="Audit log: hash chain verified intact, 6 of 6 required steps logged, M2 and M3 caught" width="860"></p>
+1. **Request.** Dr. Hofer writes the request in her Matrix room (Element). The bot drafts a card: patient (looked up on HAPI FHIR), recipient, contact, document type, address warnings. She confirms; IRIS creates a FHIR `Task` and sends the neutral link.
+2. **Link.** The outside person opens the single-use link (only its SHA-256 is stored; 72 h, 5 identity attempts, single use).
+3. **Identity.** eID login. The verified name must match the named person, otherwise nothing is shown and the misdelivery is logged and reported.
+4. **Answer.** The patient and the request are revealed; the sender types the patient's name and birth date and uploads the document.
+5. **Check.** The engine reads the document (exact parser for PDF/Markdown, read-back for photos); the core runs the three-way patient check and the LOINC checks and decides `file`, `review` or `reject`.
+6. **File.** On `file`: FHIR transaction Bundle → `$validate` → HAPI, `Task` completed, Provenance attached. On `review`: the doctor decides in Matrix. On `reject`: quarantine.
+7. **Notify.** The doctor's chat card updates with the result and links to the filed resources. Every step is in the audit chain.
 
-**No retyping. No fax. No findings in a stranger's inbox.** And all of that in the blink of an eye.
+## Architecture
 
----
+<p align="center"><img src="docs/img/atlas-01-architecture.png" alt="IRIS architecture: clinic network, internet-facing portal, team GPU" width="900"></p>
 
-## Under the hood
-
-The full picture is in the **[IRIS System Atlas](docs/system-atlas.html)** (download and open it in a browser):
-containers and trust zones, the tool stack, the design patterns, the request lifecycle, timings, and the data model.
-
-<p align="center"><img src="docs/img/atlas-01-architecture.png" alt="IRIS architecture: three trust zones. Clinic network with Element, Synapse, the IRIS app, core, SQLite, HAPI FHIR and the AI engine; the internet-facing portal, email and SMS; the team GPU reached through an SSH tunnel." width="900"></p>
-
-**Everything that sees patient data runs inside the clinic.** The internet only gets an opaque link and a neutral
-page; the GPU only gets text through an SSH tunnel.
+Three trust zones. **Everything that sees patient data runs inside the clinic**: Matrix (Synapse + Element), the
+IRIS app, the deterministic core, SQLite, HAPI FHIR and the AI engine. The **internet-facing** side gets only an
+opaque link and a neutral page. The **GPU** only receives text through an SSH tunnel and runs open-weight models.
+Full details, including the tool stack, timings and data model, in the **[IRIS System Atlas](docs/system-atlas.html)**
+(open it in a browser).
 
 <details>
-<summary><b>Design patterns: models read, rules decide</b></summary>
+<summary><b>Design patterns</b>: models read, rules decide</summary>
 <br>
-<img src="docs/img/atlas-03-patterns.png" alt="Twelve design patterns: rules first, grounded extraction, calibrated patient match, ports and adapters, capability link, need-to-know reveal, transactional outbox, hash-chained audit log, human read-back, graceful degradation, one command handler, living card" width="900">
+<img src="docs/img/atlas-03-patterns.png" alt="Twelve design patterns" width="900">
 </details>
 
 <details>
 <summary><b>Request lifecycle and audit events</b></summary>
 <br>
-<img src="docs/img/atlas-04-lifecycle.png" alt="Request lifecycle: draft, sent, opened, identified, answered, filed; branches to wrong person, blocked, rejected and review" width="900">
+<img src="docs/img/atlas-04-lifecycle.png" alt="Request lifecycle" width="900">
 </details>
 
 <details>
 <summary><b>Time per step</b></summary>
 <br>
-<img src="docs/img/atlas-05-timing.png" alt="Time per request step on a log scale: rules 3 ms, patient lookup 224 ms, Ministral 3 8B on the GPU 1.8 s" width="900">
+<img src="docs/img/atlas-05-timing.png" alt="Time per request step" width="900">
 </details>
 
 <details>
 <summary><b>FHIR R4 resources filed for one lab answer</b></summary>
 <br>
-<img src="docs/img/atlas-06-fhir.png" alt="FHIR resources and references: Task, Observation, DiagnosticReport, DocumentReference, Provenance, Practitioner, Organization, Device, Patient" width="900">
+<img src="docs/img/atlas-06-fhir.png" alt="FHIR resources and references" width="900">
 </details>
 
 <details>
 <summary><b>What crosses each boundary</b></summary>
 <br>
-<img src="docs/img/atlas-07-boundaries.png" alt="Table of what each boundary may contain: email and SMS only the link and clinic name; the link page one neutral sentence; patient data only after the identity check" width="900">
+<img src="docs/img/atlas-07-boundaries.png" alt="What each boundary may contain" width="900">
 </details>
 
----
+## Tech stack
+
+| Layer | Tools |
+|---|---|
+| Clinic chat | Matrix: Synapse homeserver, Element Web, matrix-nio bot |
+| Application | Python, FastAPI + Uvicorn, Jinja templates, SQLite, httpx |
+| Core logic | Python standard library only: document parser, Fellegi–Sunter record linkage, LOINC checks, FHIR Bundle builder |
+| Health data | HAPI FHIR R4 server, official HL7 validator, LOINC, UCUM |
+| AI engine | FastAPI service; open-weight models on vLLM (one RTX A5000); CPU fallbacks (rules, Parakeet ONNX, Tesseract) |
+| Identity | Simulated ID Austria assertion (*DemoID*), HMAC-signed; production: ID Austria OIDC / eIDAS |
+| Delivery | SMTP (Mailpit in the demo), simulated SMS gateway; FTAPI SubmitBox adapter boundary |
+| Ops and tests | Docker Compose, uv, Make, pytest, Playwright end-to-end tests, GitHub Actions |
 
 ## Run it
 
@@ -170,7 +185,7 @@ uv run python scripts/e2e.py --local    # no Docker: app in-process, fake HAPI
 
 It needs a Chromium: `uv run playwright install chromium`, or a system `chromium` on the PATH.
 
-## Architecture
+## Components in detail
 IRIS has a deterministic core, a FastAPI service around it, and five off-the-shelf services.
 
 **Models and services.** Every decision is deterministic or statistical: patient matching is a calibrated record-linkage model (Fellegi–Sunter, weights estimated on synthetic labelled pairs, `core/weights.json`); parsing of the scenario format, LOINC checks, FHIR building and the identity policy are rules. Models only *read* (see [AI engine](#ai-engine)): Dr. Hofer's typed or spoken request, and answers that arrive as PDF, scan or phone photo. They run self-hosted on one GPU (vLLM), every value they return must be a slice of the input, and the rules above still decide. Services we run but did not write: Synapse, Element Web, HAPI FHIR R4, Mailpit, SQLite.

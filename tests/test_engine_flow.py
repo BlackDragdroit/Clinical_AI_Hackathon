@@ -66,6 +66,7 @@ def test_voice_request_keeps_no_audio(hapi, monkeypatch):
     rid = re.search(r"Anfrage (\w+)", reply).group(1)
     req = db.get("requests", "id", rid)
     assert req["contact"] == "eva.brandl@labor-kanal.example" and req["source"] == "voice"
+    assert "Kontakt aus Sprachnachricht" in reply                     # voice contacts are always flagged
     parsed = [e for e in audit.entries(rid) if e["event"] == "request_parsed"][0]["details"]
     assert parsed["audio_sha256"] == "ab" * 32 and parsed["asr"] == "fake-asr"
     assert not any(isinstance(v, (bytes, bytearray)) for r in db.query("SELECT * FROM requests") for v in r.values())

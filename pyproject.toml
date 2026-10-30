@@ -22,6 +22,13 @@ dev = [
     "reportlab>=5.1.0",
     "numpy>=2.5.4",
 ]
+voice = [
+    "faster-whisper>=1.2.1",
+    "huggingface-hub>=2.4.0",
+    "onnx-asr>=0.12.0",
+    "piper-tts>=1.8.0",
+    "soundfile>=0.14.0",
+]
 
 [tool.pytest.ini_options]
 # core/ uses flat imports (from fs_matcher import ...), so it goes on the path as-is

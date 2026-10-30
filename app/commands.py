@@ -94,6 +94,8 @@ def from_engine(res: dict, sender: str, source: str) -> str:
             "missing": res.get("missing", []), "flags": len(res.get("flags", [])), "timings_ms": res.get("timings_ms")}
     heard = (res.get("input") or {}).get("normalized") or asr.get("text") or ""
     flags = [f"⚠️ {f}" for f in res.get("flags", [])]
+    if source == "voice" and res.get("contact"):     # speech-to-text gets addresses/numbers wrong (eval/VOICE.md)
+        flags.append("⚠️ Kontakt aus Sprachnachricht erkannt: bitte Adresse/Nummer vor dem Senden Zeichen für Zeichen prüfen")
     patient = res.get("patient") or {}
     if not res.get("ready"):
         audit.log("request_parsed", None, sender, meta)

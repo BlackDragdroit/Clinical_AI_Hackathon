@@ -1,0 +1,62 @@
+# Models + engine on the A5000 VM (24 GB). Start: `make gpu-up` on the VM, then `make gpu-smoke`.
+# Each vLLM server pre-allocates its share of GPU memory; the shares add up to ~0.82 so the card has headroom.
+# The app (laptop or VM) points ENGINE_URL at http://<vm>:8100.
+#
+# VERIFY on the box: the vLLM tag serves all three models (Qwen3.5-based NuExtract3 needs >= 0.17,
+# Qwen3-ASR >= 0.16); if one fails, swap ENGINE_LLM_MODEL to Qwen/Qwen3.5-4B with ENGINE_LLM_MODE=json_schema.
+# EU (Mistral) alternatives, same Apache-2.0 licence, measured as rungs on the held-out set before choosing:
+#   ENGINE_LLM_MODEL=mistralai/Ministral-3-8B-Instruct-2512 ENGINE_LLM_MODE=json_schema
+#     LLM_EXTRA="--tokenizer-mode mistral --config-format mistral --load-format mistral"
+#   ENGINE_ASR_MODEL=mistralai/Voxtral-Mini-3B-2507  ASR_EXTRA="--tokenizer-mode mistral --config-format mistral --load-format mistral"
+x-gpu: &gpu
+  deploy:
+    resources:
+      reservations:
+        devices: [{driver: nvidia, count: all, capabilities: [gpu]}]
+x-vllm: &vllm
+  image: vllm/vllm-openai:${VLLM_TAG:-v0.32.0}
+  ipc: host
+  restart: unless-stopped
+  environment:
+    HF_TOKEN: ${HF_TOKEN:-}
+  volumes:
+    - hf-cache:/root/.cache/huggingface
+
+services:
+  llm:                       # text -> JSON (request job, document fallback)
+    <<: [*vllm, *gpu]
+    command: >
+      --model ${ENGINE_LLM_MODEL:-numind/NuExtract3} --port 8001 --gpu-memory-utilization 0.42
+      --max-model-len 8192 --max-num-seqs 16 --trust-remote-code --enable-prefix-caching ${LLM_EXTRA:-}
+    ports: ["8001:8001"]
+
+  asr:                       # speech -> text, German + English
+    <<: [*vllm, *gpu]
+    command: >
+      --model ${ENGINE_ASR_MODEL:-Qwen/Qwen3-ASR-1.7B} --port 8002 --gpu-memory-utilization 0.22
+      --max-model-len 4096 --trust-remote-code ${ASR_EXTRA:-}
+    ports: ["8002:8002"]
+
+  ocr:                       # page image -> Markdown
+    <<: [*vllm, *gpu]
+    command: >
+      --model ${ENGINE_OCR_MODEL:-PaddlePaddle/PaddleOCR-VL-1.6} --port 8003 --gpu-memory-utilization 0.18
+      --max-model-len 8192 --trust-remote-code
+    ports: ["8003:8003"]
+
+  engine:
+    build: {context: ../.., dockerfile: deploy/gpu/Dockerfile.engine}
+    environment:
+      ENGINE_LLM_URL: http://llm:8001/v1
+      ENGINE_LLM_MODEL: ${ENGINE_LLM_MODEL:-numind/NuExtract3}
+      ENGINE_LLM_MODE: ${ENGINE_LLM_MODE:-nuextract}
+      ENGINE_ASR_URL: http://asr:8002/v1
+      ENGINE_ASR_MODEL: ${ENGINE_ASR_MODEL:-Qwen/Qwen3-ASR-1.7B}
+      ENGINE_OCR_URL: http://ocr:8003/v1
+      ENGINE_OCR_MODEL: ${ENGINE_OCR_MODEL:-PaddlePaddle/PaddleOCR-VL-1.6}
+      ENGINE_HAPI_URL: ${ENGINE_HAPI_URL:-}          # the clinic's FHIR server, for the patient lookup
+    ports: ["8100:8100"]
+    depends_on: [llm, asr, ocr]
+
+volumes:
+  hf-cache:

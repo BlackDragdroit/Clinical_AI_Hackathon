@@ -7,3 +7,14 @@ tools/
 .pytest_cache/
 playwright-report/
 test-results/
+
+# engine eval: generated, large or downloaded
+eval/data/synthea/
+eval/data/docs/
+eval/data/audio/
+eval/data/synthea_labs.json
+eval/data/*.log
+eval/data/external/elga/
+eval/data/external/statistik_austria/
+eval/data/external/elga_cda_examples/
+eval/data/external/grascco/

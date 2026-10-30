@@ -24,6 +24,23 @@ def read_patient(patient_ref: str) -> dict:
     return {"name": " ".join([*n.get("given", []), n.get("family", "")]).strip(), "dob": p.get("birthDate", "")}
 
 
+def search_patients(family: str | None, birthdate: str | None) -> list[dict]:
+    """Candidates by birth date and by family name: [{'ref', 'name', 'dob'}]. The engine ranks them."""
+    out: dict[str, dict] = {}
+    queries = ([{"birthdate": birthdate}] if birthdate else []) + ([{"family": family}] if family else [])
+    with _client() as c:
+        for q in queries:
+            r = c.get("Patient", params={**q, "_count": "50"})
+            if r.status_code != 200:
+                continue
+            for e in r.json().get("entry", []):
+                p = e["resource"]
+                n = (p.get("name") or [{}])[0]
+                out[f"Patient/{p['id']}"] = {"ref": f"Patient/{p['id']}", "dob": p.get("birthDate", ""),
+                                             "name": " ".join([*n.get("given", []), n.get("family", "")]).strip()}
+    return list(out.values())
+
+
 # what Dr. Hofer asked for, as the LOINC document type the filed answer will carry
 REQUESTED_DOC = {
     "lab": {"system": "http://loinc.org", "code": "11502-2", "display": "Laboratory report"},

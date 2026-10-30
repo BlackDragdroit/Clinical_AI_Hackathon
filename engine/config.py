@@ -24,6 +24,7 @@ class EngineSettings:
     # image -> text (scans, phone photos, image-only PDFs)
     ocr_url: str = _env("ENGINE_OCR_URL", "")                          # e.g. http://gpu:8003/v1
     ocr_model: str = _env("ENGINE_OCR_MODEL", "PaddlePaddle/PaddleOCR-VL-1.6")
+    ocr_api_key: str = _env("ENGINE_OCR_API_KEY", _env("ENGINE_LLM_API_KEY", ""))   # same GPU server: same key
     tesseract_cmd: str = _env("ENGINE_TESSERACT", "tesseract")         # classic OCR, the independent second reader
     # patient directory (the clinic's FHIR server); "" = no lookup, only explicit Patient/<id>
     hapi_url: str = _env("ENGINE_HAPI_URL", _env("HAPI_URL", ""))

@@ -266,3 +266,27 @@ def test_new_panels_and_single_tests_in_requests():
     r = request_job.run("Gamma-GT von Frau Maria Beispiel, geb. 12.03.1961, bei Dr. Eva Brandl eva.brandl@labor-kanal.example",
                         PATIENTS, use_llm=False)
     assert r["panel"]["loinc"] == ["2324-2"]
+
+
+def test_ocr_unwraps_a_general_model_and_sends_the_key(monkeypatch):
+    """A general vision model (e.g. Ministral 3 8B) wraps the page in 'Sure, here is ...' and a code fence."""
+    from engine.backends import ocr
+    seen = {}
+
+    class R:
+        def raise_for_status(self): pass
+        def json(self): return {"choices": [{"message": {"content": "Sure, here is the document:\n\n```\n| Test | Result |\n|---|---|\n| INR | 1.0 |\n```"}}]}
+
+    def post(url, json=None, headers=None, timeout=None):  # noqa: A002
+        seen.update(headers=headers)
+        return R()
+
+    monkeypatch.setattr(ocr.httpx, "post", post)
+    import dataclasses
+    monkeypatch.setattr(ocr, "settings", dataclasses.replace(ocr.settings, ocr_url="http://gpu/v1", ocr_api_key="k"))
+    r = ocr.vlm(b"png")
+    assert r.text == "| Test | Result |\n|---|---|\n| INR | 1.0 |" and seen["headers"] == {"Authorization": "Bearer k"}
+    # the title line keeps the lab's name for the FHIR Organization, even when the model drops the '#'
+    assert ocr._unwrap("```\nLabor Kanalstraße: lab report\n\nPatient: Maria Beispiel\n```").startswith("# Labor Kanalstraße")
+    assert ocr._unwrap("Patient: Maria Beispiel\n| a | b |").startswith("Patient:")
+

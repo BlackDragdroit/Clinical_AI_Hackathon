@@ -4,32 +4,21 @@
 <style>
 :root {
   color-scheme: light;
-  --page: #f4f5f7;
-  --paper: #ffffff;
-  --ink: #101b2d;        /* near-black navy, 17.4:1 */
-  --ink-2: #454f63;      /* 8.4:1 */
-  --ink-3: #596275;      /* 6.2:1 */
-  --line: #e2e5ea;       /* hairline between rows */
-  --line-2: #c4c9d2;     /* rule under headers */
-  --navy: #1b3460;       /* accent: links, focus, selection, 12.2:1 */
-  --navy-hover: #0e2347;
-  --hover: #f6f7f9;
-  --target: #eef1f6;
-  --inset: #f9fafb;
-  --iris: #3d3290;       /* the one brand touch: the I.R.I.S. mark */
-  /* status: dark, used as text and as the 3px rule only */
-  --ok: #1c6234;         /* 7.1:1 */
-  --warn: #765000;       /* 7.0:1 */
-  --bad: #9f1f18;        /* 8.0:1 */
-  --alert: #8a3f00;      /* 7.6:1 */
-  --radius: 3px;
-  --text: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Segoe UI Variable Text", "Segoe UI", Roboto,
-          "Helvetica Neue", Arial, sans-serif;
-  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, "Cascadia Mono", Consolas, "Liberation Mono", monospace;
+  /* mapped onto the shared design system (_design.html); names it shares (ink, line, ok, warn, bad, mono) come from there */
+  --page: var(--ground);
+  --navy: var(--accent);
+  --navy-hover: var(--accent-ink);
+  --hover: #f6f8f9;
+  --target: var(--accent-soft);
+  --inset: var(--paper-2);
+  --iris: var(--accent);
+  --alert: #8a3f00;
+  --radius: var(--r-s);
+  --text: var(--font);
   --fs-body: .9063rem;
   --fs-table: .875rem;
   --fs-small: .8125rem;
-  --fs-label: .75rem;    /* the minimum on this page */
+  --fs-label: .75rem;
 }
 @media (prefers-contrast: more) {
   :root { --ink-2: #333b4d; --ink-3: #3b4356; --line: #b5bbc6; --line-2: #7f8796; }

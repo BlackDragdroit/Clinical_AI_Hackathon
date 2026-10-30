@@ -2,5 +2,5 @@
 <ol class="steps" aria-label="{{ t('portal.step_of', n=step if step < 3 else 2) }}">
   <li class="{{ 'done' if step > 1 else 'on' }}">1. {{ t('portal.step_identity') }}</li>
   <li class="{{ 'done' if step > 2 else ('on' if step == 2 else '') }}">2. {{ t('portal.step_upload') }}</li>
-  <li class="{{ 'on' if step == 3 else '' }}">✓ {{ t('portal.step_done') }}</li>
+  <li class="{{ 'on' if step == 3 else '' }}">3. {{ t('portal.step_done') }}</li>
 </ol>

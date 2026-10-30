@@ -2,7 +2,7 @@
 {% block steps %}{% set step = 3 %}{% include "_steps.html" %}{% endblock %}
 {% block body %}
 <div class="card">
-  {% if ok %}<h2>✓ {{ t('portal.done_h') }}</h2>{% else %}<h2>{{ t('portal.reject_h') }}</h2>{% endif %}
+  {% if ok %}<h2><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m7.6 12.3 3 3 5.8-6.2" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>{{ t('portal.done_h') }}</h2>{% else %}<h2>{{ t('portal.reject_h') }}</h2>{% endif %}
   <p{% if not ok %} class="err" role="alert"{% endif %}>{{ message }}</p>
   <p class="muted">{{ t('portal.receipt_no', receipt=receipt) }}</p>
 </div>

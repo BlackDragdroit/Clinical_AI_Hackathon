@@ -1,3 +1,4 @@
+{%- import "_design.html" as design -%}
 {#- Audit page (clinic-internal). Owner: MedEng. Standalone (not base.html): base.html is the narrow
     outside portal; this is a wide staff screen. Data comes from audit.view(); every text goes through t(). -#}
 {%- macro icon(name, cls="ic") -%}
@@ -23,6 +24,7 @@
 <meta name="robots" content="noindex">
 <meta name="color-scheme" content="light">
 <title>{{ t("audit.title", lang) }} · I.R.I.S.</title>
+{% include "_design.html" %}
 {% include "_audit_style.html" %}
 </head>
 <body>
@@ -31,11 +33,7 @@
 <header class="bar">
   <div class="bar-in">
     <p class="brand">
-      <svg class="iris" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
-        <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
-        <circle cx="12" cy="12" r="5.5" fill="currentColor" opacity=".55"/>
-        <circle cx="12" cy="12" r="2.4" fill="currentColor"/>
-      </svg>
+      {{ design.mark(22) }}
       <span class="brand-name">{{ t("audit.brand", lang) }}</span>
       <span class="brand-clinic">{{ clinic }}</span>
     </p>

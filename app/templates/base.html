@@ -1,45 +1,74 @@
+{%- import "_design.html" as design -%}
 <!doctype html>
 <html lang="{{ lang | default('de') }}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
+<meta name="color-scheme" content="light">
 <title>{% block title %}{{ t('portal.title') if t is defined else 'Sichere Dokumentenanfrage' }}{% endblock %}</title>
+{% include "_design.html" %}
 <style>
-  :root { --brand: #1f5f8b; --brand-dark: #174a6d; --bg: #f5f7f8; --ink: #1d2327; --muted: #566269; --line: #c4ccd1; --err: #a4262c; }
   * { box-sizing: border-box; }
-  body { font: 18px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; margin: 0; background: var(--bg); color: var(--ink); }
-  main { max-width: 34rem; margin: 0 auto; padding: .75rem 1rem 3rem; }
-  .top { display: flex; justify-content: space-between; align-items: center; min-height: 48px; }
-  .brand { font-weight: 700; color: var(--brand); }
-  .lang { display: inline-flex; align-items: center; min-height: 44px; padding: 0 .9rem; border: 1px solid var(--line);
-          border-radius: 22px; color: var(--ink); text-decoration: none; background: #fff; font-size: .95rem; }
-  .steps { display: flex; gap: .4rem; list-style: none; padding: 0; margin: .25rem 0 1rem; font-size: .85rem; color: var(--muted); }
-  .steps li { flex: 1; border-top: 4px solid var(--line); padding-top: .3rem; }
-  .steps li.on { border-color: var(--brand); color: var(--ink); font-weight: 600; }
-  .steps li.done { border-color: var(--brand); }
-  .card { background: #fff; border-radius: 14px; padding: 1.25rem; box-shadow: 0 1px 3px #0002; }
-  h2 { margin: 0 0 .5rem; font-size: 1.35rem; line-height: 1.25; }
-  .btn { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 56px; padding: .8rem; border: 0;
-         border-radius: 12px; background: var(--brand); color: #fff; font-size: 1.1rem; font-weight: 600; text-align: center;
-         text-decoration: none; cursor: pointer; }
-  .btn:hover, .btn:focus-visible { background: var(--brand-dark); }
-  .btn.secondary { background: #fff; color: var(--ink); border: 1px solid var(--line); font-weight: 500; }
-  label { display: block; margin: 1rem 0 .3rem; font-weight: 600; }
-  input:not([type=radio]), textarea { width: 100%; min-height: 52px; padding: .75rem; font: inherit; border: 1px solid #8a959b; border-radius: 10px; background: #fff; }
-  input[type=file] { padding: .6rem; }
-  :focus-visible { outline: 3px solid #f2a900; outline-offset: 2px; }
-  .muted { color: var(--muted); font-size: .92rem; }
-  .err { color: var(--err); font-weight: 600; }
-  .or { text-align: center; color: var(--muted); margin: .9rem 0 0; }
-  .foot { text-align: center; margin-top: 1.5rem; }
-  .warn { background: #fff4ce; padding: 0 .2rem; } tr.warnrow { background: #fff4ce; }
-  table { border-collapse: collapse; width: 100%; font-size: .85rem; } td, th { border-bottom: 1px solid #ddd; padding: .35rem; text-align: left; vertical-align: top; }
+  body { margin: 0; background: var(--ground); color: var(--ink); font: 17px/1.55 var(--font); }
+  main { max-width: 32rem; margin: 0 auto; padding: 8px 16px 40px; }
+  .top { display: flex; align-items: center; gap: 10px; min-height: 60px; }
+  .brand { display: inline-flex; align-items: center; gap: 9px; font-weight: 650; letter-spacing: -.01em; }
+  .lang { margin-left: auto; display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px;
+          border: 1px solid var(--line-2); border-radius: 999px; background: var(--paper); color: var(--ink-2);
+          font-size: 15px; text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast); }
+  .lang:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* where the outside person is: three steps, the current one in the accent */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; list-style: none; padding: 0; margin: 4px 0 16px;
+           font-size: 13.5px; color: var(--ink-3); }
+  .steps li { padding-top: 8px; border-top: 3px solid var(--line); transition: border-color var(--t-mid), color var(--t-mid); }
+  .steps li.done { border-color: var(--accent); color: var(--ink-2); }
+  .steps li.on { border-color: var(--accent); color: var(--ink); font-weight: 650; }
+
+  .card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-l); padding: 22px 20px;
+          box-shadow: var(--shadow); animation: rise 420ms var(--ease) both; }
+  .card > :first-child { margin-top: 0; }
+  .card > :last-child { margin-bottom: 0; }
+  h2 { display: flex; align-items: center; gap: 10px; margin: 0 0 8px; font-size: 22px; line-height: 1.25; letter-spacing: -.012em; }
+  h2 svg { flex: none; width: 26px; height: 26px; color: var(--ok); }
+  p { margin: 0 0 14px; }
+
+  .btn { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 54px; padding: 12px 16px;
+         border: 0; border-radius: var(--r-m); background: var(--accent); color: #fff; font: inherit; font-weight: 600;
+         text-align: center; text-decoration: none; cursor: pointer;
+         transition: background var(--t-fast), transform var(--t-fast) var(--ease); }
+  .btn:hover { background: var(--accent-ink); color: #fff; }
+  .btn:active { transform: scale(.985); }
+  .btn.secondary { background: var(--paper); color: var(--ink); border: 1px solid var(--line-2); font-weight: 500; }
+  .btn.secondary:hover { background: var(--paper-2); color: var(--ink); }
+
+  label { display: block; margin: 18px 0 6px; font-size: 15px; font-weight: 600; }
+  input:not([type=radio]), textarea { width: 100%; min-height: 52px; padding: 12px 14px; font: inherit; color: var(--ink);
+         background: var(--paper); border: 1px solid var(--line-2); border-radius: var(--r-m);
+         transition: border-color var(--t-fast), box-shadow var(--t-fast); }
+  input:not([type=radio]):focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  input::placeholder, textarea::placeholder { color: var(--ink-3); }
+  input[type=file] { padding: 14px; background: var(--paper-2); border-style: dashed; font-size: 15px; color: var(--ink-2); cursor: pointer; }
+  input[type=file]::file-selector-button { font: inherit; font-weight: 600; margin-right: 12px; padding: 8px 14px; color: var(--ink);
+         background: var(--paper); border: 1px solid var(--line-2); border-radius: var(--r-s); cursor: pointer; }
+  textarea { resize: vertical; }
+
+  .muted { color: var(--ink-2); font-size: 15px; }
+  .err { padding: 10px 12px; border-radius: var(--r-m); background: var(--bad-soft); color: var(--bad); font-weight: 600; }
+  .or { display: flex; align-items: center; gap: 12px; margin: 18px 0 0; color: var(--ink-3); font-size: 14px; }
+  .or::before, .or::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .foot { margin-top: 26px; text-align: center; color: var(--ink-3); font-size: 13.5px; }
+  .warn { background: var(--warn-soft); padding: 0 .2rem; border-radius: 3px; } tr.warnrow { background: var(--warn-soft); }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; }
+  td, th { border-bottom: 1px solid var(--line); padding: 8px 6px; text-align: left; vertical-align: middle; }
+  th label { margin: 0; font-size: 14px; }
+  @keyframes rise { from { opacity: 0; transform: translateY(6px); } }
   {% block style %}{% endblock %}
 </style>
 </head>
 <body><main>
-  {% if switch_href is defined %}<div class="top"><span class="brand">{{ clinic }}</span>
+  {% if switch_href is defined %}<div class="top"><span class="brand">{{ design.mark(22) }}{{ clinic }}</span>
     <a class="lang" href="{{ switch_href }}" hreflang="{{ other_lang }}" lang="{{ other_lang }}">{{ t('lang.switch') }}</a></div>{% endif %}
   {% block steps %}{% endblock %}
   {% block body %}{% endblock %}

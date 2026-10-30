@@ -3,30 +3,21 @@
 <style>
 :root {
   color-scheme: light;
-  --bar: #14213d;          /* navy chrome */
-  --bar-ink: #f3f4fa;
-  --bar-ink-2: #b9c0d6;
-  --bg: #f3f4f8;
-  --surface: #ffffff;
-  --surface-2: #f7f7fb;
-  --line: #e0e3ec;
-  --line-2: #cbd0de;
-  --ink: #15203a;
-  --ink-2: #48526c;
-  --ink-3: #616b84;
-  --iris: #5b3fd4;         /* iris violet: accent, links, focus */
-  --iris-ink: #4a30c0;
-  --iris-soft: #eeebfd;
-  --iris-on-bar: #b8a8ff;
-  --ok: #156b45;  --ok-soft: #e3f3ea;
-  --warn: #7f4f00; --warn-soft: #fcf0d4;
-  --bad: #b0241c;  --bad-soft: #fce8e6;
+  /* mapped onto the shared design system (_design.html): light header, one accent, the shared status colours */
+  --bar: var(--paper);
+  --bar-ink: var(--ink);
+  --bar-ink-2: var(--ink-3);
+  --bg: var(--ground);
+  --surface: var(--paper);
+  --surface-2: var(--paper-2);
+  --iris: var(--accent);
+  --iris-ink: var(--accent-ink);
+  --iris-soft: var(--accent-soft);
+  --iris-on-bar: var(--accent);
   --alert: #a3420c; --alert-soft: #fdebdc;
-  --muted-soft: #eef0f5;
-  --shadow: 0 1px 2px rgb(20 33 61 / .06), 0 4px 14px rgb(20 33 61 / .05);
-  --radius: 12px;
-  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --mono: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --muted-soft: #eef1f4;
+  --radius: var(--r-l);
+  --sans: var(--font);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -53,15 +44,15 @@ code, .mono { font-family: var(--mono); font-size: .86em; }
 .skip:focus { top: .5rem; }
 
 /* chrome */
-.bar { background: var(--bar); color: var(--bar-ink); }
+.bar { background: var(--bar); color: var(--bar-ink); border-bottom: 1px solid var(--line); }
 .bar-in { max-width: 84rem; margin: 0 auto; padding: .7rem 16px; display: flex; align-items: center; gap: 1rem; justify-content: space-between; }
 .brand { display: flex; align-items: center; gap: .6rem; min-width: 0; flex-wrap: wrap; row-gap: 0; }
 .iris { color: var(--iris-on-bar); flex: none; }
 .brand-name { font-weight: 650; letter-spacing: .01em; }
 .brand-clinic { color: var(--bar-ink-2); font-size: .875rem; }
-.lang a { color: var(--bar-ink); display: inline-block; padding: .35rem .7rem; border: 1px solid rgb(255 255 255 / .28);
+.lang a { color: var(--bar-ink); display: inline-block; padding: .35rem .7rem; border: 1px solid var(--line-2);
           border-radius: 999px; font-size: .8125rem; text-decoration: none; }
-.lang a[aria-current] { background: rgb(255 255 255 / .16); font-weight: 600; }
+.lang a[aria-current] { background: var(--accent-soft); color: var(--accent-ink); font-weight: 600; }
 .lang a:hover { border-color: var(--iris-on-bar); }
 .lang a:focus-visible { outline-color: var(--iris-on-bar); }
 

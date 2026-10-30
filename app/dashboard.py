@@ -81,6 +81,7 @@ def card(req: dict, events: list[dict]) -> dict:
     hint = {"draft": f"!senden {req['id']}", "review": f"!ablegen {req['id']} / !verwerfen {req['id']}"}.get(status, "")
     return {"id": req["id"], "doc": DOC.get(req["doc_type"], req["doc_type"]), "patient": req["patient_name"],
             "to": req["expected_name"], "via": req["contact_kind"], "reason": req["reason"], "status": status,
+            "source": req.get("source") or "command",
             "created": req["created_at"], "tone": tone, "steps": steps, "alerts": alerts, "hint": hint}
 
 

@@ -25,7 +25,8 @@ POLICIES = {
                      "Entlassungsberichte versendet oft die Verwaltung im Auftrag der Ärztin: Absender per ID Austria geprüft, "
                      "Autorin laut Dokument wird getrennt festgehalten."),
 }
-# TODO(MedEng): possession-only path (no eID available) -> allowed to answer, never auto-filed (always review)
+# No possession-only path (link without eID), on purpose: it cannot tell a forwarded link from the named person (M2).
+# People without ID Austria use their own national eID: ID Austria accepts eIDAS-notified EU eIDs (README answer 2).
 
 
 def policy_for(doc_type: str) -> Policy:

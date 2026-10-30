@@ -51,3 +51,8 @@ Append after each milestone: what works, what's next, known issues.
 - Numbers (held-out 300): rules 69.7 % fully correct; rules + Qwen3-1.7B on CPU (v2) 81.7 %; wrong patient picked 0/300 in every rung; silent errors 5/300. Documents: Markdown and PDF 120/120, 0 wrong values filed, 16/16 wrong-patient documents rejected.
 - Next: NuExtract3 and Ministral 3 rungs (CPU, running), app-side patient lookup when the engine runs remotely, ELGA names into the lexicon, GPU rungs once the A5000 is up.
 - Known issues: dictated lowercase requests are the weak spot of the rules; CPU speech-to-text loses most e-mails/phones (fails safe, one wrong number); OCR not measured without GPU.
+
+## MedEng: jury documents + name rule (Fri)
+- 14 jury documents in `metrics/jury_docs/` (EN/DE, other labs, date formats, LOINC errors, wrong patient, namesake, typo, swapped DOB, sibling, German rehab report): wrongly filed = 0 of 17; 3 mismatches, all to the safe side (jd02 separate 'Geburtsdatum:' line and jd05 '12.3.61' not parsed -> review; jd10 namesake *1985 -> review at W -3.75, expected reject).
+- `names_match`: hyphen = space, extra eID given names allowed, family name exact, family-only never matches; 21 new cases in tests/test_policy.py. `make test`: 54 passed, 4 xfailed.
+- Broken / for MedEng + Biostat: a valid LOINC code that is not in the local table is filed unchecked (jd08: D-Dimer row coded 2276-4 = ferritin); German 'Probenentnahme'/'Befunddatum' keys are not read, so effectiveDateTime/issued are lost (jd02). Validator not yet run on the jury bundles.

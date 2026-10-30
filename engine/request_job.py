@@ -81,11 +81,12 @@ def _merge(key: str, hit: rules.Hit | None, llm_value, text: str, flags: list[st
     return None
 
 
-def run(text: str, directory: Directory | None = None, use_llm: bool = True) -> dict:
+def run(text: str, directory: Directory | None = None, use_llm: bool = True, use_rules: bool = True) -> dict:
+    """use_rules=False is for the evaluation only (model alone); the rules still canonicalise what the model found."""
     t0 = time.perf_counter()
     norm = normalize(text)
     lang = language(norm)
-    r = rules.extract(norm)
+    r = rules.extract(norm) if use_rules else dict.fromkeys(rules.extract(norm))
     t_rules = time.perf_counter()
     res = llm.extract(norm, FIELDS, INSTRUCTIONS) if use_llm else llm.LlmResult(None, "", 0, "disabled")
     data = res.data or {}

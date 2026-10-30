@@ -82,7 +82,7 @@ def _load(name: str) -> list[dict]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()] if path.exists() else []
 
 
-def eval_requests(items: list[dict], use_llm: bool, audio_dir: Path | None = None) -> dict:
+def eval_requests(items: list[dict], use_llm: bool, audio_dir: Path | None = None, use_rules: bool = True) -> dict:
     from engine import request_job
     from engine._core import norm_tokens
     from engine.backends import asr
@@ -98,7 +98,7 @@ def eval_requests(items: list[dict], use_llm: bool, audio_dir: Path | None = Non
             asr_info = {"text": r.text, "ms": r.ms, "error": r.error}
             text = r.text or ""
         t0 = time.perf_counter()
-        res = request_job.run(text, directory, use_llm=use_llm)
+        res = request_job.run(text, directory, use_llm=use_llm, use_rules=use_rules)
         lat.append((time.perf_counter() - t0) * 1000 + (asr_info or {}).get("ms", 0))
         picked = res["patient"]["ref"] if res["patient"]["status"] in ("unique", "explicit") else None
         ok = {
@@ -284,6 +284,7 @@ def main() -> None:
     ap.add_argument("--audio-dir", help="eval/data/audio/<set>: <id>.wav per request -> voice evaluation")
     ap.add_argument("--forms", default="md,pdf")
     ap.add_argument("--limit", type=int)
+    ap.add_argument("--no-rules", action="store_true", help="model alone (requests): ignore what the rules found")
     a = ap.parse_args()
     if a.task == "report":
         return report()
@@ -296,7 +297,7 @@ def main() -> None:
         items = _load(f"requests_{a.set}.jsonl")[: a.limit]
         if not items:
             sys.exit(f"no items in eval/data/requests_{a.set}.jsonl")
-        metrics = eval_requests(items, use, Path(a.audio_dir) if a.audio_dir else None)
+        metrics = eval_requests(items, use, Path(a.audio_dir) if a.audio_dir else None, use_rules=not a.no_rules)
         name = f"requests_{a.set}_{a.rung}" + ("_voice" if a.audio_dir else "")
     else:
         docs = _load("documents.jsonl")[: a.limit]

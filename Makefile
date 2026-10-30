@@ -56,6 +56,10 @@ gpu-up:          ## on the A5000 VM: vLLM (text, speech, OCR) + engine on :8100
 gpu-smoke:       ## check every model answers: ENGINE=http://<vm>:8100 make gpu-smoke
 	$(RUN) python -m scripts.gpu_smoke --engine $${ENGINE:-http://localhost:8100}
 
+LLAMA ?= $(HOME)/.cache/befundbruecke
+cpu-llm:         ## small model on this laptop's CPU (llama.cpp b11985): MODEL=NuExtract3|Qwen3-1.7B -> http://localhost:8011/v1
+	$(LLAMA)/llama/llama-server -m $(LLAMA)/models/$${MODEL:-NuExtract3}-Q4_K_M.gguf --jinja -c 8192 --port 8011 -t $$(nproc)
+
 engine-data:     ## build the engine test sets (patients, requests, documents) under eval/data
 	$(RUN) python -m eval.build_data
 

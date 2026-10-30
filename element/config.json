@@ -6,13 +6,13 @@
     }
   },
   "disable_guests": true,
-  "brand": "Klinikum Beispielstadt",
-  "default_theme": "custom-BefundBrücke",
+  "brand": "IRIS",
+  "default_theme": "custom-IRIS",
   "setting_defaults": {
     "use_system_theme": false,
     "custom_themes": [
       {
-        "name": "BefundBrücke",
+        "name": "IRIS",
         "is_dark": false,
         "colors": {
           "accent-color": "#1f5f8b",
@@ -49,6 +49,13 @@
           ]
         }
       }
-    ]
+    ],
+    "UIFeature.registration": false
+  },
+  "branding": {
+    "auth_header_logo_url": "iris-logo.png"
+  },
+  "embedded_pages": {
+    "welcome_url": "welcome.html"
   }
 }

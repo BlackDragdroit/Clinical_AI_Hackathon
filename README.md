@@ -1,6 +1,6 @@
-# BefundBrücke
+# IRIS
 
-A doctor in a closed Matrix network asks someone outside it for a document. BefundBrücke gets it in
+A doctor in a closed Matrix network asks someone outside it for a document. IRIS gets it in
 through a one-time link, proves it comes from the right person and is about the right patient, and files
 it as valid FHIR R4: automatically, audited, with Dr. Hofer told in Matrix.
 
@@ -38,7 +38,7 @@ uv run python scripts/e2e.py --local    # no Docker: app in-process, fake HAPI
 It needs a Chromium: `uv run playwright install chromium`, or a system `chromium` on the PATH.
 
 ## Architecture
-BefundBrücke has a deterministic core, a FastAPI service around it, and five off-the-shelf services.
+IRIS has a deterministic core, a FastAPI service around it, and five off-the-shelf services.
 
 **Models and services.** Every decision is deterministic or statistical: patient matching is a calibrated record-linkage model (Fellegi–Sunter, weights estimated on synthetic labelled pairs, `core/weights.json`); parsing of the scenario format, LOINC checks, FHIR building and the identity policy are rules. Models only *read* (see [AI engine](#ai-engine)): Dr. Hofer's typed or spoken request, and answers that arrive as PDF, scan or phone photo. They run self-hosted on one GPU (vLLM), every value they return must be a slice of the input, and the rules above still decide. Services we run but did not write: Synapse, Element Web, HAPI FHIR R4, Mailpit, SQLite.
 
@@ -196,7 +196,7 @@ flowchart LR
   PROV["Provenance"]
   PRAC["Practitioner<br/>Dr. Eva Brandl<br/>(verified sender)"]
   ORG["Organization<br/>Labor Kanalstraße"]
-  DEV["Device<br/>BefundBrücke intake"]
+  DEV["Device<br/>IRIS intake"]
 
   TASK -->|for| PAT
   TASK -.->|"output.valueReference<br/>(every filed resource)"| DR
@@ -230,7 +230,7 @@ flowchart LR
   AUTH["Practitioner<br/>Dr. Johanna Leitner<br/>(author per document)"]
   SEND["Practitioner<br/>Stefan Kern<br/>(verified sender)"]
   ORG["Organization<br/>Reha Waldblick"]
-  DEV["Device<br/>BefundBrücke intake"]
+  DEV["Device<br/>IRIS intake"]
 
   TASK -->|for| PAT
   TASK -.->|"output.valueReference<br/>(every filed resource)"| DOC

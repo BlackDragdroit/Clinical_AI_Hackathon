@@ -48,7 +48,8 @@ def _alert(ev: dict) -> str:
     d = ev["details"]
     if d.get("type") == "M3":
         return "Dokument betrifft anderen Patienten: in Quarantäne, nichts abgelegt."
-    return f"Fehlzustellung erkannt: verifiziert {d.get('verified', '?')} ≠ {d.get('expected', '?')}. Nichts offengelegt."
+    return (f"{d.get('verified', 'Unbekannt')} hat den Link geöffnet, nicht {d.get('expected', 'die angefragte Person')}."
+            " Nichts offengelegt.")
 
 
 def card(req: dict, events: list[dict]) -> dict:

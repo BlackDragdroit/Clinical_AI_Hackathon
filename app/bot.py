@@ -1,6 +1,6 @@
-"""Matrix bot (matrix-nio): relays Dr. Hofer's commands to commands.handle, drains the outbox, keeps one
-status message per request up to date (app/status_message.py) and turns ✅/❌ reactions into commands
-(app/reactions.py). Owner: SWE 1.
+"""Matrix bot (matrix-nio): relays Dr. Hofer's commands to commands.handle, keeps one card per request up to
+date with a one-line ping only where she has to look (app/status_message.py), turns ✅/❌ reactions into
+commands (app/reactions.py) and drains the outbox. Owner: SWE 1.
 
 With MATRIX_ENABLED=0 only the console printer runs, so everything else works without Synapse.
 """
@@ -40,13 +40,23 @@ async def run_bot() -> None:
             log.warning("matrix send failed: %s", resp)
         return getattr(resp, "event_id", None)
 
-    async def say(text: str) -> None:
+    async def say(text: str, buttons: dict[str, str] | None = None) -> str | None:
         event_id = await send(matrix_format.content(text))
         if not event_id:
-            return
-        for key in reactions.register(event_id, text):     # ✅ / ❌ under the message, tapped like a button
+            return None
+        keys = reactions.offer(event_id, buttons) if buttons is not None else reactions.register(event_id, text)
+        for key in keys:                                   # ✅ / ❌ under the message, tapped like a button
             await client.room_send(settings.matrix_room_id, "m.reaction",
                                    {"m.relates_to": {"rel_type": "m.annotation", "event_id": event_id, "key": key}})
+        return event_id
+
+    async def answer(command: str, reply: str) -> None:
+        if rid := status_message.drafted(reply):        # the draft becomes the request's card
+            text = await asyncio.to_thread(status_message.card_text, rid)
+            if event_id := await say(text, {"✅": f"!senden {rid}"}):
+                status_message.saved(rid, event_id, text)
+        elif not status_message.is_ack(command, reply):  # acks are not posted: the card shows the change
+            await say(reply)
 
     async def on_message(room: MatrixRoom, event: RoomMessageText) -> None:
         if room.room_id != settings.matrix_room_id or event.sender == settings.matrix_bot_user:
@@ -55,14 +65,13 @@ async def run_bot() -> None:
             return
         # commands.handle refuses senders outside AUTHORIZED_SENDERS (the clinic directory)
         reply = await asyncio.to_thread(commands.handle, event.body, event.sender)
-        await say(reply)
+        await answer(event.body, reply)
 
     async def on_reaction(room: MatrixRoom, event: ReactionEvent) -> None:
         if room.room_id != settings.matrix_room_id or event.sender == settings.matrix_bot_user:
             return
-        reply = await asyncio.to_thread(reactions.handle, event.reacts_to, event.key, event.sender)
-        if reply:
-            await say(reply)
+        if done := await asyncio.to_thread(reactions.handle, event.reacts_to, event.key, event.sender):
+            await answer(*done)
 
     client.add_event_callback(on_message, RoomMessageText)
     client.add_event_callback(on_reaction, ReactionEvent)
@@ -70,13 +79,17 @@ async def run_bot() -> None:
     async def drain() -> None:
         while True:
             for m in notify.pending():
-                await say(m["text"])
+                if not status_message.replaced(m["text"], m["request_id"]):   # the card and its pings say it
+                    await say(m["text"])
                 notify.mark_sent(m["id"])
-            # one status message per request: posted once it is sent, then edited in place
+            # one card per request, edited in place; then a one-line ping where Dr. Hofer has to look
             for event_id, request_id, text in await asyncio.to_thread(status_message.updates, started):
                 sent_id = await send(matrix_format.edit(event_id, text) if event_id else matrix_format.content(text))
                 if sent_id:
                     status_message.saved(request_id, event_id or sent_id, text)
+            for request_id, text, buttons, seq in await asyncio.to_thread(status_message.pings):
+                if await say(text, buttons):
+                    status_message.pinged(request_id, seq)
             await asyncio.sleep(1)
 
     asyncio.create_task(drain())

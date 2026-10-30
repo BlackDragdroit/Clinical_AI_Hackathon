@@ -26,22 +26,27 @@ def buttons(text: str) -> dict[str, str]:
     return out
 
 
-def register(event_id: str, text: str) -> list[str]:
-    """Remembers the buttons of a message the bot just sent; returns the keys the bot should react with."""
-    offered = buttons(text)
+def offer(event_id: str, offered: dict[str, str]) -> list[str]:
+    """Remembers the buttons {key: command} of a message the bot just sent; returns the keys to react with."""
     for key, command in offered.items():
         db.insert("matrix_actions", {"event_id": event_id, "key": key, "command": command})
     return list(offered)
 
 
-def handle(event_id: str, key: str, sender: str) -> str | None:
-    """A reaction arrived. Returns the bot's reply, or None if the reaction is not a button."""
+def register(event_id: str, text: str) -> list[str]:
+    """Like offer(), with the buttons a message's text names."""
+    return offer(event_id, buttons(text))
+
+
+def handle(event_id: str, key: str, sender: str) -> tuple[str, str] | None:
+    """A reaction arrived. Returns (command run, the bot's reply), or None if the reaction is not a button."""
     key = ALIASES.get(key.replace("️", ""))
     rows = db.query("SELECT * FROM matrix_actions WHERE event_id = ? AND key = ? AND used_at IS NULL", (event_id, key))
     if not rows:
         return None
-    reply = commands.handle(rows[0]["command"], sender)
+    command = rows[0]["command"]
+    reply = commands.handle(command, sender)
     if sender in settings.authorized_senders:     # an unauthorised tap is refused and does not use the button up
         with db.conn() as c:
             c.execute("UPDATE matrix_actions SET used_at = ? WHERE event_id = ?", (db.now(), event_id))
-    return reply
+    return command, reply

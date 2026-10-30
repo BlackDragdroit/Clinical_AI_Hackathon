@@ -45,6 +45,11 @@ def test_long_first_line_bolds_only_first_clause():
     assert h.count("<strong>") == 1 and '<a href="http://localhost:8090/fhir/DiagnosticReport/1">' in h
 
 
+def test_labelled_link():
+    h = matrix_format.to_html("Laborbefund\n[Befund öffnen](http://localhost:8090/fhir/DiagnosticReport/1) · http://x.example/a")
+    assert '<a href="http://localhost:8090/fhir/DiagnosticReport/1">Befund öffnen</a> · <a href="http://x.example/a">' in h
+
+
 def test_cut_after_sentence_keeps_the_space():
     msg = ("✅ Antwort ab12cd34 nach Prüfung abgelegt. http://localhost:8090/fhir/DocumentReference/644c4329-8893-4427 "
            "http://localhost:8090/fhir/DiagnosticReport/6c9a2ff1")

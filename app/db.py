@@ -81,10 +81,11 @@ CREATE TABLE IF NOT EXISTS matrix_outbox (
     text TEXT NOT NULL,
     sent_at TEXT
 );
-CREATE TABLE IF NOT EXISTS matrix_status (
+CREATE TABLE IF NOT EXISTS matrix_cards (
     request_id TEXT PRIMARY KEY REFERENCES requests(id),
-    event_id TEXT NOT NULL,              -- the bot's status message, edited in place as the request moves
-    text TEXT NOT NULL                   -- what that message says now
+    event_id TEXT NOT NULL,              -- the bot's card for this request, edited in place (app/status_message.py)
+    text TEXT NOT NULL,                  -- what the card says now
+    last_seq INTEGER NOT NULL DEFAULT 0  -- last audit seq a ping was considered for
 );
 CREATE TABLE IF NOT EXISTS matrix_actions (
     event_id TEXT NOT NULL,              -- a bot message that offers buttons (app/reactions.py)

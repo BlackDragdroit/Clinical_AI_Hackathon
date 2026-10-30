@@ -14,6 +14,11 @@ from tests.test_flow import _answer, _send
 DOCTOR = settings.doctor_mxid
 
 
+def _tap(event_id: str, key: str, sender: str) -> str | None:
+    done = reactions.handle(event_id, key, sender)
+    return done[1] if done else None
+
+
 def _draft() -> tuple[str, str]:
     card = commands.handle(REQ1, DOCTOR)
     return re.search(r"Anfrage (\w+)", card).group(1), card
@@ -38,39 +43,39 @@ def test_buttons_offered_by_messages(hapi, outbox):
 def test_tap_on_draft_sends_it_once(hapi, outbox):
     rid, card = _draft()
     assert reactions.register("$draft", card) == ["✅"]
-    reply = reactions.handle("$draft", "✅", DOCTOR)
+    reply = _tap("$draft", "✅", DOCTOR)
     assert reply.startswith(f"Anfrage {rid} gesendet") and db.get("requests", "id", rid)["status"] == "sent"
-    assert reactions.handle("$draft", "✅", DOCTOR) is None                        # spent: no second send
+    assert _tap("$draft", "✅", DOCTOR) is None                        # spent: no second send
     assert len(outbox) == 1
 
 
 def test_unauthorised_tap_is_refused_and_keeps_the_button(hapi, outbox):
     rid, card = _draft()
     reactions.register("$draft", card)
-    assert reactions.handle("$draft", "✅", "@mallory:evil.example").startswith("Keine Berechtigung")
+    assert _tap("$draft", "✅", "@mallory:evil.example").startswith("Keine Berechtigung")
     assert db.get("requests", "id", rid)["status"] == "draft" and not outbox
-    assert reactions.handle("$draft", "✅", DOCTOR).startswith(f"Anfrage {rid} gesendet")
+    assert _tap("$draft", "✅", DOCTOR).startswith(f"Anfrage {rid} gesendet")
 
 
 def test_other_keys_and_unknown_messages_do_nothing(hapi, outbox):
     _, card = _draft()
     reactions.register("$draft", card)
-    assert reactions.handle("$draft", "🎉", DOCTOR) is None
-    assert reactions.handle("$draft", "❌", DOCTOR) is None                        # a draft offers only ✅
-    assert reactions.handle("$other", "✅", DOCTOR) is None
-    assert reactions.handle("$draft", "👍", DOCTOR).startswith("Anfrage")         # 👍 counts as ✅
+    assert _tap("$draft", "🎉", DOCTOR) is None
+    assert _tap("$draft", "❌", DOCTOR) is None                        # a draft offers only ✅
+    assert _tap("$other", "✅", DOCTOR) is None
+    assert _tap("$draft", "👍", DOCTOR).startswith("Anfrage")         # 👍 counts as ✅
 
 
 def test_review_tap_files_and_spends_both_buttons(hapi, outbox):
     rid, msg = _review_message(outbox)
     assert reactions.register("$review", msg) == ["✅", "❌"]
-    assert reactions.handle("$review", "✅️", DOCTOR).startswith("Abgelegt")  # emoji variant selector
+    assert _tap("$review", "✅️", DOCTOR).startswith("Abgelegt")  # emoji variant selector
     assert db.get("requests", "id", rid)["status"] == "filed"
-    assert reactions.handle("$review", "❌", DOCTOR) is None                       # cannot discard after filing
+    assert _tap("$review", "❌", DOCTOR) is None                       # cannot discard after filing
 
 
 def test_review_tap_discards(hapi, outbox):
     rid, msg = _review_message(outbox)
     reactions.register("$review", msg)
-    assert reactions.handle("$review", "👎", DOCTOR) == f"Antwort {rid} verworfen."
+    assert _tap("$review", "👎", DOCTOR) == f"Antwort {rid} verworfen."
     assert db.get("requests", "id", rid)["status"] == "discarded"

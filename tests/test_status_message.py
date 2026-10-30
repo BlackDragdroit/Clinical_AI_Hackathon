@@ -1,58 +1,135 @@
-"""One Matrix status message per request: posted once when sent, edited as the request moves, never re-posted."""
+"""One card per request, edited in place; one-line pings only where Dr. Hofer has to look; no acks."""
 from __future__ import annotations
 
 import re
 
 from fastapi.testclient import TestClient
 
-from app import commands, db, matrix_format, status_message
+from app import commands, matrix_format, status_message
 from app.config import settings
 from app.main import app
 from tests.conftest import REQ1, link_path
-from tests.test_flow import _answer, _send
+from tests.test_flow import _answer
 
+DOCTOR = settings.doctor_mxid
 EPOCH = "1970-01-01T00:00:00+00:00"
+LATER = "9999-01-01T00:00:00+00:00"
 
 
-def test_draft_gets_no_status_message(hapi, outbox):
-    commands.handle(REQ1, settings.doctor_mxid)
-    assert status_message.updates(EPOCH) == []
+def _carded() -> str:
+    """!anfrage as the bot handles it: the draft reply becomes the card."""
+    rid = status_message.drafted(commands.handle(REQ1, DOCTOR))
+    status_message.saved(rid, "$card", status_message.card_text(rid))
+    return rid
 
 
-def test_posted_once_then_edited_on_progress(hapi, outbox):
-    rid = _send(REQ1)
-    [(event_id, req, text)] = status_message.updates(EPOCH)
-    assert event_id is None and req == rid
-    assert text.startswith(f"📋 Anfrage {rid} · Laborbefund · Maria Beispiel → Dr. Eva Brandl")
-    assert re.search(r"✅ Gesendet \d\d:\d\d → ⏳ Geöffnet → ◻️ Identität → ◻️ Antwort → ◻️ Abgelegt", text)
-    status_message.saved(rid, "$status1", text)
-    assert status_message.updates(EPOCH) == []                      # nothing changed, nothing sent
-
+def _flow(outbox, citizen="eva", document="lab-result-maria-beispiel.md", typed=("Maria Beispiel", "12.03.1961")):
     with TestClient(app) as client:
-        _answer(client, link_path(outbox[0]["link"]), "eva", "lab-result-maria-beispiel.md")
-    [(event_id, req, text)] = status_message.updates(EPOCH)
-    assert (event_id, req) == ("$status1", rid)                     # an edit of the same message, not a new one
-    assert "✅ Abgelegt" in text and "⏳" not in text
+        _answer(client, link_path(outbox[0]["link"]), citizen, document, typed=typed)
+
+
+def _pings() -> list[str]:
+    return [text for _, text, _, _ in status_message.pings()]
+
+
+def test_draft_card_has_what_to_check_and_one_action(hapi, outbox):
+    reply = commands.handle(REQ1, DOCTOR)
+    rid = status_message.drafted(reply)
+    assert rid and status_message.drafted("Befehl nicht ausgeführt\n…") is None
+    lines = status_message.card_text(rid).split("\n")
+    assert lines == ["Laborbefund · Maria Beispiel, geb. 12.03.1961",
+                     "an Dr. Eva Brandl · eva.brandl@labor-kanal.example",
+                     f"✅ tippen zum Senden · Anfrage {rid}"]
+
+
+def test_card_is_edited_through_to_filed(hapi, outbox):
+    rid = _carded()
+    commands.handle(f"!senden {rid}", DOCTOR)
+    [(event_id, req, text)] = status_message.updates(LATER)          # known card: edited, whatever `since` is
+    assert (event_id, req) == ("$card", rid)
+    assert re.search(r"^●○○○○  Gesendet – wartet, bis der Link geöffnet wird · \d\d:\d\d$", text, re.M)
     status_message.saved(rid, event_id, text)
-    assert db.get("matrix_status", "request_id", rid)["event_id"] == "$status1"
+    assert status_message.updates(LATER) == []                        # nothing changed, nothing sent
+
+    _flow(outbox)
+    [(event_id, _, text)] = status_message.updates(LATER)
+    lines = text.split("\n")
+    assert event_id == "$card" and lines[0] == "Laborbefund · Maria Beispiel" and lines[1] == "an Dr. Eva Brandl · E-Mail"
+    assert re.match(r"●●●●●  Abgelegt · \d\d:\d\d$", lines[2])
+    assert lines[3] == "INR (prothrombin time): 1.0 · aPTT: 31 s · Platelets: 245 10^9/L · Fibrinogen: 3.1 g/L"
+    assert re.match(rf"\[Befund öffnen\]\({re.escape(settings.hapi_public_url)}/DiagnosticReport/\d+\)$", lines[4])
 
 
-def test_requests_sent_before_bot_start_are_not_reposted(hapi, outbox):
-    _send(REQ1)
-    assert status_message.updates("9999-01-01T00:00:00+00:00") == []
+def test_request_sent_outside_matrix_gets_a_card_only_after_bot_start(hapi, outbox):
+    rid = status_message.drafted(commands.handle(REQ1, DOCTOR))
+    commands.handle(f"!senden {rid}", DOCTOR)
+    assert status_message.updates(LATER) == []                        # sent before the bot started: no flood
+    [(event_id, req, _)] = status_message.updates(EPOCH)
+    assert event_id is None and req == rid
 
 
-def test_misdelivery_shows_in_status(hapi, outbox):
-    rid = _send(REQ1)
-    with TestClient(app) as client:
-        _answer(client, link_path(outbox[0]["link"]), "karl", "lab-result-maria-beispiel.md")
-    [(_, _, text)] = status_message.updates(EPOCH)
-    assert "❌ Identität" in text and "⚠️ Fehlzustellung erkannt: verifiziert Karl Kollege" in text
-    assert rid in text
+def test_acks_of_own_actions_are_not_posted(hapi, outbox):
+    rid = _carded()
+    sent = commands.handle(f"!senden {rid}", DOCTOR)
+    assert status_message.is_ack(f"!senden {rid}", sent)
+    assert not status_message.is_ack(f"!senden {rid}", "Befehl nicht ausgeführt\nAnfrage nicht gefunden")
+    assert not status_message.is_ack("!senden deadbeef", "Anfrage deadbeef gesendet an X")   # no card: say it
+    assert not status_message.is_ack(f"!status {rid}", "Anfrage …")
+    assert status_message.is_ack(f"!ablegen {rid}", "Abgelegt: 11 Ressourcen.")
+    assert not status_message.is_ack(f"!ablegen {rid}", "Nicht abgelegt (Validierung).")
+
+
+def test_notify_texts_the_card_replaces(hapi, outbox):
+    rid = _carded()
+    assert status_message.replaced("✅ Antwort von Eva Brandl … abgelegt", rid)
+    assert status_message.replaced("⚠️ Fehlzustellung erkannt (Anfrage x)", rid)
+    assert not status_message.replaced(f"⚠️ Antwort {rid} nicht abgelegt: FHIR-Validierung 2 Fehler.", rid)
+    assert not status_message.replaced("✅ Antwort von Eva Brandl … abgelegt", "nocard01")
+
+
+def test_filed_pings_once(hapi, outbox):
+    rid = _carded()
+    commands.handle(f"!senden {rid}", DOCTOR)
+    assert _pings() == []                                             # sending and opening need no ping
+    _flow(outbox)
+    [(req, text, buttons, seq)] = status_message.pings()
+    assert (req, text, buttons) == (rid, "✅ Laborbefund · Maria Beispiel ist da.", {})
+    status_message.pinged(rid, seq)
+    assert _pings() == []
+
+
+def test_forwarded_link_pings_and_shows_on_card(hapi, outbox):
+    rid = _carded()
+    commands.handle(f"!senden {rid}", DOCTOR)
+    _flow(outbox, citizen="karl")
+    assert _pings() == ["⚠️ Laborbefund · Maria Beispiel: Karl Kollege hat den Link geöffnet, nicht Dr. Eva Brandl. "
+                        "Nichts offengelegt."]
+    text = status_message.card_text(rid)
+    assert "⚠️ Karl Kollege hat den Link geöffnet" in text and "●●○○○" in text
+
+
+def test_wrong_patient_pings_without_naming_them(hapi, outbox):
+    rid = _carded()
+    commands.handle(f"!senden {rid}", DOCTOR)
+    _flow(outbox, document="lab-result-max-beispiel.md", typed=("Max Beispiel", "01.01.1960"))
+    assert _pings() == ["⛔ Laborbefund · Maria Beispiel: Dokument betrifft anderen Patienten. Nicht abgelegt."]
+    assert "Max" not in status_message.card_text(rid)
+
+
+def test_review_pings_with_buttons_and_no_done_ping_after_own_decision(hapi, outbox):
+    rid = _carded()
+    commands.handle(f"!senden {rid}", DOCTOR)
+    _flow(outbox, typed=("Maria Beispiel", "13.03.1961"))
+    [(_, text, buttons, seq)] = status_message.pings()
+    assert text == "🔍 Laborbefund · Maria Beispiel: Zuordnung unsicher. Ablegen oder verwerfen?"
+    assert buttons == {"✅": f"!ablegen {rid}", "❌": f"!verwerfen {rid}"}
+    status_message.pinged(rid, seq)
+    commands.handle(f"!ablegen {rid}", DOCTOR)
+    assert _pings() == []                                             # she tapped it: no "ist da"
+    assert "●●●●●  Abgelegt" in status_message.card_text(rid)
 
 
 def test_edit_content_replaces_original():
-    c = matrix_format.edit("$orig", "📋 Anfrage ab12cd34\n✅ Gesendet")
+    c = matrix_format.edit("$orig", "Laborbefund · Maria Beispiel\n●○○○○  Gesendet")
     assert c["m.relates_to"] == {"rel_type": "m.replace", "event_id": "$orig"}
-    assert c["m.new_content"]["body"] == "📋 Anfrage ab12cd34\n✅ Gesendet" and c["body"].startswith("* ")
-    assert c["m.new_content"]["formatted_body"].startswith("<strong>📋 Anfrage ab12cd34</strong>")
+    assert c["m.new_content"]["body"] == "Laborbefund · Maria Beispiel\n●○○○○  Gesendet" and c["body"].startswith("* ")

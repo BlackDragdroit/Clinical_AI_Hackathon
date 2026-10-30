@@ -9,7 +9,7 @@ from __future__ import annotations
 import html
 import re
 
-_URL = re.compile(r"https?://[^\s<>()]+")
+_URL = re.compile(r"\[([^\]\n]+)\]\((https?://[^\s)]+)\)|https?://[^\s<>()]+")   # [label](url) or a bare url
 _CMD = re.compile(r"(?<![\w/])(![a-zäöü]+(?: [a-z0-9]{6,})?)")
 
 
@@ -17,9 +17,13 @@ def _inline(line: str) -> str:
     out, pos = [], 0
     for m in _URL.finditer(line):
         out.append(_cmd(html.escape(line[pos:m.start()])))
-        url = m.group(0).rstrip(".,;")
-        out.append(f'<a href="{html.escape(url)}">{html.escape(_label(url))}</a>')
-        pos = m.start() + len(url)
+        if m.group(1):
+            url, label, end = m.group(2), m.group(1), m.end()
+        else:
+            url = m.group(0).rstrip(".,;")
+            label, end = _label(url), m.start() + len(url)
+        out.append(f'<a href="{html.escape(url)}">{html.escape(label)}</a>')
+        pos = end
     out.append(_cmd(html.escape(line[pos:])))
     return "".join(out)
 

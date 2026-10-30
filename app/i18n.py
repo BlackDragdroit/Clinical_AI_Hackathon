@@ -262,6 +262,12 @@ MESSAGES: dict[str, dict[str, str]] = {
     "lang.name.de": {"de": "Deutsch", "en": "German"},
     "lang.name.en": {"de": "Englisch", "en": "English"},
     "lang.switch": {"de": "English", "en": "Deutsch"},
+
+    # appearance toggle (app/theme.py)
+    "theme.label": {"de": "Darstellung", "en": "Appearance"},
+    "theme.light": {"de": "Hell", "en": "Light"},
+    "theme.dark": {"de": "Dunkel", "en": "Dark"},
+    "theme.system": {"de": "System", "en": "System"},
 }
 
 

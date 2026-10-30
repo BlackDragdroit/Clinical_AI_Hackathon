@@ -34,12 +34,12 @@
 {%- set status_glyph = {"ok": "check", "warn": "warn", "bad": "x", "muted": "minus", "info": "clock"} -%}
 {%- set scope_text = t("audit.request", lang, id=v.request_id) if v.request_id else t("audit.all_requests", lang) -%}
 <!doctype html>
-<html lang="{{ lang }}">
+<html lang="{{ lang }}"{% if theme != "system" %} data-theme="{{ theme }}"{% endif %}>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<meta name="color-scheme" content="light dark">
+<meta name="color-scheme" content="{{ 'light dark' if theme == 'system' else theme }}">
 <title>{{ t("audit.title", lang) }} · I.R.I.S.</title>
 {% include "_audit_apple_style.html" %}
 </head>
@@ -62,6 +62,12 @@
       <a href="{{ v.links.design.standard }}">{{ t("audit.design.standard", lang) }}</a>
       <span class="design-sep" aria-hidden="true">/</span>
       <span aria-current="page">{{ t("audit.design.apple", lang) }}</span>
+    </nav>
+    <nav class="segmented" aria-label="{{ t('theme.label', lang) }}">
+      {%- for th in ("light", "dark", "system") %}
+      <a class="segment segment-sm" href="{{ theme_links[th] }}"
+         {% if th == theme %}aria-current="true"{% endif %}>{{ t("theme." ~ th, lang) }}</a>
+      {%- endfor %}
     </nav>
     <nav class="segmented" aria-label="{{ t('audit.lang_label', lang) }}">
       {%- for code in LANGS %}

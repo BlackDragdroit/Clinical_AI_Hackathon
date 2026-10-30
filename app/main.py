@@ -19,7 +19,7 @@ from fastapi import FastAPI, File, Form, Request, UploadFile
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
-from app import audit, bot, db, i18n, intake_service, misdelivery, notify, tokens
+from app import audit, bot, db, i18n, intake_service, misdelivery, notify, theme, tokens
 from app.config import settings
 from app.identity import eid_mock, policy
 from app.security import sign, unsign
@@ -160,20 +160,26 @@ def sms_inbox(request: Request):
 @app.get("/audit", response_class=HTMLResponse)
 def audit_page(request: Request, request_id: str | None = None):
     # clinic-internal: in production this sits behind the clinic login (footer says so)
-    lang = i18n.resolve_lang(request)
-    resp = _page(request, "audit.html", v=audit.view(request_id, lang), lang=lang)
+    lang, th = i18n.resolve_lang(request), theme.resolve_theme(request)
+    resp = _page(request, "audit.html", v=audit.view(request_id, lang), lang=lang,
+                 theme=th, theme_links=theme.links(request))
     if request.query_params.get("lang"):
         i18n.remember(resp, lang)
+    if request.query_params.get("theme"):
+        theme.remember(resp, th)
     return resp
 
 
 @app.get("/audit/apple", response_class=HTMLResponse)
 def audit_page_apple(request: Request, request_id: str | None = None):
     # same data and query params as /audit, second look (Apple HIG inspector style) for side-by-side review
-    lang = i18n.resolve_lang(request)
-    resp = _page(request, "audit_apple.html", v=audit.view(request_id, lang, base="/audit/apple"), lang=lang)
+    lang, th = i18n.resolve_lang(request), theme.resolve_theme(request)
+    resp = _page(request, "audit_apple.html", v=audit.view(request_id, lang, base="/audit/apple"), lang=lang,
+                 theme=th, theme_links=theme.links(request))
     if request.query_params.get("lang"):
         i18n.remember(resp, lang)
+    if request.query_params.get("theme"):
+        theme.remember(resp, th)
     return resp
 
 

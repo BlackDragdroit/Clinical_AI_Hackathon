@@ -292,3 +292,26 @@ def test_standard_page_only_gains_the_design_switch(hapi, outbox):
     rest = html.replace(switch.group(0), "")
     assert "/audit/apple" not in rest                           # every other link still points at /audit
     assert 'class="num">5</span><span class="of">/ 6' in rest and "_audit_apple" not in rest
+
+
+@pytest.mark.parametrize("page", ["/audit", "/audit/apple"])
+def test_theme_switch_light_dark_system(page):
+    with TestClient(app) as client:
+        html = client.get(page).text                                        # default: follow the system
+        assert "data-theme=" not in html.split("<head>", 1)[0]
+        r = client.get(f"{page}?theme=light&lang=en")
+        assert '<html lang="en" data-theme="light">' in r.text and r.cookies.get("theme") == "light"
+        assert '<html lang="de" data-theme="light">' in client.get(f"{page}?lang=de").text   # cookie remembered
+        assert 'data-theme="dark"' in client.get(f"{page}?theme=dark").text.split("<head>", 1)[0]
+        assert "data-theme=" not in client.get(f"{page}?theme=system").text.split("<head>", 1)[0]
+        assert "data-theme=" not in client.get(f"{page}?theme=sepia").text.split("<head>", 1)[0]
+
+
+def test_theme_links_keep_filter_and_language(hapi, outbox):
+    ids = _scenario(outbox)
+    with TestClient(app) as client:
+        html = client.get(f"/audit/apple?request_id={ids['r1']}&lang=en&theme=dark").text
+    assert '<meta name="color-scheme" content="dark">' in html
+    for th in ("light", "dark", "system"):
+        assert f'href="/audit/apple?request_id={ids["r1"]}&amp;lang=en&amp;theme={th}"' in html
+    assert ">Light<" in html and ">Dark<" in html and ">System<" in html

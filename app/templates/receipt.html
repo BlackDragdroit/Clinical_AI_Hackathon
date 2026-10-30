@@ -2,8 +2,8 @@
 {% block steps %}{% set step = 3 %}{% include "_steps.html" %}{% endblock %}
 {% block body %}
 <div class="card">
-  <h2>✓ {{ t('portal.done_h') }}</h2>
-  <p>{{ message }}</p>
+  {% if ok %}<h2>✓ {{ t('portal.done_h') }}</h2>{% else %}<h2>{{ t('portal.reject_h') }}</h2>{% endif %}
+  <p{% if not ok %} class="err" role="alert"{% endif %}>{{ message }}</p>
   <p class="muted">{{ t('portal.receipt_no', receipt=receipt) }}</p>
 </div>
 {% endblock %}

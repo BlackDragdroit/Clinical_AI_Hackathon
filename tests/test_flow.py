@@ -89,3 +89,61 @@ def test_link_is_single_use(hapi, outbox):
     with TestClient(app) as client:
         _answer(client, path, "eva", "lab-result-maria-beispiel.md")
         assert client.get(path).status_code == 404
+
+
+def test_dob_typed_without_dots_is_filed(hapi, outbox):
+    """Phone number pads have no dot; '12031961' must not push a correct answer into review."""
+    rid = _send(REQ1)
+    with TestClient(app) as client:
+        r = _answer(client, link_path(outbox[0]["link"]), "eva", "lab-result-maria-beispiel.md",
+                    typed=("Maria Beispiel", "12031961"))
+    assert "sicher übermittelt" in r.text and db.get("requests", "id", rid)["status"] == "filed"
+
+
+def test_m3_receipt_has_no_tick_and_doctor_gets_next_step(hapi, outbox):
+    rid = _send(REQ1)
+    with TestClient(app) as client:
+        r = _answer(client, link_path(outbox[0]["link"]), "eva", "lab-result-max-beispiel.md",
+                    typed=("Max Beispiel", "01.01.1960"))
+    assert "✓ Danke" not in r.text and "meldet sich bei Ihnen" in r.text
+    assert "!anfrage" in db.query("SELECT text FROM matrix_outbox WHERE request_id = ?", (rid,))[-1]["text"]
+
+
+def test_hapi_down_keeps_link_valid(hapi, outbox, monkeypatch):
+    from app import fhir_client
+    import httpx
+    rid = _send(REQ1)
+    path = link_path(outbox[0]["link"])
+
+    def down(bundle):
+        raise httpx.ConnectError("HAPI down")
+    with TestClient(app, raise_server_exceptions=False) as client:
+        monkeypatch.setattr(fhir_client, "validate", down)
+        r = _answer(client, path, "eva", "lab-result-maria-beispiel.md")
+        assert r.status_code == 503 and "Link bleibt gültig" in r.text
+        assert db.get("requests", "id", rid)["status"] == "identified" and not hapi.posted
+        assert "nicht verarbeitet" in db.query("SELECT text FROM matrix_outbox")[-1]["text"]
+        monkeypatch.setattr(fhir_client, "validate", hapi.validate)          # HAPI back: same link, send again
+        r = client.post(f"{path}/answer", data={"typed_name": "Maria Beispiel", "typed_dob": "12.03.1961"},
+                        files={"upload": ("befund.md", doc("lab-result-maria-beispiel.md").encode(), "text/markdown")})
+    assert "sicher übermittelt" in r.text and len(hapi.posted) == 1
+
+
+def test_oversized_text_upload_refused_link_stays_valid(hapi, outbox):
+    rid = _send(REQ1)
+    path = link_path(outbox[0]["link"])
+    with TestClient(app) as client:
+        client.get(path)
+        client.post("/eid/authorize", data={"state": path.rsplit("/", 1)[1], "citizen": "eva"})
+        r = client.post(f"{path}/answer", data={"typed_name": "Maria Beispiel", "typed_dob": "12.03.1961"},
+                        files={"upload": ("big.md", b"x" * (2 * 2**20), "text/markdown")})
+        assert r.status_code == 400 and "zu groß" in r.text
+        assert client.get(f"{path}/answer").status_code == 200
+    assert db.get("requests", "id", rid)["status"] == "identified"
+
+
+def test_link_claim_is_atomic(hapi, outbox):
+    from app import tokens
+    _send(REQ1)
+    raw = link_path(outbox[0]["link"]).rsplit("/", 1)[1]
+    assert tokens.claim(raw) and not tokens.claim(raw)

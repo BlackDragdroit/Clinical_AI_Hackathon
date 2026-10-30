@@ -83,3 +83,8 @@ Append after each milestone: what works, what's next, known issues.
 - Audit: new extra event `request_blocked` in `app/audit.py` (shared contract, MedEng told). Logged once, after the last failed `identity_checked`.
 - DE/EN: merged with MedEng's `app/i18n.py` (portal strings are `portal.*` keys, toggle is `?lang=`, German default, no Accept-Language).
 - Known issues: the receipt text from intake_service is German only. Not yet tried on a real phone.
+
+## SWE 2: play-test fixes (Fri 11:30)
+- Works: fixes from a play/stress test of the merged portal: a birth date typed as `12031961` (phone keypad has no dot) is accepted; if processing fails (e.g. HAPI down) nothing is filed, the link stays valid, the sender sees "send again" and Dr. Hofer is told; uploads capped (1 MB text, 10 MB PDF/photo); parsing/intake runs off the event loop, and an atomic link claim keeps concurrent submits to one filing; a wrong-patient receipt no longer shows ✓, and Dr. Hofer's M3 message says to send a new `!anfrage`. `make test`: 185 passed; `e2e.py --local` 5/5.
+- Next: e2e against `make up`; phone stopwatch test (G3). MedEng to decide: wrong document type (lab asked, report sent) is still filed with a ⚠️ only.
+- Known issues: a 1 MB text upload still slows other requests for up to ~2 s (CPU-bound parsing shares the GIL). `/audit` and `/sms` are public; the mock eID assertion is not bound to the link.

@@ -13,6 +13,7 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import json
+import logging
 from contextlib import asynccontextmanager
 from datetime import datetime
 from pathlib import Path
@@ -22,6 +23,7 @@ from urllib.parse import urlencode
 from fastapi import FastAPI, File, Form, Request, UploadFile
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
+from starlette.concurrency import run_in_threadpool
 
 from app import audit, bot, dashboard, db, engine_client, i18n, intake_service, misdelivery, notify, tokens
 from app.config import settings
@@ -33,6 +35,9 @@ i18n.install(templates)
 SESSION = "bb_session"
 COOKIE_SECURE = settings.base_url.startswith("https://")
 NEUTRAL = f"{settings.clinic_name} hat eine sichere Dokumentenanfrage an Sie gerichtet."
+MAX_UPLOAD_BYTES = 10 * 2**20     # PDF, photo, scan
+MAX_TEXT_BYTES = 1 * 2**20        # .md / .txt / pasted text: a real report is a few kB
+log = logging.getLogger("befundbruecke.portal")
 
 
 @asynccontextmanager
@@ -172,18 +177,26 @@ async def answer_submit(request: Request, raw: str, typed_name: str = Form(...),
     if not tok or not sess:
         return _invalid(request)
     req = db.get("requests", "id", tok["request_id"])
+    typed_dob = _norm_dob(typed_dob)
     if upload is not None and upload.filename:
-        data, filename, ctype = await upload.read(), upload.filename, upload.content_type
+        data, filename, ctype = await upload.read(MAX_UPLOAD_BYTES + 1), upload.filename, upload.content_type
     else:
         data, filename, ctype = text.encode("utf-8"), "formular.md", "text/markdown"
 
-    def form_error(msg: str) -> HTMLResponse:
-        return _page(request, "answer.html", 400, raw=raw, req=req, doc_label=_tr(request, f"doc.{req['doc_type']}"),
-                     doctor=settings.doctor_name, sender=sess["name"], error=msg)
+    def form_error(msg: str, status: int = 400) -> HTMLResponse:
+        return _form_error(request, raw, req, sess, msg, status)
     if not data.strip():
         return form_error(_tr(request, "portal.err_empty"))
-    eng = engine_client.document(data, filename, ctype, json.loads(req.get("panel_loinc") or "[]"),
-                                 datetime.fromisoformat(req["created_at"]), req["doc_type"])
+    is_text = ctype.startswith("text/") or filename.lower().endswith((".md", ".txt"))
+    if len(data) > (MAX_TEXT_BYTES if is_text else MAX_UPLOAD_BYTES):
+        return form_error(_tr(request, "portal.err_too_big", mb=(MAX_TEXT_BYTES if is_text else MAX_UPLOAD_BYTES) // 2**20))
+    try:   # parsing / OCR is slow: off the event loop, so one upload never stalls the portal for everyone
+        eng = await run_in_threadpool(engine_client.document, data, filename, ctype,
+                                      json.loads(req.get("panel_loinc") or "[]"),
+                                      datetime.fromisoformat(req["created_at"]), req["doc_type"])
+    except Exception:
+        log.exception("engine failed on request %s", req["id"])
+        return form_error(_tr(request, "portal.err_tech"), 503)
     if not eng["ok"]:
         return form_error(_tr(request, "portal.err_unreadable"))
     if eng["needs_readback"]:          # scan/photo: the sender confirms what we read before anything is processed
@@ -196,12 +209,25 @@ async def answer_submit(request: Request, raw: str, typed_name: str = Form(...),
                   {"items": len(eng["readback"]), "models": eng["models"],
                    "disagree": sum(1 for i in eng["readback"] if i["agree"] is False)})
         return _page(request, "readback.html", raw=raw, rb_id=rb_id, items=eng["readback"])
-    return _finish(request, raw, req, sess, typed_name, typed_dob, filename, eng["canonical_markdown"], eng, len(data))
+    return await run_in_threadpool(_finish, request, raw, req, sess, typed_name, typed_dob, filename,
+                                   eng["canonical_markdown"], eng, len(data))
+
+
+def _norm_dob(s: str) -> str:
+    """Phone number pads have no dot: '12031961' -> '12.03.1961'; German decimal pads give '12,03,1961'."""
+    s = s.strip().replace(",", ".")
+    return f"{s[:2]}.{s[2:4]}.{s[4:]}" if len(s) == 8 and s.isdigit() else s
+
+
+def _form_error(request: Request, raw: str, req: dict, sess: dict, msg: str, status: int = 400) -> HTMLResponse:
+    return _page(request, "answer.html", status, raw=raw, req=req, doc_label=_tr(request, f"doc.{req['doc_type']}"),
+                 doctor=settings.doctor_name, sender=sess["name"], error=msg)
 
 
 def _finish(request: Request, raw: str, req: dict, sess: dict, typed_name: str, typed_dob: str, filename: str,
             markdown: str, eng: dict, n_bytes: int, corrected: int | None = None) -> HTMLResponse:
-    tokens.mark_used(raw)
+    if not tokens.claim(raw):            # a second, concurrent submit of the same link
+        return _invalid(request)
     actor = f"eid:{sess['pseud']} {sess['name']}"
     db.update("requests", "id", req["id"], status="answered")
     audit.log("answer_sent", req["id"], actor, {"filename": filename, "bytes": n_bytes, "read_by": eng.get("path"),
@@ -212,10 +238,29 @@ def _finish(request: Request, raw: str, req: dict, sess: dict, typed_name: str, 
         method += "; Werte vom Absender per Read-back bestätigt"
         notes.append(f"Scan/Foto gelesen ({(eng.get('models') or {}).get('ocr_vlm') or 'OCR'}), Werte vom Absender bestätigt"
                      + (f", {corrected} korrigiert" if corrected else ""))
-    out = intake_service.process_answer(req, verified_name=sess["name"], identity_method=method, actor=actor,
-                                        typed_name=typed_name, typed_dob=typed_dob, filename=filename, content=markdown,
-                                        engine_notes=notes)
-    return _page(request, "receipt.html", message=out["sender_message_de"], receipt=out["answer_id"])
+    try:
+        out = intake_service.process_answer(req, verified_name=sess["name"], identity_method=method, actor=actor,
+                                            typed_name=typed_name, typed_dob=typed_dob, filename=filename,
+                                            content=markdown, engine_notes=notes)
+    except Exception as e:
+        return _processing_failed(request, raw, req, sess, e)
+    return _page(request, "receipt.html", ok=out["decision"] != "reject", receipt=out["answer_id"],
+                 message=_tr(request, f"portal.done_{out['decision']}"))
+
+
+def _processing_failed(request: Request, raw: str, req: dict, sess: dict, e: Exception) -> HTMLResponse:
+    """E.g. HAPI down. If nothing was filed, give the link back so the sender can simply send again."""
+    log.exception("processing answer for request %s failed", req["id"])
+    filed = db.query("SELECT 1 FROM answers WHERE request_id = ? AND filed_refs != '[]'", (req["id"],))
+    if filed:   # resources are on HAPI, a later step failed: never offer a second filing
+        notify.doctor(f"⚠️ Antwort zu Anfrage {req['id']} abgelegt, danach technischer Fehler ({type(e).__name__}). "
+                      f"Bitte Task und Ressourcen auf dem FHIR-Server prüfen.", req["id"])
+        return _page(request, "receipt.html", ok=True, receipt=req["id"], message=_tr(request, "portal.done_review"))
+    tokens.reopen(raw)
+    db.update("requests", "id", req["id"], status="identified")
+    notify.doctor(f"⚠️ Antwort zu Anfrage {req['id']} konnte nicht verarbeitet werden (technischer Fehler: "
+                  f"{type(e).__name__}). Nichts abgelegt. Der Link bleibt gültig, der Absender kann erneut senden.", req["id"])
+    return _form_error(request, raw, req, sess, _tr(request, "portal.err_tech"), 503)
 
 
 @app.post("/r/{raw}/readback", response_class=HTMLResponse)
@@ -231,7 +276,7 @@ async def readback_confirm(request: Request, raw: str):
     changed = [i["key"] for i in items if confirmed[i["key"]] != (i["value"] or "")]
     audit.log("readback_confirmed", req["id"], f"eid:{sess['pseud']} {sess['name']}", {"items": len(items), "changed": changed})
     markdown = engine_client.apply_readback(rb["markdown"], confirmed)
-    return _finish(request, raw, req, sess, rb["typed_name"], rb["typed_dob"], rb["filename"], markdown,
+    return await run_in_threadpool(_finish,request, raw, req, sess, rb["typed_name"], rb["typed_dob"], rb["filename"], markdown,
                    json.loads(rb["engine_json"]), len(markdown.encode()), corrected=len(changed))
 
 

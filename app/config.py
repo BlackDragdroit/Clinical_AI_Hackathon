@@ -40,6 +40,12 @@ class Settings:
     matrix_bot_password: str = _env("MATRIX_BOT_PASSWORD", "")
     matrix_room_id: str = _env("MATRIX_ROOM_ID", "")
 
+    llm_provider: str = _env("LLM_PROVIDER", "openai_compatible")         # vLLM/Ollama behind an OpenAI-style API
+    llm_base_url: str = _env("LLM_BASE_URL", "http://localhost:8001/v1")  # SSH tunnel to the GPU instance
+    llm_model: str = _env("LLM_MODEL", "ministral-8b")
+    llm_api_key: str = _env("LLM_API_KEY", "")                            # empty = no Authorization header
+    llm_timeout: float = float(_env("LLM_TIMEOUT", "120"))
+
     email_channel: str = _env("EMAIL_CHANNEL", "mailpit")                 # mailpit | ftapi
     link_ttl_hours: int = int(_env("LINK_TTL_HOURS", "72"))
     max_identity_attempts: int = int(_env("MAX_IDENTITY_ATTEMPTS", "5"))

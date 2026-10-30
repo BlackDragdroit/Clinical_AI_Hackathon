@@ -83,14 +83,18 @@ def card(req: dict, events: list[dict]) -> dict:
             "created": req["created_at"], "tone": tone, "steps": steps, "alerts": alerts, "hint": hint}
 
 
-def snapshot() -> dict:
+def cards() -> list[dict]:
     by_req: dict[str, list[dict]] = {}
     for ev in audit.entries():
         if ev["request_id"]:
             by_req.setdefault(ev["request_id"], []).append(ev)
-    cards = [card(r, by_req.get(r["id"], [])) for r in db.query("SELECT * FROM requests ORDER BY created_at DESC")]
-    counts = {t: sum(1 for c in cards if c["tone"] == t) for t in ("active", "ok", "warn", "error")}
-    return {"cards": cards, "counts": counts, "chain_ok": audit.verify_chain()}
+    return [card(r, by_req.get(r["id"], [])) for r in db.query("SELECT * FROM requests ORDER BY created_at DESC")]
+
+
+def snapshot() -> dict:
+    cards_now = cards()
+    counts = {t: sum(1 for c in cards_now if c["tone"] == t) for t in ("active", "ok", "warn", "error")}
+    return {"cards": cards_now, "counts": counts, "chain_ok": audit.verify_chain()}
 
 
 def _authorized(k: str) -> bool:

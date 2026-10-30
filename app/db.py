@@ -81,6 +81,11 @@ CREATE TABLE IF NOT EXISTS matrix_outbox (
     text TEXT NOT NULL,
     sent_at TEXT
 );
+CREATE TABLE IF NOT EXISTS matrix_status (
+    request_id TEXT PRIMARY KEY REFERENCES requests(id),
+    event_id TEXT NOT NULL,              -- the bot's status message, edited in place as the request moves
+    text TEXT NOT NULL                   -- what that message says now
+);
 """
 
 

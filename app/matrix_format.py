@@ -54,3 +54,9 @@ def to_html(text: str) -> str:
 
 def content(text: str) -> dict:
     return {"msgtype": "m.text", "body": text, "format": "org.matrix.custom.html", "formatted_body": to_html(text)}
+
+
+def edit(event_id: str, text: str) -> dict:
+    """Replaces the message `event_id` in place (m.replace); clients without edit support show the '* ' fallback."""
+    new = content(text)
+    return {**content(f"* {text}"), "m.new_content": new, "m.relates_to": {"rel_type": "m.replace", "event_id": event_id}}

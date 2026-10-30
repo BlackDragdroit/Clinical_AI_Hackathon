@@ -13,3 +13,4 @@ Append one line per decision: what, why, who. Placeholders that still need verif
 - **VERIFY** `IDENTITY_POLICY_URI` in core/fhir_build.py points at example.org; point it at the README anchor.
 - Docker image tags pinned and run on 2026-10-29: synapse v1.120.0, element-web v1.11.85, hapi v7.4.0, mailpit v1.21.5. — SWE 1
 - FTAPI is not used in the prototype (the track allows any replaceable product). FTAPI publishes no API reference, so we did not invent endpoints. Uploads go through our own portal; `ftapi_submitbox.py` marks where a provider adapter would go. README tagline and architecture say this explicitly. — SWE 1
+- HAPI stores its data in file-based H2 on the `hapi-data` volume (the image default is in-memory, which lost everything on any container restart; found in the browser playtest). `make reset` still wipes it on purpose. — SWE 1

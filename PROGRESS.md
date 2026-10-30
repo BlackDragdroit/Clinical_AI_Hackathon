@@ -30,3 +30,8 @@ Append after each milestone: what works, what's next, known issues.
 - G2 and the misdelivery tests on that clean stack, via `scripts/dev/flow.sh r1|r2|m1|m2|m3`: r1 and r2 filed with a ✅ in Matrix; m1 and m2 got a 403 with nothing shown, identity FAILED + misdelivery_caught; m3 not filed (Observation count unchanged), with ⚠️ in Matrix. Audit 6/6, chain intact.
 - FTAPI is deliberately not used; the README says so (tagline, trust boundaries, replaceability table).
 - Still open (not SWE 1): HL7 validator run (`make validate`, MedEng); the address lint (MedEng) still runs as a stub, so the M1 audit label reads "M1/M2".
+
+## MedEng: jury documents + name rule (Fri)
+- 14 jury documents in `metrics/jury_docs/` (EN/DE, other labs, date formats, LOINC errors, wrong patient, namesake, typo, swapped DOB, sibling, German rehab report): wrongly filed = 0 of 17; 3 mismatches, all to the safe side (jd02 separate 'Geburtsdatum:' line and jd05 '12.3.61' not parsed -> review; jd10 namesake *1985 -> review at W -3.75, expected reject).
+- `names_match`: hyphen = space, extra eID given names allowed, family name exact, family-only never matches; 21 new cases in tests/test_policy.py. `make test`: 54 passed, 4 xfailed.
+- Broken / for MedEng + Biostat: a valid LOINC code that is not in the local table is filed unchecked (jd08: D-Dimer row coded 2276-4 = ferritin); German 'Probenentnahme'/'Befunddatum' keys are not read, so effectiveDateTime/issued are lost (jd02). Validator not yet run on the jury bundles.

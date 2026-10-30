@@ -34,7 +34,8 @@ CREATE TABLE IF NOT EXISTS requests (
     task_ref TEXT,                       -- Task/123 on HAPI
     lint_warnings TEXT NOT NULL DEFAULT '[]',
     panel_loinc TEXT NOT NULL DEFAULT '[]',  -- tests the request expects (engine), for the completeness check
-    source TEXT NOT NULL DEFAULT 'command'   -- command | text | voice
+    source TEXT NOT NULL DEFAULT 'command',  -- command | text | voice
+    lang TEXT NOT NULL DEFAULT 'de'          -- de | en: the language of the doctor's request; the bot answers in it
 );
 CREATE TABLE IF NOT EXISTS tokens (
     token_hash TEXT PRIMARY KEY,         -- sha256 of the raw link token; the raw token is never stored
@@ -135,7 +136,8 @@ def conn() -> Iterator[sqlite3.Connection]:
         con.close()
 
 
-MIGRATIONS = {"requests": {"panel_loinc": "TEXT NOT NULL DEFAULT '[]'", "source": "TEXT NOT NULL DEFAULT 'command'"}}
+MIGRATIONS = {"requests": {"panel_loinc": "TEXT NOT NULL DEFAULT '[]'", "source": "TEXT NOT NULL DEFAULT 'command'",
+                            "lang": "TEXT NOT NULL DEFAULT 'de'"}}
 
 
 def init_db() -> None:

@@ -172,3 +172,22 @@ def test_ping_is_a_reply_to_its_card_and_shows_the_decision(hapi, outbox):
     assert event_id == "$ping"
     assert re.fullmatch(r"🔍 Laborbefund · Maria Beispiel: Zuordnung unsicher → abgelegt · \d\d:\d\d", text)
     assert "→ verworfen ·" in status_message.decided(f"!verwerfen {rid}")[0][1]
+
+
+def test_english_request_gets_an_english_card_and_pings(hapi, outbox):
+    """A request written in English: card, status and pings in English; the button word stays the same."""
+    from app import requests_service
+    req = requests_service.draft(doc_kind="labor", expected_name="Dr. Eva Brandl", contact="eva.brandl@labor-kanal.example",
+                                 patient_ref="Patient/maria-beispiel", reason="", source="text", lang="en")
+    draft = status_message.card_text(req["id"])
+    assert draft.startswith("Lab result · Maria Beispiel, born 12.03.1961") and "\nto Dr. Eva Brandl · " in draft
+    assert draft.endswith(f"Tap „{reactions.SENDEN}“ · Request {req['id']}")
+    status_message.saved(req["id"], "$card", draft)
+    commands.handle(f"!senden {req['id']}", DOCTOR)
+    sent = status_message.card_text(req["id"])
+    assert "Sent – waiting for the link to be opened" in sent and "\nto Dr. Eva Brandl · email" in sent
+    _flow(outbox)
+    pings = [p[1] for p in status_message.pings() if p[0] == req["id"]]
+    assert pings == ["✅ Lab result · Maria Beispiel has arrived."]
+    html = matrix_format.to_html(status_message.card_text(req["id"]))
+    assert '<font color="#17693f">Filed · ' in html and "Open result" in html

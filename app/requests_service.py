@@ -17,7 +17,7 @@ def mask(contact: str) -> str:
 
 
 def draft(doc_kind: str, expected_name: str, contact: str, patient_ref: str, reason: str,
-          panel_loinc: list[str] | None = None, source: str = "command") -> dict:
+          panel_loinc: list[str] | None = None, source: str = "command", lang: str = "de") -> dict:
     doc_type = DOC_TYPES[doc_kind.lower()]
     patient = fhir_client.read_patient(patient_ref)
     req = {
@@ -25,7 +25,7 @@ def draft(doc_kind: str, expected_name: str, contact: str, patient_ref: str, rea
         "patient_name": patient["name"], "patient_dob": patient["dob"], "expected_name": expected_name,
         "contact_kind": "email" if "@" in contact else "sms", "contact": contact, "reason": reason,
         "status": "draft", "lint_warnings": misdelivery.lint_address(contact),
-        "panel_loinc": panel_loinc or [], "source": source,
+        "panel_loinc": panel_loinc or [], "source": source, "lang": "en" if lang == "en" else "de",
     }
     db.insert("requests", req)
     audit.log("request_drafted", req["id"], settings.doctor_mxid,

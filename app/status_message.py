@@ -62,6 +62,8 @@ def text(req: dict, card: dict, checks: list[str] | None = None) -> str:
     phase = PHASE.get(req["status"], req["status"])
     if req["status"] == "review" and not any(e["event"] == "review_requested" for e in audit.entries(req["id"])):
         phase = f"Nicht abgelegt – FHIR-Prüfung fehlgeschlagen · erneut prüfen: !ablegen {req['id']}"
+    elif req["status"] in ("sent", "opened") and card["steps"][2]["state"] == "error":   # failed identity check
+        phase = f"Falsche Person – wartet weiter auf {req['expected_name']}"
     lines = [head, f"an {req['expected_name']} · {VIA.get(req['contact_kind'], req['contact_kind'])}",
              f"{dots}  {phase}" + (f" · {_time(last)}" if last else "")]
     if req["status"] == "filed":
@@ -76,7 +78,7 @@ def _result(req: dict) -> list[str]:
     summary = json.loads(rows[0]["intake_json"]).get("summary") or []
     refs = json.loads(rows[0]["filed_refs"])
     main = next((r for t in ("DiagnosticReport", "DocumentReference") for r in refs if r.startswith(t + "/")), None)
-    out = [" · ".join(summary)] if summary else []
+    out = [" · ".join(summary)] if summary and req["doc_type"] == "lab" else []   # a report is read in full, not here
     if main:
         out.append(f"[Befund öffnen]({settings.hapi_public_url}/{main})")
     return out

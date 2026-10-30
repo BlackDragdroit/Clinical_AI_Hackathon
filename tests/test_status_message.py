@@ -5,10 +5,10 @@ import re
 
 from fastapi.testclient import TestClient
 
-from app import commands, matrix_format, status_message
+from app import commands, db, matrix_format, status_message
 from app.config import settings
 from app.main import app
-from tests.conftest import REQ1, link_path
+from tests.conftest import REQ1, REQ2, link_path
 from tests.test_flow import _answer
 
 DOCTOR = settings.doctor_mxid
@@ -70,6 +70,18 @@ def test_card_is_edited_through_to_filed(hapi, outbox):
     assert re.match(rf"\[Befund öffnen\]\({re.escape(settings.hapi_public_url)}/DiagnosticReport/\d+\)$", lines[4])
 
 
+def test_report_card_shows_only_the_link(hapi, outbox):
+    rid = status_message.drafted(commands.handle(REQ2, DOCTOR))
+    status_message.saved(rid, "$card", status_message.card_text(rid))
+    commands.handle(f"!senden {rid}", DOCTOR)
+    sms = db.query("SELECT * FROM sms_outbox")[0]
+    with TestClient(app) as client:
+        _answer(client, link_path(re.search(r"https?://\S+", sms["body"]).group(0)), "stefan", "rehab-report-maria-beispiel.md")
+    lines = status_message.card_text(rid).split("\n")
+    assert re.match(r"●●●●●  Abgelegt", lines[2]) and len(lines) == 4
+    assert lines[3].startswith("[Befund öffnen](") and "DocumentReference/" in lines[3]
+
+
 def test_request_sent_outside_matrix_gets_a_card_only_after_bot_start(hapi, outbox):
     rid = status_message.drafted(commands.handle(REQ1, DOCTOR))
     commands.handle(f"!senden {rid}", DOCTOR)
@@ -115,7 +127,8 @@ def test_forwarded_link_pings_and_shows_on_card(hapi, outbox):
     assert _pings() == ["⚠️ Laborbefund · Maria Beispiel: Karl Kollege hat den Link geöffnet, nicht Dr. Eva Brandl. "
                         "Nichts offengelegt."]
     text = status_message.card_text(rid)
-    assert "⚠️ Karl Kollege hat den Link geöffnet" in text and "●●○○○" in text
+    assert "●●○○○  Falsche Person – wartet weiter auf Dr. Eva Brandl" in text
+    assert "⚠️ Karl Kollege hat den Link geöffnet" in text
 
 
 def test_wrong_patient_pings_without_naming_them(hapi, outbox):

@@ -19,7 +19,7 @@ class SmtpMailpit(Channel):
         msg["Subject"] = render_message("email_subject.txt", link)
         msg["Message-ID"] = make_msgid(domain="klinikum.example")
         msg.set_content(render_message("email_body.txt", link))
-        # TODO(SWE 2): HTML part with a big button (mobile), same neutral text
+        msg.add_alternative(render_message("email_body.html", link), subtype="html")   # big button on phones
         with smtplib.SMTP(settings.smtp_host, settings.smtp_port, timeout=10) as s:
             s.send_message(msg)
         return msg["Message-ID"]

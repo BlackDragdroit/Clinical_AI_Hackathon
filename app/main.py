@@ -76,7 +76,8 @@ def _block(req: dict, actor: str) -> None:
     audit.log("request_blocked", req["id"], actor,
               {"reason": "identity attempts exhausted", "attempts": settings.max_identity_attempts})
     notify.doctor(f"🔒 Anfrage {req['id']} gesperrt: {settings.max_identity_attempts} fehlgeschlagene "
-                  f"Identitätsprüfungen. Der Link ist deaktiviert. Bitte neu senden, wenn der Empfänger stimmt.", req["id"])
+                  f"Identitätsprüfungen. Der Link ist deaktiviert. Für einen neuen Versuch bitte eine neue Anfrage "
+                  f"stellen (!anfrage …) und die Adresse prüfen.", req["id"])
 
 
 def _who(request: Request) -> str:

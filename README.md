@@ -26,6 +26,17 @@ make up           # Synapse + Element + HAPI + Mailpit + app, users/room/patient
 
 In the room: `!anfrage labor "Dr. Eva Brandl" eva.brandl@labor-kanal.example Patient/maria-beispiel Grund: Gerinnung vor Eingriff`, then `!senden <id>`.
 
+The portal accepts Markdown or plain-text files (`.md`, `.txt`) or pasted text. PDF upload is not supported in the prototype.
+
+Browser end-to-end test of the portal (request 1 timed, request 2 via `/sms`, M1–M3), JSON on stdout and in `var/e2e.json`:
+
+```
+uv run python scripts/e2e.py            # against the running stack (make up)
+uv run python scripts/e2e.py --local    # no Docker: app in-process, fake HAPI
+```
+
+It needs a Chromium: `uv run playwright install chromium`, or a system `chromium` on the PATH.
+
 ## Architecture
 BefundBrücke has a deterministic core, a FastAPI service around it, and five off-the-shelf services.
 

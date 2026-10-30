@@ -33,6 +33,8 @@ Append after each milestone: what works, what's next, known issues.
 
 ## SWE 2 portal (Fri morning)
 - Works: mobile-first portal with step bar (identity → send → done), DE/EN toggle (German default; the neutral sentence is unchanged and tested), simulated ID Austria page with a SIMULATION banner, `secure` cookies when `BASE_URL` is https. Blocking: when identity attempts run out the request becomes `blocked`, that attempt and every later visit get the neutral dead-link page, Dr. Hofer is alerted once.
-- Next: `scripts/e2e.py` (Playwright, 5 flows + request 1 wall time, JSON for Biostat), HTML email part, README line on md/txt-only upload.
+- e2e: `scripts/e2e.py` (Playwright, phone viewport) runs r1, r2 (via /sms), M1, M2, M3 and prints JSON for Biostat (`var/e2e.json`). `--local` passes 5/5 without Docker, request 1 wall time 0.64 s scripted. Not yet run against `make up` (no Docker on SWE 2's machine).
+- Email now has an HTML part with a big "Anfrage öffnen" button (in `MESSAGE_TEMPLATES`, leak test green). README states md/txt-only upload.
+- Next: e2e against the real stack, stopwatch fixes after Biostat's run, preview decision with MedEng.
 - Audit: new extra event `request_blocked` in `app/audit.py` (shared contract, MedEng told). Logged once, after the last failed `identity_checked`.
 - Known issues: the receipt text from intake_service is German only. Not yet tried on a real phone.

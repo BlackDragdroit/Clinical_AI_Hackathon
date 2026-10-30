@@ -3,6 +3,7 @@
 #   scripts/dev/mx.sh '!status ab12cd34'      send, wait $WAIT s (default 4), print the last $N (default 4) messages
 #   scripts/dev/mx.sh                         only print the last messages
 set -euo pipefail
+export PYTHONIOENCODING=utf-8   # bot cards contain ✅/●; Windows consoles default to cp1252
 cd "$(dirname "$0")/../.."
 set -a; source .env; set +a
 HS=http://localhost:8008

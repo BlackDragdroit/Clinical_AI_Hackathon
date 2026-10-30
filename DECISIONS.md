@@ -10,9 +10,13 @@ Append one line per decision: what, why, who. Placeholders that still need verif
 - Identity binding: the eID name must equal the expected person's name (titles, case and umlaut spelling ignored). On a mismatch, nothing is revealed, `identity_checked FAILED` + `misdelivery_caught` are logged, and Dr. Hofer is alerted. — setup
 - On M3 (reject) the Task goes back to `in-progress` (still waiting for the right document), and the answer is kept in `answers` as quarantined. — setup
 - Audit timestamps are UTC; FHIR timestamps are Europe/Vienna (core). — setup
-- **VERIFY** `IDENTITY_POLICY_URI` in core/fhir_build.py points at example.org; point it at the README anchor.
+- `IDENTITY_POLICY_URI` (Provenance.policy) points at README design answer 2 on GitHub. It was example.org, the only HL7 validator error on both scenario bundles. — MedEng
 - Docker image tags pinned and run on 2026-10-29: synapse v1.120.0, element-web v1.11.85, hapi v7.4.0, mailpit v1.21.5. — SWE 1
 - FTAPI is not used in the prototype (the track allows any replaceable product). FTAPI publishes no API reference, so we did not invent endpoints. Uploads go through our own portal; `ftapi_submitbox.py` marks where a provider adapter would go. README tagline and architecture say this explicitly. — SWE 1
+- Address lint warns only about near-misses of KNOWN_DOMAINS and never blocks; an unknown domain that resembles none of them gives no warning (we can't know every lab). — MedEng
+- Misdelivery codes in the audit log are `M1` / `M2` / `M3`; the human label lives in `app/i18n.py` and says "wahrscheinlich" for M1/M2, because a failed eID can't tell a wrong address from a forward with certainty. — MedEng
+- UI texts go through `app/i18n.py` (German default and fallback, English second). Stored texts (`lint_warnings`, audit details) stay German for the record; pages that need another language render from codes (`lint_findings`, `misdelivery_label`). — MedEng
+- HAPI stores its data in file-based H2 on the `hapi-data` volume (the image default is in-memory, which lost everything on any container restart; found in the browser playtest). `make reset` still wipes it on purpose. — SWE 1
 
 ## Engine (AI) — Thu night
 - One engine service (`engine/`, FastAPI `engine.api:app`) with two jobs: request (typed/spoken DE+EN → checked request) and document (Markdown/PDF/scan/photo → scenario-shaped Markdown + checks). The app calls it over HTTP when `ENGINE_URL` is set, in-process otherwise (dev, tests). — AI

@@ -28,7 +28,7 @@ widget() {    # the dashboard widget in the room points at the app's address
   url=$(docker compose exec -T app .venv/bin/python -m app.dashboard | tail -1)
   curl -fs -XPUT "$HS/_matrix/client/v3/rooms/$room/state/im.vector.modular.widgets/bb-dashboard" \
     -H "Authorization: Bearer $tok" -H 'Content-Type: application/json' \
-    -d "$(python3 -c 'import json,sys; print(json.dumps({"type": "m.custom", "id": "bb-dashboard", "name": "BefundBrücke Dashboard",
+    -d "$(python3 -c 'import json,sys; print(json.dumps({"type": "m.custom", "id": "bb-dashboard", "name": "IRIS Dashboard",
                                                          "url": sys.argv[1], "creatorUserId": sys.argv[2], "data": {}}))' "$url" "$DOCTOR_MXID")" >/dev/null
 }
 

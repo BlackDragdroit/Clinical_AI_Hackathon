@@ -127,7 +127,7 @@ MESSAGES: dict[str, dict[str, str]] = {
     "doc.lab": {"de": 'Laborbefund', "en": 'lab result'},
     "doc.report": {"de": 'Entlassungsbericht', "en": 'discharge report'},
     # audit page (/audit): page chrome
-    "audit.brand": {"de": "I.R.I.S. · BefundBrücke", "en": "I.R.I.S. · BefundBrücke"},
+    "audit.brand": {"de": "IRIS", "en": "IRIS"},
     "audit.title": {"de": "Audit-Protokoll", "en": "Audit log"},
     "audit.subtitle": {
         "de": "Jeder Schritt jeder Anfrage: wer, was, wann. Nur anhängen, hash-verkettet.",

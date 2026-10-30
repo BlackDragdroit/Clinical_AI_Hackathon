@@ -9,7 +9,7 @@ Dr. Lena Hofer, Innere Medizin am Klinikum Beispielstadt. Maria Beispiel hat ein
 
 Heute heißt das: Das Labor faxt oder schickt eine E-Mail. Jemand tippt die Werte von Hand ab. Und eine falsch adressierte E-Mail landet bei Fremden, mit Name und Befund.
 
-Mit BefundBrücke schreibt Dr. Hofer einen Satz in Matrix. Dr. Eva Brandl bekommt eine neutrale E-Mail: kein Name, kein Befund, nur ein Link. Sie meldet sich mit ID Austria an. Erst dann sieht sie, um wen es geht. Sie lädt den Befund hoch.
+Mit IRIS schreibt Dr. Hofer einen Satz in Matrix. Dr. Eva Brandl bekommt eine neutrale E-Mail: kein Name, kein Befund, nur ein Link. Sie meldet sich mit ID Austria an. Erst dann sieht sie, um wen es geht. Sie lädt den Befund hoch.
 
 Die Werte landen als strukturierte Laborwerte mit LOINC-Code bei der richtigen Patientin, mit dem Nachweis, wer sie geschickt hat. Dr. Hofer bekommt die Meldung in Matrix.
 
@@ -25,7 +25,7 @@ Dr. Lena Hofer, internal medicine at Klinikum Beispielstadt. Maria Beispiel is d
 
 Today that means: the lab faxes or emails. Someone types the values in by hand. And a misdirected email reaches a stranger, with the name and the result.
 
-With BefundBrücke, Dr. Hofer writes one sentence in Matrix. Dr. Eva Brandl gets a neutral email: no name, no result, just a link. She logs in with ID Austria. Only then does she see who it is about. She uploads the result.
+With IRIS, Dr. Hofer writes one sentence in Matrix. Dr. Eva Brandl gets a neutral email: no name, no result, just a link. She logs in with ID Austria. Only then does she see who it is about. She uploads the result.
 
 The values arrive as structured, LOINC-coded lab results on the right patient, with proof of who sent them. Dr. Hofer is told in Matrix.
 

@@ -50,7 +50,7 @@ async def lifespan(_: FastAPI):
         await task
 
 
-app = FastAPI(title="BefundBrücke", lifespan=lifespan)
+app = FastAPI(title="IRIS", lifespan=lifespan)
 app.include_router(dashboard.router)
 app.include_router(report.router)
 

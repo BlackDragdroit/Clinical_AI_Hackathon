@@ -43,3 +43,10 @@ def test_long_first_line_bolds_only_first_clause():
     h = matrix_format.to_html(msg)
     assert h.startswith("<strong>✅ Antwort von Eva Brandl (Labor Kanalstraße) abgelegt</strong> – 11 FHIR")
     assert h.count("<strong>") == 1 and '<a href="http://localhost:8090/fhir/DiagnosticReport/1">' in h
+
+
+def test_cut_after_sentence_keeps_the_space():
+    msg = ("✅ Antwort ab12cd34 nach Prüfung abgelegt. http://localhost:8090/fhir/DocumentReference/644c4329-8893-4427 "
+           "http://localhost:8090/fhir/DiagnosticReport/6c9a2ff1")
+    h = matrix_format.to_html(msg)
+    assert h.startswith('<strong>✅ Antwort ab12cd34 nach Prüfung abgelegt.</strong> <a href=')

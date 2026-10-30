@@ -43,7 +43,8 @@ def _headline(line: str) -> str:
         m = _CLAUSE.search(line, 15)
         if m and m.start() < 90:
             cut = m.end() if m.group(1) == ". " else m.start()
-            return f"<strong>{_inline(line[:cut].rstrip())}</strong>{_inline(line[cut:])}"
+            head = line[:cut].rstrip()
+            return f"<strong>{_inline(head)}</strong>{line[len(head):cut]}{_inline(line[cut:])}"   # keep the space
     return f"<strong>{_inline(line)}</strong>"
 
 
